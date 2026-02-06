@@ -4,15 +4,15 @@
   "description": "TTS service using Qwen TTS model",
   "type": "module",
   "scripts": {
-    "dev": "bun run src/index.ts",
-    "build": "bun build src/index.ts --outdir dist",
+    "dev": "NODE_ENV=development bun run src/ts/server.ts",
+    "dev:py": "uv run uvicorn src.py.qwen_tts_server:app --port 7861 --reload",
+    "start": "bun run dist/server.js",
     "test": "bun test",
-    "lint": "eslint src --ext .ts",
+    "test:py": "uv run pytest",
+    "lint": "eslint src/ts --ext .ts",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "@huggingface/inference": "^2.8.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^20.11.0",
     "bun-types": "latest",

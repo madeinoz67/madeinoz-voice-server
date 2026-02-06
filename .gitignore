@@ -11,6 +11,7 @@ build/
 .env
 .env.local
 .env.*.local
+# .env.development is tracked in repository (no secrets)
 
 # IDE
 .vscode/
@@ -37,3 +38,29 @@ coverage/
 # Temporary files
 tmp/
 temp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# uv (Python package manager)
+uv.lock
+
+# Model cache (large files)
+.cache/
+huggingface/
+
