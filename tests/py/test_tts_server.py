@@ -3,18 +3,17 @@ Tests for Qwen TTS Server
 Pytest tests for FastAPI TTS endpoints
 """
 
-import pytest
-from fastapi.testclient import TestClient
-from unittest.mock import Mock, patch, MagicMock
-import base64
-import io
 import sys
 from pathlib import Path
+from unittest.mock import patch
+
+import pytest
+from fastapi.testclient import TestClient
 
 # Add src/py to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src" / "py"))
 
-from qwen_tts_server import app, TTSRequest, HealthResponse
+from qwen_tts_server import TTSRequest, app
 
 
 @pytest.fixture

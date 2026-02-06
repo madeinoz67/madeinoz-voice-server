@@ -9,15 +9,21 @@
     "start": "bun run dist/server.js",
     "test": "bun test",
     "test:py": "uv run pytest",
-    "lint": "eslint src/ts --ext .ts",
+    "lint": "eslint src/ts",
+    "lint:fix": "eslint src/ts --fix",
+    "lint:py": "uv run ruff check src/py tests/py",
+    "lint:py:fix": "uv run ruff check --fix src/py tests/py",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
     "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "bun-types": "latest",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3"
+    "eslint": "^9.0.0",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.0.0"
   },
   "engines": {
     "bun": ">=1.0.0"

@@ -5,6 +5,8 @@
 
 import type { PronunciationRule, PronunciationDictionary } from "@/models/pronunciation.js";
 import { logger } from "@/utils/logger.js";
+import { readFileSync } from "fs";
+import { existsSync } from "fs";
 
 /**
  * Default pronunciation rules
@@ -34,8 +36,48 @@ const DEFAULT_RULES: PronunciationRule[] = [
 export class PronunciationService {
   private dictionary: PronunciationDictionary;
 
-  constructor(customRules: PronunciationRule[] = []) {
-    this.dictionary = this.buildDictionary(customRules);
+  constructor(customRules: PronunciationRule[] = [], loadFromPath?: string) {
+    let rules = customRules;
+
+    // Load rules from file if path provided
+    if (loadFromPath) {
+      const fileRules = PronunciationService.loadFromFile(loadFromPath);
+      rules = [...rules, ...fileRules];
+      logger.info("Loaded pronunciation rules from file", {
+        path: loadFromPath,
+        count: fileRules.length,
+      });
+    }
+
+    this.dictionary = this.buildDictionary(rules);
+  }
+
+  /**
+   * Load pronunciation rules from a JSON file
+   */
+  static loadFromFile(filePath: string): PronunciationRule[] {
+    if (!existsSync(filePath)) {
+      logger.warn("Pronunciation file not found, using defaults", { filePath });
+      return [];
+    }
+
+    try {
+      const content = readFileSync(filePath, "utf-8");
+      const data = JSON.parse(content);
+
+      // Handle both array and object formats
+      if (Array.isArray(data)) {
+        return data;
+      } else if (data.pronunciations && Array.isArray(data.pronunciations)) {
+        return data.pronunciations;
+      }
+
+      logger.warn("Invalid pronunciation file format", { filePath });
+      return [];
+    } catch (error) {
+      logger.error("Failed to load pronunciation file", error as Error, { filePath });
+      return [];
+    }
   }
 
   /**
@@ -129,11 +171,26 @@ let service: PronunciationService | null = null;
 /**
  * Get or create pronunciation service singleton
  */
-export function getPronunciationService(customRules?: PronunciationRule[]): PronunciationService {
+export function getPronunciationService(customRules?: PronunciationRule[], loadFromPath?: string): PronunciationService {
   if (!service) {
-    service = new PronunciationService(customRules);
+    service = new PronunciationService(customRules || [], loadFromPath);
   }
   return service;
+}
+
+/**
+ * Load pronunciation rules from the standard PAI pronunciation file
+ */
+export function loadPAIPronunciations(): PronunciationRule[] {
+  const pronunciationsPath = `${process.env.HOME}/.claude/VoiceServer/voices/pronunciations.json`;
+
+  if (existsSync(pronunciationsPath)) {
+    const rules = PronunciationService.loadFromFile(pronunciationsPath);
+    logger.info("Loaded PAI pronunciation rules", { count: rules.length });
+    return rules;
+  }
+
+  return [];
 }
 
 /**

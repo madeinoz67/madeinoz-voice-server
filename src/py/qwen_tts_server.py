@@ -21,17 +21,15 @@ Architecture Attribution:
     project, not copied from any source.
 """
 
-import os
-import logging
 import base64
-import io
+import logging
+import os
 import time
-from typing import Optional
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
 # Import TTS libraries
 # Note: Using pyspch for basic TTS as fallback if Qwen model unavailable
@@ -89,7 +87,7 @@ class HealthResponse(BaseModel):
     """Health check response"""
     status: str
     model_loaded: bool
-    model_name: Optional[str] = None
+    model_name: str | None = None
     port: int
 
 
@@ -190,6 +188,8 @@ def synthesize_with_qwen(text: str, voice: str, prosody: str, speed: float) -> t
     Synthesize speech using Qwen3-TTS model
     Returns: (audio_data, sample_rate, duration_ms)
     """
+    # TODO: implement prosody handling
+    _ = prosody  # noqa: ARG001 - will be implemented when Qwen model is integrated
     # TODO: Implement actual Qwen3-TTS synthesis when model is available
     # For now, fall back to system TTS
     logger.warning("Qwen3-TTS not fully implemented, using system TTS")
@@ -197,7 +197,7 @@ def synthesize_with_qwen(text: str, voice: str, prosody: str, speed: float) -> t
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):  # noqa: ARG001 - app required by FastAPI
     """Lifespan context manager for model loading"""
     global model
     # Startup
@@ -290,7 +290,7 @@ async def synthesize(request: TTSRequest):
 
     except Exception as e:
         logger.error(f"Synthesis error: {e}")
-        raise HTTPException(status_code=500, detail=f"Synthesis failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Synthesis failed: {str(e)}") from None
 
 
 @app.get("/")

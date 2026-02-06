@@ -11,9 +11,10 @@ import { createDefaultHealthStatus } from "@/models/health.js";
 import { sanitizeTitle, sanitizeMessage } from "@/utils/text-sanitizer.js";
 import { logger } from "@/utils/logger.js";
 import { translateProsody, DEFAULT_PROSODY } from "@/services/prosody-translator.js";
-import { applyPronunciations } from "@/services/pronunciation.js";
+import { applyPronunciations, loadPAIPronunciations } from "@/services/pronunciation.js";
 import { getTTSClient } from "@/services/tts-client.js";
 import { getSubprocessManager, type SubprocessStatus } from "@/services/subprocess-manager.js";
+import { getVoiceLoader } from "@/services/voice-loader.js";
 import { getRateLimiter, extractClientId } from "@/middleware/rate-limiter.js";
 import { getCORSMiddleware } from "@/middleware/cors.js";
 import { unlinkSync } from "fs";
@@ -283,6 +284,15 @@ async function handleHealth(): Promise<HealthStatus> {
     voiceSystem = "macOS Say";
   }
 
+  // Get available voices
+  let availableVoices: string[] = [];
+  try {
+    const voiceLoader = getVoiceLoader();
+    availableVoices = await voiceLoader.getAvailableVoices();
+  } catch (error) {
+    logger.warn("Failed to get available voices", { error: (error as Error).message });
+  }
+
   // Update health status
   serverState.healthStatus = {
     status: serverState.subprocessStatus.state === "running" ? "healthy" : "degraded",
@@ -292,6 +302,7 @@ async function handleHealth(): Promise<HealthStatus> {
     model_loaded: modelLoaded,
     api_key_configured: false,
     python_subprocess: serverState.subprocessStatus.state as "running" | "stopped" | "crashed",
+    available_voices: availableVoices.length > 0 ? availableVoices : undefined,
   };
 
   return serverState.healthStatus;
@@ -343,6 +354,29 @@ export async function startServer(config: Partial<ServerConfig> = {}): Promise<v
         error: (error as Error).message,
       });
     }
+  }
+
+  // Load voice configurations
+  try {
+    const voiceLoader = getVoiceLoader();
+    const voices = await voiceLoader.loadVoices();
+    logger.info(`Loaded ${voices.size} voice configurations`);
+  } catch (error) {
+    logger.warn("Failed to load voice configurations", {
+      error: (error as Error).message,
+    });
+  }
+
+  // Load pronunciation rules
+  try {
+    const pronunciations = loadPAIPronunciations();
+    if (pronunciations.length > 0) {
+      logger.info(`Loaded ${pronunciations.length} pronunciation rules`);
+    }
+  } catch (error) {
+    logger.warn("Failed to load pronunciation rules", {
+      error: (error as Error).message,
+    });
   }
 
   const server = Bun.serve({

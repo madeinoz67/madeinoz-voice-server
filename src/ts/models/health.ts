@@ -36,6 +36,8 @@ export interface HealthStatus {
   api_key_configured: boolean;
   /** Python subprocess status */
   python_subprocess: SubprocessStatus;
+  /** Available voice IDs (optional) */
+  available_voices?: string[];
 }
 
 /**
