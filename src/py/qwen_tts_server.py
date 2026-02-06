@@ -57,7 +57,7 @@ logger = logging.getLogger(__name__)
 
 # Global model instance
 model = None  # Qwen3TTSModel instance
-MODEL_NAME = "Qwen3-TTS-VoiceDesign"
+MODEL_NAME = "Qwen3-TTS-0.6B-CustomVoice"
 MODEL_LOADED = False
 
 # Thread pool for running blocking TTS operations without blocking async event loop
@@ -117,8 +117,8 @@ def load_qwen_model():
 
     model_path = os.getenv("QWEN_MODEL_PATH")
     cache_dir = os.path.expanduser("~/.cache/huggingface/hub")
-    # Use VoiceDesign model for creating distinct agent personalities from text descriptions
-    model_id = "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"
+    # Use smaller 0.6B custom voice model - faster loading and inference
+    model_id = "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice"
 
     # Check for cached model in HuggingFace cache directory
     cached_model_path = os.path.join(cache_dir, f"models--{model_id.replace('/', '--')}")
@@ -232,11 +232,20 @@ def synthesize_with_qwen(text: str, voice: str, prosody: str, speed: float) -> t
         model_device = getattr(model.model, 'device', getattr(model, 'device', 'unknown'))
         logger.info(f"Model device for inference: {model_device}")
 
-        # Try to infer the model type and use the appropriate method
-        # Base model uses generate(), VoiceDesign uses generate_voice_design()
-        if hasattr(model, 'generate_voice_design'):
-            # VoiceDesign model - requires instruct parameter for voice instructions
-            # Use prosody as the voice instruction, default to normal speech
+        # Check if this is a CustomVoice model - it doesn't support generate_voice_design
+        model_config = getattr(model, 'config', None)
+        is_custom_voice = model_config and getattr(model_config, 'tts_model_type', '') == 'custom_voice'
+
+        if is_custom_voice or not hasattr(model, 'generate_voice_design'):
+            # Use basic generate for CustomVoice models
+            wavs, sample_rate = model.generate(
+                text=text,
+                language="English",
+                speaker=voice,
+                stream=False
+            )
+        else:
+            # Use generate_voice_design for VoiceDesign models
             voice_instruct = prosody if prosody and prosody != "speak normally" else "Speak in a natural, clear voice"
             wavs, sample_rate = model.generate_voice_design(
                 text=text,
@@ -245,16 +254,6 @@ def synthesize_with_qwen(text: str, voice: str, prosody: str, speed: float) -> t
                 instruct=voice_instruct,  # Voice instruction (required)
                 stream=False
             )
-        elif hasattr(model, 'generate'):
-            # Base model - simpler generation
-            wavs, sample_rate = model.generate(
-                text=text,
-                language="English",
-                speaker=voice,
-                stream=False
-            )
-        else:
-            raise AttributeError("Model has no known generation method")
 
         # Convert to numpy array and ensure proper format
         audio_array = wavs.cpu().numpy() if torch.is_tensor(wavs) else np.array(wavs)
@@ -413,23 +412,28 @@ async def stream_qwen_audio_generator(text: str, voice: str, prosody: str, speed
 
         # Run streaming in thread pool (blocking operation)
         def get_stream():
-            if hasattr(model, 'generate_voice_design'):
-                return model.generate_voice_design(
-                    text=text,
-                    language="English",
-                    speaker=voice,
-                    instruct=voice_instruct,
-                    stream=True  # Enable streaming
-                )
-            elif hasattr(model, 'generate'):
+            # The 0.6B CustomVoice model uses generate() but without certain parameters
+            # Let's try minimal parameters first
+            try:
                 return model.generate(
                     text=text,
-                    language="English",
-                    speaker=voice,
-                    stream=True  # Enable streaming
+                    stream=True
                 )
-            else:
-                raise AttributeError("Model has no known generation method")
+            except Exception as e:
+                logger.error(f"generate() failed: {e}, trying with more parameters...")
+                try:
+                    return model.generate(
+                        text=text,
+                        language="English",
+                        stream=True
+                    )
+                except Exception as e2:
+                    logger.error(f"generate() with language failed: {e2}")
+                    # Last resort - try generate_voice_design without instruct
+                    return model.generate_voice_design(
+                        text=text,
+                        stream=True
+                    )
 
         # Get the stream generator
         stream = await asyncio.to_thread(get_stream)
