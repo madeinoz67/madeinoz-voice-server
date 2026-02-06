@@ -109,22 +109,25 @@ async function playStreamingAudio(
 ): Promise<void> {
   // Use ffplay for true streaming audio playback
   // ffplay reads from stdin and plays as data arrives
-  const proc = Bun.spawn(["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet",
+  const proc = Bun.spawn(["ffplay", "-nodisp", "-autoexit",
+    "-loglevel", "info",      // Show info logs for debugging
     "-f", "s16le",           // PCM signed 16-bit little-endian
     "-ar", "24000",           // Sample rate 24kHz
-    "-ac", "1",               // Mono
     "-i", "pipe:0",           // Read from stdin
     "-volume", volume.toString(),  // Volume (0.0-1.0, ffplay handles this)
-    "-"], {
-    stdout: "pipe",
-    stderr: "pipe",
-    stdin: "pipe",  // We'll write to stdin
+  ], {
+    stdout: "inherit",       // Show stdout for debugging
+    stderr: "inherit",       // Show stderr for debugging
+    stdin: "pipe",           // We'll write to stdin
   });
 
   const writer = proc.stdin;
   if (!writer) {
+    logger.error("Failed to open ffplay stdin");
     throw new Error("Failed to open ffplay stdin");
   }
+
+  logger.info("ffplay process started", { pid: proc.pid });
 
   try {
     let firstChunk = true;
@@ -137,6 +140,8 @@ async function playStreamingAudio(
       totalBytes += chunk.length;
       chunkCount++;
 
+      logger.debug(`Writing chunk ${chunkCount}: ${chunk.length} bytes to ffplay`);
+
       // Write chunk directly to ffplay's stdin
       writer.write(chunk);
       writer.flush();
@@ -144,21 +149,25 @@ async function playStreamingAudio(
       // Log first chunk arrival
       if (firstChunk) {
         const elapsed = Date.now() - startTime;
-        logger.info(`✓ First audio chunk received after ${elapsed}ms, playback started`);
+        logger.info(`✓ First audio chunk received after ${elapsed}ms, writing to ffplay`);
         firstChunk = false;
       }
     }
+
+    logger.info("All chunks written, closing stdin to signal end of stream");
 
     // Close stdin to signal end of stream
     writer.end();
 
     // Wait for ffplay to finish playing
-    await proc.exited;
+    const exitCode = await proc.exited;
+    logger.info(`ffplay exited with code: ${exitCode}`);
 
     const duration = Date.now() - startTime;
     logger.info(`✓ Streaming playback complete: ${chunkCount} chunks, ${totalBytes} bytes in ${duration}ms`);
 
   } catch (error) {
+    logger.error("Error during streaming playback", { error: (error as Error).message });
     // Clean up process if error occurs
     proc.kill();
     throw error;
