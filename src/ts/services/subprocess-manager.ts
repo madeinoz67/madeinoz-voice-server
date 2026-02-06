@@ -92,14 +92,17 @@ export class SubprocessManager {
 
     try {
       // Get the project root directory
-      const projectRoot = import.meta.dir.replace("/src/services", "");
+      // When running via "bun run src/ts/server.ts", import.meta.dir is src/ts/services
+      // Need to go up to project root
+      const projectRoot = import.meta.dir.replace("/src/ts/services", "");
+      logger.info(`Project root: ${projectRoot}`);
 
       // Start the subprocess
       this.process = Bun.spawn({
         cmd: [this.config.command, ...this.config.args],
         cwd: projectRoot,
-        stdout: "pipe",
-        stderr: "pipe",
+        stdout: "inherit",
+        stderr: "inherit",
         env: {
           ...process.env,
           PYTHONUNBUFFERED: "1",

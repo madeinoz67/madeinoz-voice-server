@@ -27,8 +27,8 @@ export interface TTSClientConfig {
  */
 const DEFAULT_CONFIG: TTSClientConfig = {
   baseUrl: "http://127.0.0.1:7860",
-  timeout: 10000, // 10 seconds
-  maxRetries: 2,
+  timeout: 30000, // 30 seconds - Qwen TTS can take 12-20 seconds
+  maxRetries: 1, // Reduce retries since longer timeout reduces likelihood of timeout
   retryDelay: 1000, // 1 second
 };
 
