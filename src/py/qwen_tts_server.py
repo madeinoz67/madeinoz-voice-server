@@ -134,6 +134,16 @@ def load_qwen_model():
             model = Qwen3TTSModel.from_pretrained(model_id)
         MODEL_LOADED = True
         logger.info("✓ Model loaded successfully")
+
+        # Try to enable MPS (Apple Silicon) GPU acceleration if available
+        if hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+            try:
+                model.device = "mps"
+                model.model = model.model.to("mps")
+                logger.info("✓ Model moved to Apple Metal (MPS) GPU acceleration")
+            except Exception as mps_error:
+                logger.warning(f"Failed to enable MPS acceleration: {mps_error}")
+                logger.info("  Continuing with CPU inference")
     except Exception as e:
         logger.error(f"Failed to load Qwen3-TTS model: {e}")
         logger.info("  Falling back to system TTS (pyttsx3)")
