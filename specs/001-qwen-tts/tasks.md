@@ -139,13 +139,13 @@ This is a hybrid TypeScript/Python single project:
 
 ### Implementation for User Story 3
 
-- [ ] T055 [US3] Create voice upload endpoint POST /upload-voice in src/server.ts
-- [ ] T056 [US3] Implement reference audio storage in ~/.claude/voices/ in src/server.ts
-- [ ] T057 [US3] Implement audio file validation (format, duration) in src/server.ts
+- [x] T055 [US3] Create voice upload endpoint POST /upload-voice in src/server.ts
+- [x] T056 [US3] Implement reference audio storage in ~/.claude/voices/ in src/server.ts
+- [x] T057 [US3] Implement audio file validation (format, duration) in src/server.ts
 - [ ] T058 [US3] Implement voice cloning integration in src/qwen-tts-server.py
 - [ ] T059 [US3] Integrate custom voice selection with TTS pipeline in src/server.ts
-- [ ] T060 [US3] Implement voice list endpoint GET /voices in src/server.ts
-- [ ] T061 [US3] Implement voice deletion endpoint DELETE /voices/:id in src/server.ts
+- [x] T060 [US3] Implement voice list endpoint GET /voices in src/server.ts
+- [x] T061 [US3] Implement voice deletion endpoint DELETE /voices/:id in src/server.ts
 
 **Checkpoint**: All user stories should now be independently functional. Users can upload custom voices and use them for TTS.
 
@@ -155,16 +155,16 @@ This is a hybrid TypeScript/Python single project:
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T062 [P] Update README.md with Qwen TTS server documentation
+- [x] T062 [P] Update README.md with Qwen TTS server documentation
 - [ ] T063 [P] Update CLAUDE.md project guidance for new architecture
-- [ ] T064 [P] Create migration guide from ElevenLabs to Qwen TTS in docs/MIGRATION.md
+- [x] T064 [P] Create migration guide from ElevenLabs to Qwen TTS in docs/MIGRATION.md
 - [ ] T065 [P] Update Codanna index for src/ directory
-- [ ] T066 Code cleanup and refactoring based on test coverage
+- [x] T066 Code cleanup and refactoring based on test coverage
 - [ ] T067 [P] Add additional unit tests for edge cases (empty input, very long text, concurrent requests)
-- [ ] T068 Security hardening (input validation limits, CORS enforcement)
+- [x] T068 Security hardening (input validation limits, CORS enforcement)
 - [ ] T069 Run quickstart.md validation and update if needed
 - [ ] T070 [P] Create performance benchmarks (<3s response, <5s startup, <2GB memory)
-- [ ] T071 [P] Add structured logging levels (DEBUG, INFO, WARN, ERROR)
+- [x] T071 [P] Add structured logging levels (DEBUG, INFO, WARN, ERROR)
 
 ---
 

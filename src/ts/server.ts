@@ -7,6 +7,11 @@ import type { NotificationRequest, PaiNotificationRequest } from "@/models/notif
 import type { HealthStatus } from "@/models/health.js";
 import type { SuccessResponse, ErrorResponse } from "@/models/notification.js";
 import type { ProsodySettings } from "@/models/voice-config.js";
+import type {
+  VoiceUploadResponse,
+  VoiceListResponse,
+  VoiceDeleteResponse,
+} from "@/models/voice-upload.js";
 import { createDefaultHealthStatus } from "@/models/health.js";
 import { sanitizeTitle, sanitizeMessage } from "@/utils/text-sanitizer.js";
 import { logger } from "@/utils/logger.js";
@@ -15,6 +20,7 @@ import { applyPronunciations, loadPAIPronunciations } from "@/services/pronuncia
 import { getTTSClient } from "@/services/tts-client.js";
 import { getSubprocessManager, type SubprocessStatus } from "@/services/subprocess-manager.js";
 import { getVoiceLoader } from "@/services/voice-loader.js";
+import { saveVoice, listVoices, deleteVoice } from "@/services/voice-storage.js";
 import { getRateLimiter, extractClientId } from "@/middleware/rate-limiter.js";
 import { getCORSMiddleware } from "@/middleware/cors.js";
 import { unlinkSync } from "fs";
@@ -309,6 +315,141 @@ async function handleHealth(): Promise<HealthStatus> {
 }
 
 /**
+ * Handle POST /upload-voice endpoint
+ * Upload a custom voice with reference audio
+ */
+async function handleUploadVoice(req: Request): Promise<VoiceUploadResponse> {
+  try {
+    logger.info("Received /upload-voice request");
+
+    // Parse multipart form data
+    const formData = await req.formData();
+    const audioFile = formData.get("audio") as File | null;
+    const name = formData.get("name") as string | null;
+    const description = formData.get("description") as string | null || undefined;
+
+    // Validate required fields
+    if (!audioFile) {
+      return {
+        status: "error",
+        message: "Missing required field: audio file",
+      };
+    }
+
+    if (!name) {
+      return {
+        status: "error",
+        message: "Missing required field: name",
+      };
+    }
+
+    // Save uploaded file to temp location
+    const tempDir = "/tmp";
+    const tempFilePath = `${tempDir}/voice_upload_${Date.now()}.wav`;
+
+    try {
+      const buffer = await audioFile.arrayBuffer();
+      const uint8Array = new Uint8Array(buffer);
+      await Bun.write(tempFilePath, uint8Array);
+
+      // Save voice to storage
+      const voiceMetadata = saveVoice(tempFilePath, { name, description });
+
+      if (!voiceMetadata) {
+        return {
+          status: "error",
+          message: "Failed to save voice - audio validation failed",
+        };
+      }
+
+      logger.info("Voice uploaded successfully", {
+        id: voiceMetadata.id,
+        name: voiceMetadata.name,
+      });
+
+      return {
+        status: "success",
+        message: "Voice uploaded successfully",
+        voice: voiceMetadata,
+      };
+    } finally {
+      // Clean up temp file
+      try {
+        unlinkSync(tempFilePath);
+      } catch {
+        // Ignore cleanup errors
+      }
+    }
+  } catch (error) {
+    logger.error("Error handling /upload-voice", error as Error);
+    return {
+      status: "error",
+      message: "Internal server error",
+    };
+  }
+}
+
+/**
+ * Handle GET /voices endpoint
+ * List all available custom voices
+ */
+async function handleListVoices(): Promise<VoiceListResponse> {
+  try {
+    const voices = listVoices();
+
+    logger.debug(`Listed ${voices.length} voices`);
+
+    return {
+      status: "success",
+      voices,
+    };
+  } catch (error) {
+    logger.error("Error handling /voices", error as Error);
+    return {
+      status: "error",
+      message: "Internal server error",
+    };
+  }
+}
+
+/**
+ * Handle DELETE /voices/:id endpoint
+ * Delete a custom voice
+ */
+async function handleDeleteVoice(voiceId: string): Promise<VoiceDeleteResponse> {
+  try {
+    logger.info("Received DELETE /voices request", { voiceId });
+
+    if (!voiceId) {
+      return {
+        status: "error",
+        message: "Missing voice ID",
+      };
+    }
+
+    const deleted = deleteVoice(voiceId);
+
+    if (!deleted) {
+      return {
+        status: "error",
+        message: "Voice not found",
+      };
+    }
+
+    return {
+      status: "success",
+      message: "Voice deleted successfully",
+    };
+  } catch (error) {
+    logger.error("Error handling DELETE /voices", error as Error);
+    return {
+      status: "error",
+      message: "Internal server error",
+    };
+  }
+}
+
+/**
  * Parse JSON body from request
  */
 async function parseJsonBody<T>(req: Request): Promise<T> {
@@ -421,6 +562,19 @@ export async function startServer(config: Partial<ServerConfig> = {}): Promise<v
         // GET /health
         else if (path === "/health" && req.method === "GET") {
           responseData = await handleHealth();
+        }
+        // POST /upload-voice
+        else if (path === "/upload-voice" && req.method === "POST") {
+          responseData = await handleUploadVoice(req);
+        }
+        // GET /voices
+        else if (path === "/voices" && req.method === "GET") {
+          responseData = await handleListVoices();
+        }
+        // DELETE /voices/:id
+        else if (path.startsWith("/voices/") && req.method === "DELETE") {
+          const voiceId = path.split("/").pop() || "";
+          responseData = await handleDeleteVoice(voiceId);
         }
         // 404 Not Found
         else {
