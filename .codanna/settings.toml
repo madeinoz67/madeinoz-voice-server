@@ -36,7 +36,8 @@ ignore_patterns = [
 indexed_paths = [
     "src/ts",                       # TypeScript main server
     "src/py",                       # Python TTS server
-    "specs",                        # Specification documents
+    "tests/ts",                     # TypeScript tests
+    "tests/py",                     # Python tests
 ]
 
 # Items per batch before flushing to index (default: 5000)
@@ -376,7 +377,7 @@ highlight = true
 # paths: directories or files to include
 # patterns: glob patterns to match (default: ["**/*.md"])
 [documents.collections.docs]
-paths = ["docs"]
+paths = ["docs", "specs"]
 patterns = [
     "**/*.md",
     "**/*.txt",
