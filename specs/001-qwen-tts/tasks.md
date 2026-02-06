@@ -158,7 +158,7 @@ This is a hybrid TypeScript/Python single project:
 - [x] T062 [P] Update README.md with Qwen TTS server documentation
 - [ ] T063 [P] Update CLAUDE.md project guidance for new architecture
 - [x] T064 [P] Create migration guide from ElevenLabs to Qwen TTS in docs/MIGRATION.md
-- [ ] T065 [P] Update Codanna index for src/ directory
+- [x] T065 [P] Update Codanna index for src/ts, src/py, tests directories
 - [x] T066 Code cleanup and refactoring based on test coverage
 - [ ] T067 [P] Add additional unit tests for edge cases (empty input, very long text, concurrent requests)
 - [x] T068 Security hardening (input validation limits, CORS enforcement)
