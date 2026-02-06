@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__web-reader__webReader",
+      "mcp__brightdata__scrape_as_markdown",
+      "mcp__github__get_file_contents"
+    ]
+  }
+}

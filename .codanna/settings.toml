@@ -1,0 +1,68 @@
+# Codanna Configuration File
+# https://github.com/bartolli/codanna
+
+version = 1
+index_path = ".codanna/index"
+
+[indexing]
+parallelism = 10
+tantivy_heap_mb = 50
+max_retry_attempts = 3
+ignore_patterns = [
+    "node_modules/**",
+    ".git/**",
+    "*.generated.*",
+]
+indexed_paths = [
+    "src",
+]
+batch_size = 5000
+batches_per_commit = 10
+show_progress = true
+
+[languages.typescript]
+enabled = true
+extensions = ["ts", "tsx", "mts", "cts"]
+config_files = ["tsconfig.json"]
+
+[semantic_search]
+enabled = true
+model = "AllMiniLML6V2"
+threshold = 0.6
+embedding_threads = 3
+
+[documents]
+enabled = true
+
+[documents.defaults]
+strategy = "hybrid"
+min_chunk_chars = 200
+max_chunk_chars = 1500
+overlap_chars = 100
+
+[documents.search]
+preview_mode = "kwic"
+preview_chars = 600
+highlight = true
+
+[documents.collections.docs]
+paths = ["docs"]
+patterns = ["**/*.md", "**/*.txt"]
+
+[mcp]
+max_context_size = 100000
+
+[file_watch]
+enabled = true
+debounce_ms = 500
+
+[server]
+mode = "stdio"
+watch_interval = 5
+
+[logging]
+default = "warn"
+
+[logging.modules]
+pipeline = "warn"
+tantivy = "warn"
