@@ -57,7 +57,7 @@ logger = logging.getLogger(__name__)
 
 # Global model instance
 model = None  # Qwen3TTSModel instance
-MODEL_NAME = "Qwen3-TTS-0.6B-CustomVoice"
+MODEL_NAME = "Qwen3-TTS-VoiceDesign"
 MODEL_LOADED = False
 
 # Thread pool for running blocking TTS operations without blocking async event loop
@@ -117,8 +117,9 @@ def load_qwen_model():
 
     model_path = os.getenv("QWEN_MODEL_PATH")
     cache_dir = os.path.expanduser("~/.cache/huggingface/hub")
-    # Use smaller 0.6B custom voice model - faster loading and inference
-    model_id = "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice"
+    # Use VoiceDesign model for creating distinct agent personalities from text descriptions
+    # TODO: Investigate 0.6B CustomVoice model API compatibility
+    model_id = "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"
 
     # Check for cached model in HuggingFace cache directory
     cached_model_path = os.path.join(cache_dir, f"models--{model_id.replace('/', '--')}")

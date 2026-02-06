@@ -47,7 +47,7 @@ const DEFAULT_CONFIG: SubprocessManagerConfig = {
   args: ["run", "python3", "src/py/qwen_tts_server.py"],
   healthCheckPort: 7860,
   healthCheckPath: "/health",
-  startupTimeout: 180000, // 180 seconds (3 minutes) - allow time for model download
+  startupTimeout: 30000, // 30 seconds
   shutdownTimeout: 5000, // 5 seconds
 };
 
