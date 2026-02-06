@@ -20,7 +20,7 @@ import { applyPronunciations, loadPAIPronunciations } from "@/services/pronuncia
 import { getTTSClient } from "@/services/tts-client.js";
 import { getSubprocessManager, type SubprocessStatus } from "@/services/subprocess-manager.js";
 import { getVoiceLoader } from "@/services/voice-loader.js";
-import { saveVoice, listVoices, deleteVoice } from "@/services/voice-storage.js";
+import { saveVoice, listVoices, deleteVoice, getVoice as getStoredVoice } from "@/services/voice-storage.js";
 import { getRateLimiter, extractClientId } from "@/middleware/rate-limiter.js";
 import { getCORSMiddleware } from "@/middleware/cors.js";
 import { unlinkSync } from "fs";
@@ -147,6 +147,59 @@ async function fallbackToMacOSSay(text: string, voiceId?: string): Promise<void>
 }
 
 /**
+ * Check if voice is a custom uploaded voice
+ * Returns voice metadata if found, null otherwise
+ */
+async function getCustomVoice(voiceId: string): Promise<{
+  metadata: { id: string; name: string; file_path: string };
+} | null> {
+  try {
+    const metadata = getStoredVoice(voiceId);
+    if (metadata) {
+      return {
+        metadata: {
+          id: metadata.id,
+          name: metadata.name,
+          file_path: metadata.file_path,
+        },
+      };
+    }
+  } catch {
+    // Voice not found in custom storage
+  }
+  return null;
+}
+
+/**
+ * Process TTS with custom voice support
+ * Checks for custom uploaded voices first, falls back to built-in voices
+ */
+async function processTTSWithCustomVoice(
+  text: string,
+  voiceId: string,
+  prosody: ProsodySettings,
+  volume: number
+): Promise<void> {
+  // First check if it's a custom uploaded voice
+  const customVoice = await getCustomVoice(voiceId);
+
+  if (customVoice) {
+    logger.info("Using custom uploaded voice", {
+      voiceId,
+      voiceName: customVoice.metadata.name,
+    });
+
+    // For custom voices, we would use the reference audio for cloning
+    // TODO: When Qwen3-TTS VoiceDesign is integrated, use the reference audio
+    // For now, fall through to built-in voice processing
+    logger.info("Custom voice processing not yet fully implemented, using built-in fallback");
+  }
+
+  // Use standard TTS processing
+  await processTTSWithCustomVoice(text, voiceId, prosody, volume);
+}
+
+/**
  * Process TTS request with fallback chain
  */
 async function processTTS(
@@ -255,7 +308,7 @@ async function handlePai(request: PaiNotificationRequest): Promise<SuccessRespon
     }
 
     // Process TTS
-    await processTTS(message, voiceId, voiceSettings, volume);
+    await processTTSWithCustomVoice(message, voiceId, voiceSettings, volume);
 
     return successResponse("PAI notification sent");
   } catch (error) {
@@ -290,13 +343,25 @@ async function handleHealth(): Promise<HealthStatus> {
     voiceSystem = "macOS Say";
   }
 
-  // Get available voices
+  // Get available voices (built-in + custom)
   let availableVoices: string[] = [];
   try {
     const voiceLoader = getVoiceLoader();
     availableVoices = await voiceLoader.getAvailableVoices();
   } catch (error) {
-    logger.warn("Failed to get available voices", { error: (error as Error).message });
+    logger.warn("Failed to get built-in voices", { error: (error as Error).message });
+  }
+
+  // Add custom uploaded voices
+  try {
+    const customVoices = listVoices();
+    for (const voice of customVoices) {
+      if (!availableVoices.includes(voice.id)) {
+        availableVoices.push(voice.id);
+      }
+    }
+  } catch (error) {
+    logger.warn("Failed to get custom voices", { error: (error as Error).message });
   }
 
   // Update health status

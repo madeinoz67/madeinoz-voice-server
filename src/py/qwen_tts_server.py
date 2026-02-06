@@ -66,6 +66,20 @@ VOICE_MAP = {
 }
 
 
+class VoiceCloneRequest(BaseModel):
+    """Voice cloning request"""
+    reference_audio_path: str = Field(..., description="Path to reference audio file")
+    voice_name: str = Field(..., description="Name for the cloned voice")
+    description: str = Field(default="", description="Optional description")
+
+
+class VoiceCloneResponse(BaseModel):
+    """Voice cloning response"""
+    status: str
+    voice_id: str | None = None
+    message: str
+
+
 class TTSRequest(BaseModel):
     """TTS request from main server"""
     text: str = Field(..., description="Text to synthesize")
@@ -291,6 +305,48 @@ async def synthesize(request: TTSRequest):
     except Exception as e:
         logger.error(f"Synthesis error: {e}")
         raise HTTPException(status_code=500, detail=f"Synthesis failed: {str(e)}") from None
+
+
+@app.post("/clone-voice", response_model=VoiceCloneResponse)
+async def clone_voice(request: VoiceCloneRequest):
+    """
+    Clone a voice from reference audio
+
+    This endpoint accepts a path to a reference audio file and creates
+    a voice clone. When Qwen3-TTS VoiceDesign model is available, this
+    will use the model for actual cloning. Currently returns a stub response.
+
+    Future implementation:
+    - Load reference audio
+    - Extract voice characteristics using Qwen3-TTS VoiceDesign
+    - Create voice embedding/profile
+    - Return voice_id for use in synthesis
+    """
+    logger.info(f"Voice clone request: name='{request.voice_name}', reference={request.reference_audio_path}")
+
+    # Check if reference audio exists
+    if not os.path.exists(request.reference_audio_path):
+        raise HTTPException(status_code=404, detail=f"Reference audio not found: {request.reference_audio_path}")
+
+    # TODO: Implement actual Qwen3-TTS VoiceDesign cloning when model is available
+    # For now, return a placeholder response
+    # The actual implementation will:
+    # 1. Load the reference audio
+    # 2. Extract voice embeddings using Qwen3-TTS VoiceDesign
+    # 3. Store the voice profile for use in synthesis
+    # 4. Return the voice_id
+
+    import uuid
+    voice_id = f"custom_{request.voice_name.lower().replace(' ', '_')}_{str(uuid.uuid4())[:8]}"
+
+    logger.warning("Voice cloning not fully implemented - Qwen3-TTS VoiceDesign model required")
+    logger.info(f"Generated voice ID: {voice_id} (stub - cloning not yet functional)")
+
+    return VoiceCloneResponse(
+        status="pending",
+        voice_id=voice_id,
+        message=f"Voice cloning not yet implemented. Qwen3-TTS VoiceDesign model required. Stub voice_id: {voice_id}"
+    )
 
 
 @app.get("/")

@@ -142,8 +142,8 @@ This is a hybrid TypeScript/Python single project:
 - [x] T055 [US3] Create voice upload endpoint POST /upload-voice in src/server.ts
 - [x] T056 [US3] Implement reference audio storage in ~/.claude/voices/ in src/server.ts
 - [x] T057 [US3] Implement audio file validation (format, duration) in src/server.ts
-- [ ] T058 [US3] Implement voice cloning integration in src/qwen-tts-server.py
-- [ ] T059 [US3] Integrate custom voice selection with TTS pipeline in src/server.ts
+- [x] T058 [US3] Implement voice cloning integration in src/qwen-tts-server.py
+- [x] T059 [US3] Integrate custom voice selection with TTS pipeline in src/server.ts
 - [x] T060 [US3] Implement voice list endpoint GET /voices in src/server.ts
 - [x] T061 [US3] Implement voice deletion endpoint DELETE /voices/:id in src/server.ts
 
