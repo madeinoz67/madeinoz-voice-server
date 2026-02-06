@@ -459,7 +459,7 @@ async def stream_qwen_audio_generator(text: str, voice: str, prosody: str, speed
                 audio_array = np.clip(audio_array, -1.0, 1.0)
                 audio_array = (audio_array * 32767).astype(np.int16)
 
-            chunk_samples = len(audio_array)
+            chunk_samples = audio_array.size
             total_samples += chunk_samples
             chunk_count += 1
 
