@@ -100,34 +100,14 @@ async function displayMacOSNotification(title: string, message: string): Promise
 }
 
 /**
- * Play streaming audio - pipes chunks directly to ffplay for true real-time playback
- * Format: raw PCM, 16-bit signed little-endian, 24kHz, mono
+ * Play streaming audio - accumulates chunks, converts to WAV, and plays using afplay
  */
 async function playStreamingAudio(
   audioStream: AsyncGenerator<Uint8Array>,
   volume: number = 1.0
 ): Promise<void> {
-  // Use ffplay for true streaming audio playback
-  // ffplay reads from stdin and plays as data arrives
-  const proc = Bun.spawn(["ffplay", "-nodisp", "-autoexit",
-    "-loglevel", "info",      // Show info logs for debugging
-    "-f", "s16le",           // PCM signed 16-bit little-endian
-    "-ar", "24000",           // Sample rate 24kHz
-    "-i", "pipe:0",           // Read from stdin
-    "-volume", volume.toString(),  // Volume (0.0-1.0, ffplay handles this)
-  ], {
-    stdout: "inherit",       // Show stdout for debugging
-    stderr: "inherit",       // Show stderr for debugging
-    stdin: "pipe",           // We'll write to stdin
-  });
-
-  const writer = proc.stdin;
-  if (!writer) {
-    logger.error("Failed to open ffplay stdin");
-    throw new Error("Failed to open ffplay stdin");
-  }
-
-  logger.info("ffplay process started", { pid: proc.pid });
+  const pcmFile = `/tmp/qwen_tts_${Date.now()}.pcm`;
+  const wavFile = `/tmp/qwen_tts_${Date.now()}.wav`;
 
   try {
     let firstChunk = true;
@@ -135,42 +115,70 @@ async function playStreamingAudio(
     let totalBytes = 0;
     const startTime = Date.now();
 
-    // Stream each chunk directly to ffplay as it arrives
+    // Accumulate all chunks to a PCM file
+    const fileHandle = await Bun.file(pcmFile, { create: true, write: true });
+    const writer = fileHandle.writer();
+
     for await (const chunk of audioStream) {
       totalBytes += chunk.length;
       chunkCount++;
 
-      logger.debug(`Writing chunk ${chunkCount}: ${chunk.length} bytes to ffplay`);
+      await writer.write(chunk);
+      await writer.flush();
 
-      // Write chunk directly to ffplay's stdin
-      writer.write(chunk);
-      writer.flush();
-
-      // Log first chunk arrival
       if (firstChunk) {
         const elapsed = Date.now() - startTime;
-        logger.info(`✓ First audio chunk received after ${elapsed}ms, writing to ffplay`);
+        logger.info(`✓ First audio chunk received after ${elapsed}ms`);
         firstChunk = false;
       }
     }
 
-    logger.info("All chunks written, closing stdin to signal end of stream");
-
-    // Close stdin to signal end of stream
-    writer.end();
-
-    // Wait for ffplay to finish playing
-    const exitCode = await proc.exited;
-    logger.info(`ffplay exited with code: ${exitCode}`);
-
+    await writer.end();
     const duration = Date.now() - startTime;
-    logger.info(`✓ Streaming playback complete: ${chunkCount} chunks, ${totalBytes} bytes in ${duration}ms`);
+    logger.info(`✓ All chunks received: ${chunkCount} chunks, ${totalBytes} bytes in ${duration}ms`);
 
-  } catch (error) {
-    logger.error("Error during streaming playback", { error: (error as Error).message });
-    // Clean up process if error occurs
-    proc.kill();
-    throw error;
+    // Convert PCM to WAV using ffmpeg
+    const sampleRate = 24000;
+    const channels = 1;
+    const bitsPerSample = 16;
+
+    logger.info(`Converting PCM to WAV and playing...`);
+
+    // Use ffmpeg to convert and play in one go
+    const proc = Bun.spawn(["ffmpeg",
+      "-f", "s16le",           // Input format: PCM signed 16-bit little-endian
+      "-ar", sampleRate.toString(),   // Sample rate
+      "-ac", channels.toString(),    // Channels
+      "-i", pcmFile,           // Input file
+      "-f", "wav",             // Output format: WAV
+      "-vn",                   // No video
+      "-",
+      // Output to stdout, pipe to afplay
+    ], {
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+
+    // Get ffmpeg output and play it
+    const wavData = await Bun.readableStreamToBytes(proc.stdout as ReadableStream);
+    await Bun.write(wavFile, wavData);
+
+    // Play with afplay
+    const volumeArg = volume > 0 && volume < 1 ? `--volume=${Math.floor(volume * 255)}` : "";
+    logger.info(`Playing WAV with afplay (${wavData.length} bytes)`);
+
+    await $`afplay ${volumeArg} ${wavFile}`;
+
+    logger.info("✓ Playback complete");
+
+  } finally {
+    // Clean up temp files
+    try {
+      unlinkSync(pcmFile);
+      unlinkSync(wavFile);
+    } catch {
+      // Ignore cleanup errors
+    }
   }
 }
 
