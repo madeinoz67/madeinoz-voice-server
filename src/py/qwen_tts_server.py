@@ -32,9 +32,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 # Import TTS libraries
-from transformers import AutoModelForTextToSpeech, AutoProcessor
+# Using Qwen's official qwen-tts package instead of transformers
+from qwen_tts import Qwen3TTSModel
 import torch
 import scipy.io.wavfile as wavfile
+import numpy as np
 
 try:
     import pyttsx3
@@ -50,9 +52,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Global model instance
-model = None
-processor = None
-MODEL_NAME = "Qwen3-TTS"
+model = None  # Qwen3TTSModel instance
+MODEL_NAME = "Qwen3-TTS-VoiceDesign"
 MODEL_LOADED = False
 
 # Built-in voice names mapped to pyttsx3 voice IDs
@@ -104,8 +105,8 @@ class HealthResponse(BaseModel):
 
 
 def load_qwen_model():
-    """Load Qwen3-TTS model"""
-    global model, processor, MODEL_LOADED
+    """Load Qwen3-TTS model using Qwen's official qwen-tts package"""
+    global model, MODEL_LOADED
 
     model_path = os.getenv("QWEN_MODEL_PATH")
     cache_dir = os.path.expanduser("~/.cache/huggingface/hub")
@@ -116,26 +117,23 @@ def load_qwen_model():
     cached_model_path = os.path.join(cache_dir, f"models--{model_id.replace('/', '--')}")
 
     try:
+        # Load the model - qwen-tts handles device placement internally
+        # We don't pass device_map or dtype to avoid compatibility issues
         if model_path and os.path.exists(model_path):
             logger.info(f"Loading Qwen3-TTS model from custom path: {model_path}")
-            model = AutoModelForTextToSpeech.from_pretrained(model_path)
-            processor = AutoProcessor.from_pretrained(model_path)
-            MODEL_LOADED = True
+            model = Qwen3TTSModel.from_pretrained(model_path)
         elif os.path.exists(cached_model_path):
-            logger.info(f"✓ Found cached model in HuggingFace cache: {cached_model_path}")
+            logger.info(f"✓ Found cached model in HuggingFace cache")
             logger.info("  Using cached model (no download required)")
-            model = AutoModelForTextToSpeech.from_pretrained(model_id)
-            processor = AutoProcessor.from_pretrained(model_id)
-            MODEL_LOADED = True
+            model = Qwen3TTSModel.from_pretrained(model_id)
         else:
-            logger.info(f"✗ Model not found in cache: {cached_model_path}")
+            logger.info(f"✗ Model not found in cache")
             logger.info(f"  Downloading model '{model_id}' on first use...")
             logger.info("  Model will be cached to: ~/.cache/huggingface/hub/")
             logger.info("  Model size: ~3.4GB - this may take a while...")
-            model = AutoModelForTextToSpeech.from_pretrained(model_id)
-            processor = AutoProcessor.from_pretrained(model_id)
-            MODEL_LOADED = True
-            logger.info("✓ Model downloaded and loaded successfully")
+            model = Qwen3TTSModel.from_pretrained(model_id)
+        MODEL_LOADED = True
+        logger.info("✓ Model loaded successfully")
     except Exception as e:
         logger.error(f"Failed to load Qwen3-TTS model: {e}")
         logger.info("  Falling back to system TTS (pyttsx3)")
@@ -204,25 +202,53 @@ def synthesize_with_qwen(text: str, voice: str, prosody: str, speed: float) -> t
     Synthesize speech using Qwen3-TTS model
     Returns: (audio_data, sample_rate, duration_ms)
     """
-    global model, processor
+    global model
 
-    if model is None or processor is None:
+    if model is None:
         logger.warning("Qwen model not loaded, falling back to system TTS")
         return synthesize_with_system_tts(text, voice, speed)
 
     try:
         logger.info(f"Synthesizing with Qwen3-TTS: text='{text[:30]}...', voice={voice}")
 
-        # Prepare inputs
-        inputs = processor(text=text, return_tensors="pt")
+        # Try to infer the model type and use the appropriate method
+        # Base model uses generate(), VoiceDesign uses generate_voice_design()
+        if hasattr(model, 'generate_voice_design'):
+            # VoiceDesign model - requires instruct parameter for voice instructions
+            # Use prosody as the voice instruction, default to normal speech
+            voice_instruct = prosody if prosody and prosody != "speak normally" else "Speak in a natural, clear voice"
+            wavs, sample_rate = model.generate_voice_design(
+                text=text,
+                language="English",
+                speaker=voice,  # Voice description/speaker name
+                instruct=voice_instruct,  # Voice instruction (required)
+                stream=False
+            )
+        elif hasattr(model, 'generate'):
+            # Base model - simpler generation
+            wavs, sample_rate = model.generate(
+                text=text,
+                language="English",
+                speaker=voice,
+                stream=False
+            )
+        else:
+            raise AttributeError("Model has no known generation method")
 
-        # Generate audio
-        with torch.no_grad():
-            output = model.generate(**inputs, speaker_prompt=voice)
+        # Convert to numpy array and ensure proper format
+        audio_array = wavs.cpu().numpy() if torch.is_tensor(wavs) else np.array(wavs)
 
-        # Convert to WAV format
-        audio_array = output.cpu().numpy()
-        sample_rate = model.config.sampling_rate
+        # Ensure audio_array is 1D and properly formatted for WAV
+        if audio_array.ndim > 1:
+            audio_array = audio_array.squeeze()
+
+        # Convert to int16 for WAV format (standard for speech audio)
+        # Normalize if float audio
+        if audio_array.dtype == np.float32 or audio_array.dtype == np.float16:
+            # Assume audio is in [-1, 1] range, convert to int16
+            audio_array = np.clip(audio_array, -1.0, 1.0)
+            audio_array = (audio_array * 32767).astype(np.int16)
+
         duration_ms = int(len(audio_array) / sample_rate * 1000)
 
         # Save to temporary file
@@ -236,7 +262,7 @@ def synthesize_with_qwen(text: str, voice: str, prosody: str, speed: float) -> t
         # Clean up
         os.remove(temp_file)
 
-        logger.info(f"Qwen3-TTS synthesis complete: {duration_ms}ms audio")
+        logger.info(f"Qwen3-TTS synthesis complete: {duration_ms}ms audio at {sample_rate}Hz")
         return audio_data, sample_rate, duration_ms
 
     except Exception as e:

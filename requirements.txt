@@ -5,8 +5,13 @@ fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 pyttsx3>=2.90
 
-# Qwen3-TTS Model (uncomment when ready to use actual model)
-# Note: These packages are large (~2GB total download)
+# Qwen3-TTS Model - using official qwen-tts package
+# This replaces the transformers approach for better compatibility
+qwen-tts>=0.1.0
 torch>=2.0.0
 transformers>=4.35.0
 scipy>=1.11.0
+numpy>=1.24.0
+
+# Optional: flash-attn for faster inference (requires CUDA)
+# flash-attn  # Only install if you have NVIDIA GPU

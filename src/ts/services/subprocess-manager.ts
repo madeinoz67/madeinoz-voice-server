@@ -43,8 +43,8 @@ export interface SubprocessStatus {
  * Default configuration
  */
 const DEFAULT_CONFIG: SubprocessManagerConfig = {
-  command: "python3",
-  args: ["src/py/qwen_tts_server.py"],
+  command: "uv",
+  args: ["run", "python3", "src/py/qwen_tts_server.py"],
   healthCheckPort: 7860,
   healthCheckPath: "/health",
   startupTimeout: 30000, // 30 seconds
