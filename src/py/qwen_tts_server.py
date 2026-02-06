@@ -32,11 +32,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 # Import TTS libraries
-# Note: Using pyspch for basic TTS as fallback if Qwen model unavailable
-# For production with Qwen3-TTS, uncomment the following:
-# from transformers import AutoModelForTextToSpeech, AutoProcessor
-# import torch
-# import scipy.io.wavfile as wavfile
+from transformers import AutoModelForTextToSpeech, AutoProcessor
+import torch
+import scipy.io.wavfile as wavfile
 
 try:
     import pyttsx3
@@ -117,26 +115,30 @@ def load_qwen_model():
     # Check for cached model in HuggingFace cache directory
     cached_model_path = os.path.join(cache_dir, f"models--{model_id.replace('/', '--')}")
 
-    if model_path and os.path.exists(model_path):
-        logger.info(f"Loading Qwen3-TTS model from custom path: {model_path}")
-        # TODO: Implement actual Qwen3-TTS loading when available
-        # model = AutoModelForTextToSpeech.from_pretrained(model_path)
-        # processor = AutoProcessor.from_pretrained(model_path)
-        MODEL_LOADED = True
-    elif os.path.exists(cached_model_path):
-        logger.info(f"✓ Found cached model in HuggingFace cache: {cached_model_path}")
-        logger.info("  Using cached model (no download required)")
-        # TODO: Implement actual Qwen3-TTS loading from cache when available
-        # model = AutoModelForTextToSpeech.from_pretrained(model_id)
-        # processor = AutoProcessor.from_pretrained(model_id)
-        MODEL_LOADED = True
-    else:
-        logger.info(f"✗ Model not found in cache: {cached_model_path}")
-        logger.info(f"  Would download model '{model_id}' on first use")
-        logger.info("  Model will be cached to: ~/.cache/huggingface/hub/")
-        logger.info("  Current model size: ~3.4GB")
-        logger.info("  Note: Using VoiceDesign model for agent personality voices")
-        logger.info("  For now, using system TTS (pyttsx3) fallback")
+    try:
+        if model_path and os.path.exists(model_path):
+            logger.info(f"Loading Qwen3-TTS model from custom path: {model_path}")
+            model = AutoModelForTextToSpeech.from_pretrained(model_path)
+            processor = AutoProcessor.from_pretrained(model_path)
+            MODEL_LOADED = True
+        elif os.path.exists(cached_model_path):
+            logger.info(f"✓ Found cached model in HuggingFace cache: {cached_model_path}")
+            logger.info("  Using cached model (no download required)")
+            model = AutoModelForTextToSpeech.from_pretrained(model_id)
+            processor = AutoProcessor.from_pretrained(model_id)
+            MODEL_LOADED = True
+        else:
+            logger.info(f"✗ Model not found in cache: {cached_model_path}")
+            logger.info(f"  Downloading model '{model_id}' on first use...")
+            logger.info("  Model will be cached to: ~/.cache/huggingface/hub/")
+            logger.info("  Model size: ~3.4GB - this may take a while...")
+            model = AutoModelForTextToSpeech.from_pretrained(model_id)
+            processor = AutoProcessor.from_pretrained(model_id)
+            MODEL_LOADED = True
+            logger.info("✓ Model downloaded and loaded successfully")
+    except Exception as e:
+        logger.error(f"Failed to load Qwen3-TTS model: {e}")
+        logger.info("  Falling back to system TTS (pyttsx3)")
         MODEL_LOADED = HAS_PYTTSX3
 
 
@@ -202,12 +204,45 @@ def synthesize_with_qwen(text: str, voice: str, prosody: str, speed: float) -> t
     Synthesize speech using Qwen3-TTS model
     Returns: (audio_data, sample_rate, duration_ms)
     """
-    # TODO: implement prosody handling
-    _ = prosody  # noqa: ARG001 - will be implemented when Qwen model is integrated
-    # TODO: Implement actual Qwen3-TTS synthesis when model is available
-    # For now, fall back to system TTS
-    logger.warning("Qwen3-TTS not fully implemented, using system TTS")
-    return synthesize_with_system_tts(text, voice, speed)
+    global model, processor
+
+    if model is None or processor is None:
+        logger.warning("Qwen model not loaded, falling back to system TTS")
+        return synthesize_with_system_tts(text, voice, speed)
+
+    try:
+        logger.info(f"Synthesizing with Qwen3-TTS: text='{text[:30]}...', voice={voice}")
+
+        # Prepare inputs
+        inputs = processor(text=text, return_tensors="pt")
+
+        # Generate audio
+        with torch.no_grad():
+            output = model.generate(**inputs, speaker_prompt=voice)
+
+        # Convert to WAV format
+        audio_array = output.cpu().numpy()
+        sample_rate = model.config.sampling_rate
+        duration_ms = int(len(audio_array) / sample_rate * 1000)
+
+        # Save to temporary file
+        temp_file = "/tmp/qwen_tts_output.wav"
+        wavfile.write(temp_file, sample_rate, audio_array)
+
+        # Read back as bytes
+        with open(temp_file, 'rb') as f:
+            audio_data = f.read()
+
+        # Clean up
+        os.remove(temp_file)
+
+        logger.info(f"Qwen3-TTS synthesis complete: {duration_ms}ms audio")
+        return audio_data, sample_rate, duration_ms
+
+    except Exception as e:
+        logger.error(f"Qwen3-TTS synthesis failed: {e}")
+        logger.info("Falling back to system TTS")
+        return synthesize_with_system_tts(text, voice, speed)
 
 
 @asynccontextmanager

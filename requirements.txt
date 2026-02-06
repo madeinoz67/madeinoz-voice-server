@@ -1,0 +1,12 @@
+# Qwen3-TTS Voice Server Dependencies
+
+# Core server
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pyttsx3>=2.90
+
+# Qwen3-TTS Model (uncomment when ready to use actual model)
+# Note: These packages are large (~2GB total download)
+torch>=2.0.0
+transformers>=4.35.0
+scipy>=1.11.0
