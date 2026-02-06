@@ -100,6 +100,72 @@ async function displayMacOSNotification(title: string, message: string): Promise
 }
 
 /**
+ * Play streaming audio - pipes chunks directly to ffplay for true real-time playback
+ * Format: raw PCM, 16-bit signed little-endian, 24kHz, mono
+ */
+async function playStreamingAudio(
+  audioStream: AsyncGenerator<Uint8Array>,
+  volume: number = 1.0
+): Promise<void> {
+  // Use ffplay for true streaming audio playback
+  // ffplay reads from stdin and plays as data arrives
+  const proc = Bun.spawn(["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet",
+    "-f", "s16le",           // PCM signed 16-bit little-endian
+    "-ar", "24000",           // Sample rate 24kHz
+    "-ac", "1",               // Mono
+    "-i", "pipe:0",           // Read from stdin
+    "-volume", volume.toString(),  // Volume (0.0-1.0, ffplay handles this)
+    "-"], {
+    stdout: "pipe",
+    stderr: "pipe",
+    stdin: "pipe",  // We'll write to stdin
+  });
+
+  const writer = proc.stdin;
+  if (!writer) {
+    throw new Error("Failed to open ffplay stdin");
+  }
+
+  try {
+    let firstChunk = true;
+    let chunkCount = 0;
+    let totalBytes = 0;
+    const startTime = Date.now();
+
+    // Stream each chunk directly to ffplay as it arrives
+    for await (const chunk of audioStream) {
+      totalBytes += chunk.length;
+      chunkCount++;
+
+      // Write chunk directly to ffplay's stdin
+      writer.write(chunk);
+      writer.flush();
+
+      // Log first chunk arrival
+      if (firstChunk) {
+        const elapsed = Date.now() - startTime;
+        logger.info(`✓ First audio chunk received after ${elapsed}ms, playback started`);
+        firstChunk = false;
+      }
+    }
+
+    // Close stdin to signal end of stream
+    writer.end();
+
+    // Wait for ffplay to finish playing
+    await proc.exited;
+
+    const duration = Date.now() - startTime;
+    logger.info(`✓ Streaming playback complete: ${chunkCount} chunks, ${totalBytes} bytes in ${duration}ms`);
+
+  } catch (error) {
+    // Clean up process if error occurs
+    proc.kill();
+    throw error;
+  }
+}
+
+/**
  * Play audio file using afplay
  */
 async function playAudioFile(filePath: string, volume: number = 1.0): Promise<void> {
@@ -221,8 +287,8 @@ async function processTTS(
   });
 
   try {
-    // Try Qwen TTS via subprocess
-    const { filePath } = await ttsClient.synthesizeToFile({
+    // Try Qwen TTS via subprocess with streaming
+    const audioStream = ttsClient.synthesizeStream({
       text: processedText,
       voice: voiceId,
       prosody_instruction: prosodyInstruction,
@@ -230,7 +296,7 @@ async function processTTS(
       output_format: "wav",
     });
 
-    await playAudioFile(filePath, volume);
+    await playStreamingAudio(audioStream, volume);
   } catch (error) {
     logger.warn("TTS synthesis failed, falling back to macOS say", {
       error: (error as Error).message,

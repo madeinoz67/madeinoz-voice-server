@@ -21,13 +21,17 @@ Architecture Attribution:
     project, not copied from any source.
 """
 
+import asyncio
 import base64
+import inspect
 import logging
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -55,6 +59,9 @@ logger = logging.getLogger(__name__)
 model = None  # Qwen3TTSModel instance
 MODEL_NAME = "Qwen3-TTS-VoiceDesign"
 MODEL_LOADED = False
+
+# Thread pool for running blocking TTS operations without blocking async event loop
+tts_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="tts_worker")
 
 # Built-in voice names mapped to pyttsx3 voice IDs
 VOICE_MAP = {
@@ -221,6 +228,10 @@ def synthesize_with_qwen(text: str, voice: str, prosody: str, speed: float) -> t
     try:
         logger.info(f"Synthesizing with Qwen3-TTS: text='{text[:30]}...', voice={voice}")
 
+        # Log actual device being used for inference
+        model_device = getattr(model.model, 'device', getattr(model, 'device', 'unknown'))
+        logger.info(f"Model device for inference: {model_device}")
+
         # Try to infer the model type and use the appropriate method
         # Base model uses generate(), VoiceDesign uses generate_voice_design()
         if hasattr(model, 'generate_voice_design'):
@@ -344,17 +355,19 @@ async def synthesize(request: TTSRequest):
     start_time = time.time()
 
     try:
-        # Choose synthesis method
+        # Run blocking TTS synthesis in thread pool to avoid blocking async event loop
         if MODEL_LOADED:
-            audio_data, sample_rate, duration_ms = synthesize_with_qwen(
+            audio_data, sample_rate, duration_ms = await asyncio.to_thread(
+                synthesize_with_qwen,
                 request.text,
                 request.voice,
                 request.prosody_instruction,
                 request.speed
             )
         else:
-            # Fallback to system TTS
-            audio_data, sample_rate, duration_ms = synthesize_with_system_tts(
+            # Fallback to system TTS (also blocking, run in executor)
+            audio_data, sample_rate, duration_ms = await asyncio.to_thread(
+                synthesize_with_system_tts,
                 request.text,
                 request.voice,
                 request.speed
@@ -376,6 +389,130 @@ async def synthesize(request: TTSRequest):
     except Exception as e:
         logger.error(f"Synthesis error: {e}")
         raise HTTPException(status_code=500, detail=f"Synthesis failed: {str(e)}") from None
+
+
+async def stream_qwen_audio_generator(text: str, voice: str, prosody: str, speed: float):
+    """
+    Generator that yields audio chunks immediately as they're generated.
+    Uses raw PCM streaming for true real-time audio delivery.
+    """
+    global model, start_time
+
+    if not model:
+        raise HTTPException(status_code=500, detail="Model not loaded")
+
+    try:
+        logger.info(f"Streaming synthesis: text='{text[:30]}...', voice={voice}")
+
+        # Log device being used
+        model_device = getattr(model.model, 'device', getattr(model, 'device', 'unknown'))
+        logger.info(f"Streaming with device: {model_device}")
+
+        # Prepare voice instruction
+        voice_instruct = prosody if prosody and prosody != "speak normally" else "Speak in a natural, clear voice"
+
+        # Run streaming in thread pool (blocking operation)
+        def get_stream():
+            if hasattr(model, 'generate_voice_design'):
+                return model.generate_voice_design(
+                    text=text,
+                    language="English",
+                    speaker=voice,
+                    instruct=voice_instruct,
+                    stream=True  # Enable streaming
+                )
+            elif hasattr(model, 'generate'):
+                return model.generate(
+                    text=text,
+                    language="English",
+                    speaker=voice,
+                    stream=True  # Enable streaming
+                )
+            else:
+                raise AttributeError("Model has no known generation method")
+
+        # Get the stream generator
+        stream = await asyncio.to_thread(get_stream)
+
+        # Stream each chunk immediately as it arrives
+        chunk_count = 0
+        first_chunk_time = None
+        total_samples = 0
+        sample_rate = 24000  # Qwen3-TTS standard sample rate
+
+        for audio_chunk in stream:
+            if first_chunk_time is None:
+                first_chunk_time = time.time()
+                logger.info(f"✓ First audio chunk received after {(first_chunk_time - start_time)*1000:.0f}ms")
+
+            # Convert to numpy and format
+            audio_array = audio_chunk.cpu().numpy() if torch.is_tensor(audio_chunk) else np.array(audio_chunk)
+            if audio_array.ndim > 1:
+                audio_array = audio_array.squeeze()
+
+            # Skip empty chunks
+            if audio_array.size == 0:
+                continue
+
+            # Convert to int16 PCM
+            if audio_array.dtype == np.float32 or audio_array.dtype == np.float16:
+                audio_array = np.clip(audio_array, -1.0, 1.0)
+                audio_array = (audio_array * 32767).astype(np.int16)
+
+            chunk_samples = len(audio_array)
+            total_samples += chunk_samples
+            chunk_count += 1
+
+            # Send this chunk IMMEDIATELY as raw bytes
+            # The client will receive continuous PCM data
+            yield audio_array.tobytes()
+
+            elapsed = (time.time() - start_time) * 1000
+            logger.debug(f"Sent chunk {chunk_count}: {chunk_samples} samples at {elapsed:.0f}ms")
+
+        elapsed = (time.time() - start_time) * 1000
+        duration_ms = int(total_samples / sample_rate * 1000)
+        logger.info(f"✓ Streaming complete: {chunk_count} chunks, {duration_ms}ms audio in {elapsed:.0f}ms")
+
+        if chunk_count == 0:
+            raise HTTPException(status_code=500, detail="No audio data received from model")
+
+    except Exception as e:
+        logger.error(f"Streaming error: {e}")
+        raise
+
+
+@app.post("/synthesize_stream")
+async def synthesize_stream(request: TTSRequest):
+    """
+    Stream synthesized speech in real-time
+
+    Returns audio chunks as they're generated, enabling playback to start
+    after ~1.5 seconds instead of waiting for full generation (~15 seconds).
+    """
+    global start_time
+    start_time = time.time()
+
+    if not request.text or not request.text.strip():
+        raise HTTPException(status_code=400, detail="Text is required")
+
+    return StreamingResponse(
+        stream_qwen_audio_generator(
+            request.text,
+            request.voice,
+            request.prosody_instruction,
+            request.speed
+        ),
+        media_type="audio/pcm",
+        headers={
+            "Content-Disposition": "attachment; filename=speech.pcm",
+            "Cache-Control": "no-cache",
+            "X-Audio-Format": "pcm",
+            "X-Sample-Rate": "24000",
+            "X-Channels": "1",
+            "X-Bits-Per-Sample": "16",
+        }
+    )
 
 
 @app.post("/clone-voice", response_model=VoiceCloneResponse)

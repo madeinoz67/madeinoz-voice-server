@@ -150,6 +150,62 @@ export class TTSClient {
   }
 
   /**
+   * Stream TTS request - returns audio as it's generated
+   * Yields audio chunks for real-time playback
+   */
+  async *synthesizeStream(request: TTSRequest): AsyncGenerator<Uint8Array> {
+    const url = `${this.config.baseUrl}/synthesize_stream`;
+
+    logger.debug("Starting TTS stream", {
+      text: request.text.substring(0, 50),
+      voice: request.voice,
+    });
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`TTS server returned ${response.status}: ${errorText}`);
+      }
+
+      // Stream the audio chunks
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("No response body reader available");
+      }
+
+      logger.debug("Receiving audio stream...");
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        logger.debug(`Received audio chunk: ${value.length} bytes`);
+        yield value;
+      }
+
+      logger.debug("Audio stream complete");
+
+    } catch (error) {
+      logger.error("TTS stream error", { error: (error as Error).message });
+      throw error;
+    }
+  }
+
+  /**
    * Update configuration
    */
   setConfig(newConfig: Partial<TTSClientConfig>): void {
