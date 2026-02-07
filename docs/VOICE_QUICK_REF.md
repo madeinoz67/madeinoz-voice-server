@@ -145,8 +145,13 @@ Find the voice you want, then use its ID number:
 ## Popular Combinations
 
 **Tech Assistant:** ID 12 (am_michael) - Professional, trustworthy
+
 **Creative Muse:** ID 8 (af_nova) - Artistic, dreamy
+
 **Study Buddy:** ID 4 (af_sky) - Bright, energetic
+
 **News Reader:** ID 21 (bf_emma) - Sophisticated BBC-style
+
 **Game Character:** ID 13 (am_adam) - Youthful, fun
+
 **Meditation Guide:** ID 11 (af_river) - Calm, flowing
