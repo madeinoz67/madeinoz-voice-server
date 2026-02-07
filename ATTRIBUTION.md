@@ -1,45 +1,54 @@
 # Attributions
 
-## Qwen TTS Voice Server
+## madeinoz-voice-server
 
 This project incorporates open-source components and was inspired by
 existing work in the text-to-speech community.
 
 ### Direct Dependencies
 
-- **Qwen3-TTS** by Alibaba Qwen Team
-  - License: Apache 2.0
-  - Repository: https://github.com/QwenLM/Qwen3-TTS
-  - Used for: Text-to-speech model (when available)
-
-- **FastAPI** by Sebastián Ramírez
+- **MLX-audio** by MLX Community
   - License: MIT
-  - Repository: https://github.com/tiangolo/fastapi
-  - Used for: Python web server framework
+  - Repository: https://github.com/ml-explore/mlx-audio
+  - Used for: Fast local TTS with Kokoro-82M model (Apple Silicon)
 
-- **pyttsx3** by Natesh MB
-  - License: LGPLv3
-  - Repository: https://github.com/nateshmbhat/pyttsx3
-  - Used for: macOS TTS fallback
+- **Kokoro-82M** by LMSTUDIO
+  - License: Apache 2.0
+  - Repository: https://huggingface.co/mlx-community/Kokoro-82M-bf16
+  - Used for: Text-to-speech model with 41 built-in voices
+
+- **Bun** by Jarred Sumner
+  - License: MIT
+  - Repository: https://github.com/oven-sh/bun
+  - Used for: TypeScript runtime and server framework
+
+### Historical References (Previously Used)
+
+The following components were used in earlier versions but have been removed:
+
+- **Qwen3-TTS** by Alibaba Qwen Team (Apache 2.0) - Previously used for custom voice cloning
+- **FastAPI** by Sebastián Ramírez (MIT) - Previously used for Python web server
+- **pyttsx3** by Natesh MB (LGPLv3) - Previously used for macOS TTS fallback
 
 ### Architectural Inspiration
 
 **ValyrianTech/Qwen3-TTS_server**
 - Repository: https://github.com/ValyrianTech/Qwen3-TTS_server
 - License: Apache 2.0
-- Relationship: Architectural inspiration only
+- Relationship: Historical architectural inspiration only
 
-Our implementation was **inspired by** the ValyrianTech Qwen3-TTS_server
+Our initial implementation was **inspired by** the ValyrianTech Qwen3-TTS_server
 reference implementation for:
 - FastAPI server structure patterns
 - TTS inference workflow design
 - Endpoint organization concepts
 
-**However, our implementation is original code** with significant differences:
-- Different API contract (ElevenLabs-compatible vs custom)
-- Different deployment target (macOS local vs GPU server)
-- Different architecture (TypeScript subprocess host vs standalone)
-- Additional features (pyttsx3 fallback, prosody translation layer)
+**However, our current implementation is original code** with significant differences:
+- MLX-audio backend instead of Qwen TTS
+- TypeScript-only architecture (no Python subprocess)
+- Kokoro-82M with 41 built-in voices
+- ElevenLabs-compatible API for PAI integration
+- Simplified single-backend architecture
 
 No code was copied from ValyrianTech/Qwen3-TTS_server.
 
