@@ -45,3 +45,6 @@ bun run typecheck # Type check only
 - Codanna indexing is enabled for `src/` directory
 - Semantic search is available for code queries
 - Documentation is built with MkDocs Material theme
+
+## Recent Changes
+- 001-qwen-tts: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]

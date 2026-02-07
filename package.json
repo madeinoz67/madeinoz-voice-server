@@ -1,23 +1,26 @@
 {
   "name": "madeinoz-voice-server",
   "version": "0.1.0",
-  "description": "TTS service using Qwen TTS model",
+  "description": "PAI voice server using MLX-audio Kokoro TTS",
   "type": "module",
   "scripts": {
-    "dev": "bun run src/index.ts",
-    "build": "bun build src/index.ts --outdir dist",
+    "dev": "NODE_ENV=development bun run src/ts/server.ts",
+    "start": "bun run dist/server.js",
     "test": "bun test",
-    "lint": "eslint src --ext .ts",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@huggingface/inference": "^2.8.0"
+    "lint": "eslint src/ts",
+    "lint:fix": "eslint src/ts --fix",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
     "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "bun-types": "latest",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3"
+    "eslint": "^9.0.0",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.0.0"
   },
   "engines": {
     "bun": ">=1.0.0"
