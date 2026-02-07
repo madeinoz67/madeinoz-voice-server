@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MadeinozVoiceServer < Formula
-  desc "Local-first TTS voice server using Kokoro-82M and Qwen TTS models"
+  desc "Local-first TTS voice server using MLX-audio with Kokoro-82M model"
   homepage "https://github.com/madeinoz67/madeinoz-voice-server"
   version "0.1.0"
   license "MIT"

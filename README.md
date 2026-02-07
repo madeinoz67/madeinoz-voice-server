@@ -47,7 +47,7 @@ brew install madeinoz67/tap/madeinoz-voice-server
 uv tool install mlx-audio
 
 # Start as a service
-brew services start madeinoz67/tap/madeinoz-voice-server
+brew services start voice-server
 
 # Or run directly
 voice-server
