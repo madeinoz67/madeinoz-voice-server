@@ -7,7 +7,6 @@ import type { TTSRequest, TTSResponse } from "@/models/tts.js";
 import { logger } from "@/utils/logger.js";
 import { writeFileSync, unlinkSync, existsSync } from "fs";
 import { tmpdir } from "os";
-import { $ } from "bun";
 import { getVoiceLoader } from "@/services/voice-loader.js";
 
 /**

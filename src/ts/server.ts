@@ -126,7 +126,7 @@ async function playStreamingAudio(
 
   try {
     let firstChunk = true;
-    let chunkCount = 0;
+    const chunkCount = 0;
     let totalBytes = 0;
     const startTime = Date.now();
 
@@ -158,7 +158,7 @@ async function playStreamingAudio(
     // Convert PCM to WAV using ffmpeg
     const sampleRate = 24000;
     const channels = 1;
-    const bitsPerSample = 16;
+    // PCM signed 16-bit little-endian (s16le)
 
     logger.info(`Converting PCM to WAV and playing...`);
 
@@ -203,6 +203,7 @@ async function playStreamingAudio(
 /**
  * Play audio file using afplay
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function playAudioFile(filePath: string, volume: number = 1.0): Promise<void> {
   try {
     // afplay volume is 0-255, convert from 0.0-1.0
@@ -307,7 +308,7 @@ async function processTTSWithMLX(
   text: string,
   voiceId: string,
   prosody: ProsodySettings,
-  volume: number
+  _volume: number
 ): Promise<void> {
   const mlxClient = getMLXTTSClient(serverState.config.mlxConfig);
   const prosodyInstruction = translateProsody(prosody);
