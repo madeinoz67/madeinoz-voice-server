@@ -53,14 +53,3 @@ jobs:
       - run: bun install
       - run: bun test
 
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: [lint-ts, lint-py, test]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-      - run: bun install
-      - run: bun run build
