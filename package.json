@@ -13,7 +13,8 @@
     "lint:fix": "eslint src/ts --fix",
     "lint:py": "uv run ruff check src/py tests/py",
     "lint:py:fix": "uv run ruff check --fix src/py tests/py",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
