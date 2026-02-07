@@ -1,5 +1,5 @@
 site_name: madeinoz-voice-server
-site_description: TTS service using Qwen TTS model
+site_description: TTS service using MLX-audio Kokoro TTS
 site_author: madeinoz
 docs_dir: docs
 site_dir: site
@@ -43,7 +43,6 @@ repo_url: https://github.com/madeinoz/madeinoz-voice-server
 nav:
   - Home: index.md
   - API: api.md
-  - Development: development.md
 
 markdown_extensions:
   - pymdownx.highlight:
