@@ -33,6 +33,7 @@
 
 [Gates determined based on constitution file]
 - **Principle VI (Codanna Workflow)**: Verify all TypeScript files in `src/` are indexed, semantic search is available for code navigation, and impact analysis is performed before refactoring
+- **Principle VII (Documentation Standards)**: Verify all documentation uses valid Markdown with proper heading hierarchy, code blocks specify language for syntax highlighting, and documentation is kept in sync with code changes
 
 ## Project Structure
 

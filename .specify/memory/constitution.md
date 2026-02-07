@@ -1,21 +1,26 @@
 <!--
 ## Sync Impact Report
 
-**Version Change**: 1.0.0 → 1.1.0
+**Version Change**: 1.1.0 → 1.2.0
 
-**Modified Principles**: None (new principle added)
+**Modified Principles**:
+- Principle II: Updated "Qwen3-TTS" references to "MLX-audio Kokoro-82M"
+- Principle III: Updated fallback strategy to reflect MLX-only (no Python subprocess)
 
 **Added Sections**:
-- Principle VI: Codanna Workflow (NEW)
+- Principle VII: Documentation Standards (NEW)
 
 **Removed Sections**: None
 
 **Templates Requiring Updates**:
 - ✅ Constitution updated (this file)
-- ✅ Plan template: Codanna constitution check added to `.specify/templates/plan-template.md`
-- ✅ Tasks template: Codanna indexing tasks added to `.specify/templates/tasks-template.md`
+- ✅ Plan template: Documentation compliance check to be added to `.specify/templates/plan-template.md`
+- ✅ Tasks template: Documentation tasks to be added to `.specify/templates/tasks-template.md`
 
-**Follow-up TODOs**: None
+**Follow-up TODOs**:
+- Update plan template to include documentation compliance check
+- Update tasks template to include documentation verification tasks
+- Audit existing documentation for compliance with new standards
 
 **Backwards Compatibility**: YES - No breaking changes
 -->
@@ -32,13 +37,13 @@ The server MUST be a drop-in replacement for the ElevenLabs-based PAI voice serv
 
 ### II. Local-First Architecture
 
-The server MUST operate without external API dependencies for core TTS functionality. All voice synthesis MUST be performed locally using the Qwen3-TTS model. Network requests to external services (HuggingFace, ElevenLabs, etc.) are PROHIBITED for primary TTS operations. Configuration files, voice references, and cached audio MUST reside on the local filesystem.
+The server MUST operate without external API dependencies for core TTS functionality. All voice synthesis MUST be performed locally using the MLX-audio Kokoro-82M model. Network requests to external services (HuggingFace, ElevenLabs, etc.) are PROHIBITED for primary TTS operations. Configuration files, voice references, and cached audio MUST reside on the local filesystem.
 
 **Rationale**: Local-first ensures privacy, eliminates ongoing costs, provides consistent latency, and removes single points of failure. The system must remain functional during network outages.
 
 ### III. Graceful Degradation
 
-The server MUST implement a three-tier fallback strategy: (1) Qwen TTS model for primary synthesis, (2) macOS `say` command when Qwen is unavailable, (3) Silent failure with appropriate error logging when both fail. Each fallback tier MUST activate within 5 seconds of the previous tier failing. Users MUST be notified via HTTP status codes and log messages when fallback occurs.
+The server MUST implement a three-tier fallback strategy: (1) MLX-audio Kokoro-82M model for primary synthesis, (2) macOS `say` command when MLX-audio is unavailable, (3) Silent failure with appropriate error logging when both fail. Each fallback tier MUST activate within 5 seconds of the previous tier failing. Users MUST be notified via HTTP status codes and log messages when fallback occurs.
 
 **Rationale**: Voice notifications are helpful but not critical. The system should always provide the best available experience rather than failing completely. macOS `say` ensures basic functionality even when the TTS model is unavailable.
 
@@ -77,6 +82,52 @@ The project MUST maintain an active Codanna index for code intelligence and sema
 - When deprecating features, use impact analysis to find all usage sites
 
 **Rationale**: Codanna transforms code from static text into queryable knowledge. Semantic search enables finding code by intent rather than exact names. Impact analysis prevents subtle bugs from hidden dependencies. Symbol lookup ensures consistent naming and avoids shadowing. These capabilities are essential for maintaining code quality in a growing codebase.
+
+### VII. Documentation Standards
+
+All project documentation MUST be friendly to both human readers and AI systems. Documentation serves dual purposes: guiding human developers and enabling AI agents to understand and work with the codebase effectively.
+
+**Markdown Formatting Requirements:**
+- ALL documentation files MUST use valid Markdown syntax
+- Headings MUST follow proper hierarchy (single `#` for title, `##` for sections, etc.)
+- Code blocks MUST specify language for syntax highlighting (e.g., ```typescript, ```bash)
+- Tables MUST use proper pipe syntax with aligned columns for readability
+- NO trailing whitespace on any line
+- Line length SHOULD be limited to 100 characters for readability
+- Lists MUST use consistent bullet style (`-` preferred over `*`)
+
+**Human Readability Requirements:**
+- Documentation MUST have clear, scannable heading structure
+- Section titles SHOULD be descriptive and action-oriented
+- Complex concepts MUST include examples
+- Code examples MUST be executable and tested
+- Diagrams and visual aids SHOULD be used where they clarify complex flows
+- Technical jargon MUST be explained on first use
+- Documentation MUST be kept in sync with code changes
+
+**AI Readability Requirements:**
+- Documentation MUST use semantic HTML-compatible structure when rendered
+- Code blocks MUST have language tags for proper parsing by AI systems
+- API documentation MUST follow consistent schemas (e.g., OpenAPI/Swagger)
+- Configuration file formats MUST be documented with machine-readable schemas where possible
+- Documentation files SHOULD be indexed by Codanna for semantic search
+- Heading hierarchy MUST reflect logical document structure (not skip levels)
+
+**Documentation Synchronization:**
+- Code changes MUST include corresponding documentation updates
+- API changes MUST update relevant documentation before merge
+- Deprecation notices MUST be documented in code comments and user-facing docs
+- Documentation drift (code/docs mismatch) MUST be addressed immediately
+
+**API Documentation Standards:**
+- ALL public endpoints MUST have OpenAPI/Swagger documentation
+- Request/response schemas MUST be explicitly documented
+- Error codes MUST be documented with causes and resolutions
+- Authentication requirements MUST be clearly stated
+- Rate limits MUST be documented where applicable
+- Examples MUST be provided for all non-trivial endpoints
+
+**Rationale**: Dual-optimized documentation ensures both human developers and AI assistants can effectively work with the codebase. Humans need clear, scannable structure with examples. AI systems need semantic structure and consistent schemas for parsing. When documentation serves both audiences, it accelerates development, reduces onboarding time, and enables AI agents to provide more accurate assistance.
 
 ## Development Workflow
 
@@ -138,6 +189,7 @@ The project MUST maintain an active Codanna index for code intelligence and sema
 - Fallback activation rate: < 5% under normal conditions
 
 ### Documentation Standards
+- See Principle VII for comprehensive documentation requirements
 - ALL public endpoints MUST have OpenAPI/Swagger documentation
 - Configuration file formats MUST be documented with examples
 - Error codes MUST be documented with causes and resolutions
@@ -168,4 +220,4 @@ This constitution supersedes all other project practices and guidelines. In case
 
 ---
 
-**Version**: 1.1.0 | **Ratified**: 2026-02-06 | **Last Amended**: 2026-02-06
+**Version**: 1.2.0 | **Ratified**: 2026-02-06 | **Last Amended**: 2026-02-07
