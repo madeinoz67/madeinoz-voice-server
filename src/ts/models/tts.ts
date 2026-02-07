@@ -1,15 +1,15 @@
 /**
  * TTS request/response types
- * Internal communication with Qwen TTS service
+ * Internal communication with TTS service (MLX-audio / Kokoro)
  */
 
 /**
- * Internal request to Qwen TTS inference service
+ * Internal TTS request
  */
 export interface TTSRequest {
   /** Sanitized text to synthesize */
   text: string;
-  /** Qwen voice identifier or reference label */
+  /** Numeric voice ID (1-54 for Kokoro) or voice identifier */
   voice: string;
   /** Natural language prosody description */
   prosody_instruction: string;
@@ -20,7 +20,7 @@ export interface TTSRequest {
 }
 
 /**
- * Response from Qwen TTS inference service
+ * TTS response
  */
 export interface TTSResponse {
   /** Raw audio bytes (base64 encoded in JSON) */
@@ -30,7 +30,7 @@ export interface TTSResponse {
   /** Audio sample rate (typically 24000 Hz) */
   sample_rate: number;
   /** Audio format */
-  format: "wav" | "mp3";
+  format: "wav" | "mp3" | "streaming";
 }
 
 /**

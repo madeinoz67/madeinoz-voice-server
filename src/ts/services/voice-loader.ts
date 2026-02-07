@@ -1,10 +1,12 @@
 /**
  * Voice Configuration Loader
  * Parses AGENTPERSONALITIES.md and caches voice configurations
+ * Supports numeric voice IDs (1-54) mapped to Kokoro voices
  */
 
 import type { VoiceConfig } from "@/models/voice-config.js";
 import { logger } from "@/utils/logger.js";
+import { getKokoroVoice, getVoiceInfo, type KokoroVoice } from "@/constants/KOKORO_VOICES.js";
 
 /**
  * Voice registry entry from AGENTPERSONALITIES.md
@@ -46,6 +48,7 @@ interface VoiceCache {
 /**
  * Voice loader service
  * Loads and caches voice configurations from AGENTPERSONALITIES.md
+ * Supports numeric voice IDs (1-54) for Kokoro voices
  */
 class VoiceLoaderService {
   private cache: VoiceCache | null = null;
@@ -56,6 +59,33 @@ class VoiceLoaderService {
     // Path to AGENTPERSONALITIES.md in PAI skills
     this.personalitiesPath = `${process.env.HOME}/.claude/skills/Agents/AgentPersonalities.md`;
     this.cachePath = `${process.env.HOME}/.claude/skills/Agents/Data/Traits.yaml`;
+  }
+
+  /**
+   * Resolve voice_id to Kokoro voice name
+   * @param voiceId - Numeric voice ID (1-54) or string identifier
+   * @returns Kokoro voice preset name (e.g., "af_heart")
+   */
+  resolveKokoroVoice(voiceId: string): string {
+    return getKokoroVoice(voiceId);
+  }
+
+  /**
+   * Get voice information for a numeric ID
+   * @param voiceId - Numeric voice ID (1-54)
+   * @returns Voice info or undefined
+   */
+  getVoiceInfo(voiceId: string): KokoroVoice | undefined {
+    return getVoiceInfo(voiceId);
+  }
+
+  /**
+   * Get all available Kokoro voices
+   * @returns Array of all Kokoro voice information
+   */
+  getAllKokoroVoices(): readonly KokoroVoice[] {
+    const { KOKORO_VOICES } = require("@/constants/KOKORO_VOICES.js");
+    return KOKORO_VOICES;
   }
 
   /**

@@ -1,14 +1,15 @@
 # madeinoz-voice-server
 
-A local-first Text-to-Speech (TTS) voice server using Qwen TTS model. Drop-in replacement for ElevenLabs with zero API costs, rate limits, or network dependencies.
+A local-first Text-to-Speech (TTS) voice server using Kokoro-82M and Qwen TTS models. Drop-in replacement for ElevenLabs with zero API costs, rate limits, or network dependencies.
 
 ## Features
 
 - 🎙️ **Local TTS** - All audio generation happens on your machine
 - 💰 **Cost-Free** - No per-character or per-minute charges
 - 🔒 **Private** - No data sent to external services
-- 🔊 **Multiple Voices** - Built-in voices with custom voice upload support
-- ⚡ **Fast** - Sub-3 second response times
+- 🔊 **41 Built-in Voices** - Numeric voice IDs for easy configuration
+- ⚡ **Fast Streaming** - Smooth real-time audio playback (RTF ~1.0x)
+- 🌍 **Multi-language** - English, British, Japanese, Chinese voices
 - 📱 **macOS Integration** - Native notifications and audio playback
 
 ## Quick Start
@@ -17,15 +18,38 @@ A local-first Text-to-Speech (TTS) voice server using Qwen TTS model. Drop-in re
 # Install dependencies
 bun install
 
-# Install Python dependencies (for TTS subprocess)
-uv pip install -r requirements.txt
+# Install MLX-audio (for Kokoro TTS)
+uv tool install mlx-audio
 
-# Run development server
-PORT=8889 bun run dev
+# Run development server with Kokoro backend
+TTS_BACKEND=mlx PORT=8889 bun run dev
 
 # Test the server
 curl http://localhost:8889/health
 ```
+
+## Voice Configuration
+
+The server uses **numeric voice IDs** (1-41) for easy configuration:
+
+```bash
+# Test voice ID 1 (warm, friendly)
+curl -X POST http://localhost:8889/notify \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello!", "voice_id": "1"}'
+
+# Test voice ID 12 (professional male)
+curl -X POST http://localhost:8889/notify \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello!", "voice_id": "12"}'
+
+# Test voice ID 21 (sophisticated British)
+curl -X POST http://localhost:8889/notify \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello!", "voice_id": "21"}'
+```
+
+**See [docs/VOICE_GUIDE.md](docs/VOICE_GUIDE.md)** for complete voice documentation.
 
 ## API Endpoints
 
@@ -39,7 +63,7 @@ curl -X POST http://localhost:8889/notify \
   -d '{
     "title": "Hello",
     "message": "This is a test notification",
-    "voice_id": "marrvin",
+    "voice_id": "1",
     "volume": 1.0
   }'
 ```
@@ -49,7 +73,7 @@ curl -X POST http://localhost:8889/notify \
 |-------|------|----------|-------------|
 | `title` | string | ✅ | Notification title |
 | `message` | string | ✅ | Text to speak |
-| `voice_id` | string | ❌ | Voice ID (default: "marrvin") |
+| `voice_id` | string | ❌ | Numeric voice ID 1-41 (default: "1") |
 | `voice_settings` | object | ❌ | Voice configuration |
 | `volume` | number | ❌ | Volume 0.0-1.0 (default: 1.0) |
 | `voice_enabled` | boolean | ❌ | Enable TTS (default: true) |
@@ -88,10 +112,10 @@ curl http://localhost:8889/health
 {
   "status": "healthy",
   "port": 8889,
-  "voice_system": "Qwen TTS",
-  "default_voice_id": "marrvin",
+  "voice_system": "Kokoro-82M",
+  "default_voice_id": "1",
   "model_loaded": true,
-  "available_voices": ["marrvin", "marlin", "daniel"]
+  "available_voices": ["1", "2", "3", "..."]
 }
 ```
 
@@ -134,10 +158,11 @@ curl -X DELETE http://localhost:8889/voices/{voice_id}
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PORT` | 8888 | Server port |
-| `DEFAULT_VOICE_ID` | marrvin | Default voice |
-| `ENABLE_SUBPROCESS` | true | Enable Python TTS subprocess |
+| `TTS_BACKEND` | qwen | TTS backend: `mlx` (Kokoro) or `qwen` |
+| `DEFAULT_VOICE_ID` | 1 | Default voice ID (1-41 for Kokoro) |
+| `MLX_MODEL` | mlx-community/Kokoro-82M-bf16 | MLX model to use |
+| `MLX_STREAMING_INTERVAL` | 0.3 | Streaming chunk size (seconds) |
 | `ENABLE_MACOS_NOTIFICATIONS` | true | Enable macOS notifications |
-| `QWEN_MODEL_PATH` | - | Custom path to Qwen model |
 
 ### Voice Configuration
 
@@ -184,6 +209,9 @@ Add custom pronunciations in `~/.claude/pronunciations.json`:
 ├── scripts/                   # Utility scripts
 │   └── generate-reference.ts  # ElevenLabs reference generator
 ├── docs/
+│   ├── VOICE_GUIDE.md         # User voice configuration guide
+│   ├── VOICE_QUICK_REF.md     # Quick reference for all 41 voices
+│   ├── KOKORO_VOICES.md       # Technical voice documentation
 │   └── MIGRATION.md           # ElevenLabs migration guide
 ├── specs/                     # Feature specifications
 ├── AGENTPERSONALITIES.md      # Voice configurations
@@ -217,12 +245,34 @@ bun run build
 
 ## Available Voices
 
-| Voice ID | Description |
-|----------|-------------|
-| `marrvin` | Default voice, neutral tone |
-| `marlin` | Alternative voice |
-| `daniel` | Alternative voice |
-| Custom | Upload via `/upload-voice` |
+The server includes **41 built-in Kokoro voices** accessible via numeric IDs:
+
+### Popular Voices
+
+| ID | Voice | Description |
+|----|-------|-------------|
+| **1** | af_heart | Warm, friendly (default) |
+| **4** | af_sky | Bright, energetic |
+| **12** | am_michael | Professional male |
+| **13** | am_adam | Youthful, energetic |
+| **21** | bf_emma | Sophisticated British |
+
+### Quick Reference
+
+| Category | IDs | Examples |
+|----------|-----|----------|
+| American Female | 1-11 | af_heart, af_sky, af_bella |
+| American Male | 12-20 | am_michael, am_adam, am_eric |
+| British Female | 21-24 | bf_emma, bf_isabella |
+| British Male | 25-28 | bm_george, bm_lewis |
+| Japanese | 29-33 | jf_alpha, jm_kumo |
+| Chinese | 34-41 | zf_xiaoxiao, zm_yunjian |
+
+**See [docs/VOICE_QUICK_REF.md](docs/VOICE_QUICK_REF.md)** for complete voice listings.
+
+### Custom Voices
+
+You can still upload custom voices via `/upload-voice` (Qwen backend only).
 
 ## Scripts
 

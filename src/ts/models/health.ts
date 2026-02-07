@@ -11,7 +11,7 @@ export type SubprocessStatus = "running" | "stopped" | "crashed";
 /**
  * Voice system type
  */
-export type VoiceSystemType = "Qwen TTS" | "macOS Say" | "Unavailable";
+export type VoiceSystemType = "Qwen TTS" | "MLX-audio" | "macOS Say" | "Unavailable";
 
 /**
  * Overall server health status

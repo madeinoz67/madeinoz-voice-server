@@ -18,6 +18,7 @@ import { logger } from "@/utils/logger.js";
 import { translateProsody, DEFAULT_PROSODY } from "@/services/prosody-translator.js";
 import { applyPronunciations, loadPAIPronunciations } from "@/services/pronunciation.js";
 import { getTTSClient } from "@/services/tts-client.js";
+import { getMLXTTSClient, type MLXTTSClientConfig } from "@/services/mlx-tts-client.js";
 import { getSubprocessManager, type SubprocessStatus } from "@/services/subprocess-manager.js";
 import { getVoiceLoader } from "@/services/voice-loader.js";
 import { saveVoice, listVoices, deleteVoice, getVoice as getStoredVoice } from "@/services/voice-storage.js";
@@ -35,6 +36,10 @@ interface ServerConfig {
   defaultVoiceId: string;
   enableSubprocess: boolean;
   enableMacOSNotifications: boolean;
+  /** TTS backend: "qwen" (Python server) or "mlx" (MLX-audio CLI) */
+  ttsBackend: "qwen" | "mlx";
+  /** MLX-audio configuration (only used when ttsBackend is "mlx") */
+  mlxConfig?: Partial<MLXTTSClientConfig>;
 }
 
 /**
@@ -46,6 +51,16 @@ const DEFAULT_CONFIG: ServerConfig = {
   defaultVoiceId: process.env.DEFAULT_VOICE_ID || "marrvin",
   enableSubprocess: process.env.ENABLE_SUBPROCESS !== "false",
   enableMacOSNotifications: process.env.ENABLE_MACOS_NOTIFICATIONS !== "false",
+  ttsBackend: (process.env.TTS_BACKEND === "mlx" ? "mlx" : "qwen"),
+  mlxConfig: process.env.TTS_BACKEND === "mlx" ? {
+    // Use Kokoro-82M for smooth streaming (RTF ~1.0x)
+    // Voices resolved via numeric ID (1-54) in voice loader
+    model: process.env.MLX_MODEL || "mlx-community/Kokoro-82M-bf16",
+    instruct: process.env.MLX_INSTRUCT,
+    langCode: "en",
+    speed: 1.0,
+    streamingInterval: parseFloat(process.env.MLX_STREAMING_INTERVAL || "0.3"),
+  } : undefined,
 };
 
 /**
@@ -116,15 +131,11 @@ async function playStreamingAudio(
     const startTime = Date.now();
 
     // Accumulate all chunks to a PCM file
-    const fileHandle = await Bun.file(pcmFile, { create: true, write: true });
-    const writer = fileHandle.writer();
+    const chunks: Uint8Array[] = [];
 
     for await (const chunk of audioStream) {
       totalBytes += chunk.length;
-      chunkCount++;
-
-      await writer.write(chunk);
-      await writer.flush();
+      chunks.push(chunk);
 
       if (firstChunk) {
         const elapsed = Date.now() - startTime;
@@ -133,7 +144,14 @@ async function playStreamingAudio(
       }
     }
 
-    await writer.end();
+    // Write all chunks to PCM file
+    const combined = new Uint8Array(totalBytes);
+    let offset = 0;
+    for (const chunk of chunks) {
+      combined.set(chunk, offset);
+      offset += chunk.length;
+    }
+    await Bun.write(pcmFile, combined);
     const duration = Date.now() - startTime;
     logger.info(`✓ All chunks received: ${chunkCount} chunks, ${totalBytes} bytes in ${duration}ms`);
 
@@ -283,6 +301,49 @@ async function processTTSWithCustomVoice(
 }
 
 /**
+ * Process TTS request with MLX-audio backend
+ */
+async function processTTSWithMLX(
+  text: string,
+  voiceId: string,
+  prosody: ProsodySettings,
+  volume: number
+): Promise<void> {
+  const mlxClient = getMLXTTSClient(serverState.config.mlxConfig);
+  const prosodyInstruction = translateProsody(prosody);
+
+  // Apply pronunciation rules
+  const processedText = applyPronunciations(text);
+
+  logger.info("Processing TTS with MLX-audio streaming", {
+    text: processedText.substring(0, 50),
+    model: serverState.config.mlxConfig?.model,
+  });
+
+  try {
+    // Use streaming mode - MLX-audio plays directly via sounddevice
+    // This provides lower latency and smoother playback
+    await mlxClient.synthesize(
+      {
+        text: processedText,
+        voice: voiceId,
+        prosody_instruction: prosodyInstruction,
+        speed: prosody.speed,
+        output_format: "wav",
+      },
+      true // stream = true
+    ); // Enable streaming
+
+    logger.info("MLX-audio streaming playback complete");
+  } catch (error) {
+    logger.warn("MLX-audio TTS synthesis failed, falling back to macOS say", {
+      error: (error as Error).message,
+    });
+    await fallbackToMacOSSay(text, voiceId);
+  }
+}
+
+/**
  * Process TTS request with fallback chain
  */
 async function processTTS(
@@ -291,34 +352,44 @@ async function processTTS(
   prosody: ProsodySettings,
   volume: number
 ): Promise<void> {
-  const ttsClient = getTTSClient();
-  const prosodyInstruction = translateProsody(prosody);
+  const useMLX = serverState.config.ttsBackend === "mlx";
 
-  // Apply pronunciation rules
-  const processedText = applyPronunciations(text);
+  if (useMLX) {
+    // Use MLX-audio backend (ultra-fast)
+    logger.debug("Using MLX-audio TTS backend");
+    return await processTTSWithMLX(text, voiceId, prosody, volume);
+  } else {
+    // Use Qwen TTS HTTP server backend
+    logger.debug("Using Qwen TTS HTTP backend");
+    const ttsClient = getTTSClient();
+    const prosodyInstruction = translateProsody(prosody);
 
-  logger.info("Processing TTS", {
-    text: processedText.substring(0, 50),
-    voice: voiceId,
-    prosody: prosodyInstruction,
-  });
+    // Apply pronunciation rules
+    const processedText = applyPronunciations(text);
 
-  try {
-    // Try Qwen TTS via subprocess with streaming
-    const audioStream = ttsClient.synthesizeStream({
-      text: processedText,
+    logger.info("Processing TTS", {
+      text: processedText.substring(0, 50),
       voice: voiceId,
-      prosody_instruction: prosodyInstruction,
-      speed: prosody.speed,
-      output_format: "wav",
+      prosody: prosodyInstruction,
     });
 
-    await playStreamingAudio(audioStream, volume);
-  } catch (error) {
-    logger.warn("TTS synthesis failed, falling back to macOS say", {
-      error: (error as Error).message,
-    });
-    await fallbackToMacOSSay(text, voiceId);
+    try {
+      // Try Qwen TTS via subprocess with streaming
+      const audioStream = ttsClient.synthesizeStream({
+        text: processedText,
+        voice: voiceId,
+        prosody_instruction: prosodyInstruction,
+        speed: prosody.speed,
+        output_format: "wav",
+      });
+
+      await playStreamingAudio(audioStream, volume);
+    } catch (error) {
+      logger.warn("TTS synthesis failed, falling back to macOS say", {
+        error: (error as Error).message,
+      });
+      await fallbackToMacOSSay(text, voiceId);
+    }
   }
 }
 
@@ -408,11 +479,24 @@ async function handleHealth(): Promise<HealthStatus> {
   const subprocessManager = getSubprocessManager();
   serverState.subprocessStatus = subprocessManager.getStatus();
 
-  // Determine voice system
+  // Determine voice system based on backend
   let voiceSystem: HealthStatus["voice_system"] = "Unavailable";
   let modelLoaded = false;
 
-  if (serverState.subprocessStatus.state === "running") {
+  if (serverState.config.ttsBackend === "mlx") {
+    // MLX-audio backend
+    try {
+      const mlxClient = getMLXTTSClient(serverState.config.mlxConfig);
+      const healthy = await mlxClient.healthCheck();
+      if (healthy) {
+        voiceSystem = "MLX-audio";
+        modelLoaded = true;
+      }
+    } catch {
+      voiceSystem = "Unavailable";
+    }
+  } else if (serverState.subprocessStatus.state === "running") {
+    // Qwen TTS HTTP backend
     const ttsClient = getTTSClient();
     const health = await ttsClient.getHealthStatus();
     if (health) {
@@ -630,10 +714,31 @@ export async function startServer(config: Partial<ServerConfig> = {}): Promise<v
   const { port, host } = finalConfig;
   const serverUrl = `http://${host}:${port}`;
 
-  logger.info(`Starting Qwen TTS Voice Server on ${serverUrl}`);
+  logger.info(`Starting Voice Server on ${serverUrl}`);
+  logger.info(`TTS Backend: ${finalConfig.ttsBackend.toUpperCase()}`, {
+    backend: finalConfig.ttsBackend,
+    model: finalConfig.mlxConfig?.model || "N/A",
+  });
 
-  // Start Python subprocess if enabled
-  if (finalConfig.enableSubprocess) {
+  // Initialize MLX-audio client if using MLX backend
+  if (finalConfig.ttsBackend === "mlx") {
+    try {
+      const mlxClient = getMLXTTSClient(finalConfig.mlxConfig);
+      const healthy = await mlxClient.healthCheck();
+      if (!healthy) {
+        throw new Error("MLX-audio CLI not available");
+      }
+      logger.info("MLX-audio TTS backend initialized successfully");
+    } catch (error) {
+      logger.warn("Failed to initialize MLX-audio, falling back to Qwen TTS", {
+        error: (error as Error).message,
+      });
+      finalConfig.ttsBackend = "qwen";
+    }
+  }
+
+  // Start Python subprocess if enabled (only for Qwen backend)
+  if (finalConfig.ttsBackend === "qwen" && finalConfig.enableSubprocess) {
     try {
       const subprocessManager = getSubprocessManager();
       await subprocessManager.start();
