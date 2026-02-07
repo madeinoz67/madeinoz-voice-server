@@ -119,7 +119,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install MkDocs Material
-        run: pip install mkdocs-material mkdocs-glightbox
+        run: pip install mkdocs-material mkdocs-glightbox mkdocs-git-revision-date-localized-plugin mkdocs-git-committers-plugin mkdocs-git-authors-plugin
 
       - name: Build documentation
         run: mkdocs build --strict
@@ -211,7 +211,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install MkDocs Material
-        run: pip install mkdocs-material mkdocs-glightbox
+        run: pip install mkdocs-material mkdocs-glightbox mkdocs-git-revision-date-localized-plugin mkdocs-git-committers-plugin mkdocs-git-authors-plugin
 
       - name: Build documentation
         run: mkdocs build --strict
