@@ -398,18 +398,18 @@ async function processTTS(
  */
 async function handleNotify(request: NotificationRequest): Promise<SuccessResponse | ErrorResponse> {
   try {
-    logger.info("Received /notify request", { title: request.title });
+    logger.info("Received /notify request", { title: request.title || "Notification" });
 
-    // Validate request
-    if (!request.title || !request.message) {
-      return errorResponse("Missing required fields: title and message");
+    // Validate request (title is optional for backward compatibility)
+    if (!request.message) {
+      return errorResponse("Missing required field: message");
     }
 
-    // Sanitize input
-    const title = sanitizeTitle(request.title);
+    // Sanitize input - use default title if not provided
+    const title = sanitizeTitle(request.title || "Notification");
     const message = sanitizeMessage(request.message);
 
-    if (!title || !message) {
+    if (!message) {
       return errorResponse("Invalid input after sanitization");
     }
 

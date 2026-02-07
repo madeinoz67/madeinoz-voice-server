@@ -105,6 +105,11 @@ export class MLXTTSClient {
       const streamingInterval = stream ? (this.config.streamingInterval || 0.3) : 2.0;
       args.push("--streaming_interval", streamingInterval.toString());
 
+      // Add --play flag for streaming mode to enable audio playback
+      if (stream) {
+        args.push("--play");
+      }
+
       logger.debug("Executing MLX-audio command", { args: args.join(" ") });
 
       // For streaming mode, MLX-audio plays audio directly via sounddevice
@@ -118,9 +123,11 @@ export class MLXTTSClient {
           ESPEAK_DATA_PATH: "/opt/homebrew/Cellar/espeak-ng/1.52.0/share/espeak-ng-data",
         };
 
+        // Use inherit for stderr so sounddevice can access audio device properly
+        // and we can see any error messages
         const proc = Bun.spawn(args, {
-          stdout: "pipe",
-          stderr: "pipe",
+          stdout: "inherit",
+          stderr: "inherit",
           env,
         });
 

@@ -9,8 +9,8 @@ import type { ProsodySettings } from "@/models/voice-config.js";
  * Incoming request for voice notification
  */
 export interface NotificationRequest {
-  /** Notification title (max 100 chars) */
-  title: string;
+  /** Notification title (max 100 chars) - optional for backward compatibility */
+  title?: string;
   /** Text to synthesize (max 500 chars) */
   message: string;
   /** Whether to play audio (default: true) */
@@ -55,11 +55,11 @@ export interface ErrorResponse {
  * Validate notification request
  */
 export function isValidNotificationRequest(request: Partial<NotificationRequest>): boolean {
-  // Required fields
-  if (!request.title || !request.message) return false;
+  // Required fields (title is optional for backward compatibility)
+  if (!request.message) return false;
 
   // Length validation
-  if (request.title.length > 100) return false;
+  if (request.title && request.title.length > 100) return false;
   if (request.message.length > 500) return false;
 
   // Can only specify one of voice_id or voice_name

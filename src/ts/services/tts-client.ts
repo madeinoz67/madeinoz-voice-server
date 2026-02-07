@@ -200,7 +200,8 @@ export class TTSClient {
       logger.debug("Audio stream complete");
 
     } catch (error) {
-      logger.error("TTS stream error", { error: (error as Error).message });
+      const errorObj = error instanceof Error ? error : new Error(String(error));
+      logger.error("TTS stream error", errorObj);
       throw error;
     }
   }
