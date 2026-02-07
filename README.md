@@ -1,6 +1,6 @@
 # madeinoz-voice-server
 
-A local-first Text-to-Speech (TTS) voice server using Kokoro-82M and Qwen TTS models. Drop-in replacement for ElevenLabs with zero API costs, rate limits, or network dependencies.
+A local-first Text-to-Speech (TTS) voice server for PAI (Personal AI Infrastructure). Uses Kokoro-82M and Qwen TTS models with an ElevenLabs-compatible API for PAI agent voices. Zero API costs, rate limits, or external network dependencies.
 
 ## Features
 
@@ -155,7 +155,7 @@ curl -X POST http://localhost:8888/notify \
 **Request:**
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `title` | string | ✅ | Notification title |
+| `title` | string | ❌ | Notification title (default: "Notification") |
 | `message` | string | ✅ | Text to speak |
 | `voice_id` | string | ❌ | Numeric voice ID 1-41 (default: "1") |
 | `voice_settings` | object | ❌ | Voice configuration |
@@ -242,7 +242,7 @@ curl -X DELETE http://localhost:8888/voices/{voice_id}
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PORT` | 8888 | Server port |
-| `TTS_BACKEND` | qwen | TTS backend: `mlx` (Kokoro) or `qwen` |
+| `TTS_BACKEND` | mlx | TTS backend: `mlx` (Kokoro) or `qwen` |
 | `DEFAULT_VOICE_ID` | 1 | Default voice ID (1-41 for Kokoro) |
 | `MLX_MODEL` | mlx-community/Kokoro-82M-bf16 | MLX model to use |
 | `MLX_STREAMING_INTERVAL` | 0.3 | Streaming chunk size (seconds) |
@@ -250,7 +250,7 @@ curl -X DELETE http://localhost:8888/voices/{voice_id}
 
 ### Voice Configuration
 
-Voices are configured in `AGENTPERSONALITIES.md`:
+Voices are configured in `docs/agent-voices.md`:
 
 ```markdown
 ## marrvin
