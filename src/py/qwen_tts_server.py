@@ -30,17 +30,17 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 
+import numpy as np
+import scipy.io.wavfile as wavfile
+import torch
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 # Import TTS libraries
 # Using Qwen's official qwen-tts package instead of transformers
 from qwen_tts import Qwen3TTSModel
-import torch
-import scipy.io.wavfile as wavfile
-import numpy as np
 
 try:
     import pyttsx3
@@ -131,11 +131,11 @@ def load_qwen_model():
             logger.info(f"Loading Qwen3-TTS model from custom path: {model_path}")
             model = Qwen3TTSModel.from_pretrained(model_path)
         elif os.path.exists(cached_model_path):
-            logger.info(f"✓ Found cached model in HuggingFace cache")
+            logger.info("✓ Found cached model in HuggingFace cache")
             logger.info("  Using cached model (no download required)")
             model = Qwen3TTSModel.from_pretrained(model_id)
         else:
-            logger.info(f"✗ Model not found in cache")
+            logger.info("✗ Model not found in cache")
             logger.info(f"  Downloading model '{model_id}' on first use...")
             logger.info("  Model will be cached to: ~/.cache/huggingface/hub/")
             logger.info("  Model size: ~3.4GB - this may take a while...")
@@ -391,7 +391,7 @@ async def synthesize(request: TTSRequest):
         raise HTTPException(status_code=500, detail=f"Synthesis failed: {str(e)}") from None
 
 
-async def stream_qwen_audio_generator(text: str, voice: str, prosody: str, speed: float):
+async def stream_qwen_audio_generator(text: str, voice: str, prosody: str, speed: float):  # noqa: ARG001
     """
     Generator that yields audio chunks immediately as they're generated.
     Uses raw PCM streaming for true real-time audio delivery.
@@ -407,9 +407,6 @@ async def stream_qwen_audio_generator(text: str, voice: str, prosody: str, speed
         # Log device being used
         model_device = getattr(model.model, 'device', getattr(model, 'device', 'unknown'))
         logger.info(f"Streaming with device: {model_device}")
-
-        # Prepare voice instruction
-        voice_instruct = prosody if prosody and prosody != "speak normally" else "Speak in a natural, clear voice"
 
         # Run streaming in thread pool (blocking operation)
         def get_stream():
