@@ -9,7 +9,15 @@
       "mcp__zread__read_file",
       "mcp__web-search-prime__webSearchPrime",
       "mcp__github__search_code",
-      "mcp__codanna__find_symbol"
+      "mcp__codanna__find_symbol",
+      "mcp__github__list_releases",
+      "mcp__github__search_repositories",
+      "mcp__github__issue_read",
+      "mcp__github__search_issues",
+      "mcp__github__search_pull_requests",
+      "mcp__github__list_pull_requests",
+      "mcp__github__list_branches",
+      "mcp__github__list_issues"
     ]
   }
 }

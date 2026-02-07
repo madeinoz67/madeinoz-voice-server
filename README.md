@@ -1,22 +1,22 @@
 # madeinoz-voice-server
 
-A local-first Text-to-Speech (TTS) voice server for PAI (Personal AI Infrastructure). Uses Kokoro-82M and Qwen TTS models with an ElevenLabs-compatible API for PAI agent voices. Zero API costs, rate limits, or external network dependencies.
+A local-first Text-to-Speech (TTS) voice server for PAI (Personal AI Infrastructure). Uses MLX-audio with Kokoro-82M model and an ElevenLabs-compatible API for PAI agent voices. Zero API costs, rate limits, or external network dependencies.
 
 ## Features
 
-- 🎙️ **Local TTS** - All audio generation happens on your machine
-- 💰 **Cost-Free** - No per-character or per-minute charges
-- 🔒 **Private** - No data sent to external services
-- 🔊 **41 Built-in Voices** - Numeric voice IDs for easy configuration
-- ⚡ **Fast Streaming** - Smooth real-time audio playback (RTF ~1.0x)
-- 🌍 **Multi-language** - English, British, Japanese, Chinese voices
-- 📱 **macOS Integration** - Native notifications and audio playback
+- Local TTS - All audio generation happens on your machine
+- Cost-Free - No per-character or per-minute charges
+- Private - No data sent to external services
+- 41 Built-in Voices - Numeric voice IDs for easy configuration
+- Fast Streaming - Smooth real-time audio playback (RTF ~1.0x)
+- Multi-language - English, British, Japanese, Chinese voices
+- macOS Integration - Native notifications and audio playback
 
 ## Requirements
 
 ### Platform
 - **macOS 13+ (Ventura or later)** - Required for native `afplay` audio
-- **Apple Silicon (M1/M2/M3/M4)** recommended for MLX-audio backend
+- **Apple Silicon (M1/M2/M3/M4)** - Required for MLX-audio backend
 
 ### Required Tools
 
@@ -26,12 +26,11 @@ A local-first Text-to-Speech (TTS) voice server for PAI (Personal AI Infrastruct
 | **uv** | >= 0.1 | Python package manager | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 | **ffmpeg** | any | Audio conversion | `brew install ffmpeg` |
 
-### Optional Dependencies
+### TTS Backend
 
 | Backend | Requirements | Use Case |
 |---------|--------------|----------|
-| **MLX-audio** (default) | Apple Silicon only | Fast local TTS, 41 built-in voices |
-| **Qwen TTS** | Python 3.10+, PyTorch | Custom voice cloning, VoiceDesign |
+| **MLX-audio** | Apple Silicon only | Fast local TTS, 41 built-in voices |
 
 ## Quick Start
 
@@ -44,7 +43,7 @@ brew tap madeinoz67/tap
 # Install the voice server
 brew install madeinoz67/tap/madeinoz-voice-server
 
-# Install MLX-audio backend (optional, for fast TTS)
+# Install MLX-audio backend
 uv tool install mlx-audio
 
 # Start as a service
@@ -54,7 +53,7 @@ brew services start madeinoz67/tap/madeinoz-voice-server
 voice-server
 ```
 
-**Note:** After Homebrew installation, the MLX-audio backend still needs to be installed separately:
+**Note:** After Homebrew installation, the MLX-audio backend needs to be installed separately:
 ```bash
 uv tool install mlx-audio
 ```
@@ -83,21 +82,18 @@ cd madeinoz-voice-server
 # Install TypeScript dependencies
 bun install
 
-# Install MLX-audio for Kokoro TTS backend (recommended)
+# Install MLX-audio for Kokoro TTS backend
 uv tool install mlx-audio
 ```
 
 ### 3. Run the Server
 
 ```bash
-# Production mode (Kokoro/MLX backend - default)
-TTS_BACKEND=mlx PORT=8888 bun run dev
+# Production mode
+PORT=8888 bun run dev
 
 # Development mode (uses port 8889 to avoid conflicts)
-NODE_ENV=development TTS_BACKEND=mlx PORT=8889 bun run dev
-
-# Or use Qwen backend (requires Python dependencies)
-TTS_BACKEND=qwen PORT=8888 bun run dev
+NODE_ENV=development PORT=8889 bun run dev
 ```
 
 ### 4. Test the Server
@@ -155,12 +151,12 @@ curl -X POST http://localhost:8888/notify \
 **Request:**
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `title` | string | ❌ | Notification title (default: "Notification") |
-| `message` | string | ✅ | Text to speak |
-| `voice_id` | string | ❌ | Numeric voice ID 1-41 (default: "1") |
-| `voice_settings` | object | ❌ | Voice configuration |
-| `volume` | number | ❌ | Volume 0.0-1.0 (default: 1.0) |
-| `voice_enabled` | boolean | ❌ | Enable TTS (default: true) |
+| `title` | string | No | Notification title (default: "Notification") |
+| `message` | string | Yes | Text to speak |
+| `voice_id` | string | No | Numeric voice ID 1-41 (default: "1") |
+| `voice_settings` | object | No | Voice configuration |
+| `volume` | number | No | Volume 0.0-1.0 (default: 1.0) |
+| `voice_enabled` | boolean | No | Enable TTS (default: true) |
 
 **Response:**
 ```json
@@ -203,38 +199,6 @@ curl http://localhost:8888/health
 }
 ```
 
-### POST /upload-voice
-
-Upload a custom voice for TTS.
-
-```bash
-curl -X POST http://localhost:8888/upload-voice \
-  -F "audio=@reference.wav" \
-  -F "name=My Custom Voice" \
-  -F "description=A custom voice"
-```
-
-**Requirements:**
-- Audio format: WAV
-- Duration: 3-10 seconds
-- Sample rate: 16-48 kHz (24 kHz recommended)
-
-### GET /voices
-
-List all available custom voices.
-
-```bash
-curl http://localhost:8888/voices
-```
-
-### DELETE /voices/:id
-
-Delete a custom voice.
-
-```bash
-curl -X DELETE http://localhost:8888/voices/{voice_id}
-```
-
 ## Configuration
 
 ### Environment Variables
@@ -242,7 +206,6 @@ curl -X DELETE http://localhost:8888/voices/{voice_id}
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PORT` | 8888 | Server port |
-| `TTS_BACKEND` | mlx | TTS backend: `mlx` (Kokoro) or `qwen` |
 | `DEFAULT_VOICE_ID` | 1 | Default voice ID (1-41 for Kokoro) |
 | `MLX_MODEL` | mlx-community/Kokoro-82M-bf16 | MLX model to use |
 | `MLX_STREAMING_INTERVAL` | 0.3 | Streaming chunk size (seconds) |
@@ -270,7 +233,7 @@ Add custom pronunciations in `~/.claude/pronunciations.json`:
 {
   "DAIV": "DAY-vee",
   "PAI": "PIE",
-  "Qwen": "CHwen"
+  "Kokoro": "ko-KO-ro"
 }
 ```
 
@@ -279,8 +242,6 @@ Add custom pronunciations in `~/.claude/pronunciations.json`:
 ```
 .
 ├── src/
-│   ├── py/                    # Python TTS server (FastAPI)
-│   │   └── qwen_tts_server.py
 │   └── ts/                    # TypeScript main server
 │       ├── models/            # Type definitions
 │       ├── services/          # Business logic
@@ -288,7 +249,6 @@ Add custom pronunciations in `~/.claude/pronunciations.json`:
 │       ├── middleware/        # HTTP middleware
 │       └── server.ts          # Main server
 ├── tests/
-│   ├── py/                    # Python tests
 │   └── ts/                    # TypeScript tests
 ├── scripts/                   # Utility scripts
 │   └── generate-reference.ts  # ElevenLabs reference generator
@@ -298,8 +258,7 @@ Add custom pronunciations in `~/.claude/pronunciations.json`:
 │   ├── KOKORO_VOICES.md       # Technical voice documentation
 │   └── MIGRATION.md           # ElevenLabs migration guide
 ├── specs/                     # Feature specifications
-├── AGENTPERSONALITIES.md      # Voice configurations
-└── pyproject.toml             # Python project config
+└── AGENTPERSONALITIES.md      # Voice configurations
 ```
 
 ## Development
@@ -307,15 +266,12 @@ Add custom pronunciations in `~/.claude/pronunciations.json`:
 ```bash
 # Install all dependencies
 bun install              # TypeScript/Bun dependencies
-uv tool install mlx-audio  # MLX-audio backend (optional)
-
-# Install Python dependencies for Qwen backend (optional)
-uv pip install -r requirements.txt
+uv tool install mlx-audio  # MLX-audio backend
 
 # Run development server
 # Production: PORT=8888
 # Development (to avoid conflict): NODE_ENV=development PORT=8889
-PORT=8888 TTS_BACKEND=mlx bun run dev
+PORT=8888 bun run dev
 
 # Run tests
 bun test
@@ -325,7 +281,6 @@ bun run typecheck
 
 # Linting
 bun run lint
-bun run lint:py
 
 # Build for production
 bun run build
@@ -358,10 +313,6 @@ The server includes **41 built-in Kokoro voices** accessible via numeric IDs:
 
 **See [docs/VOICE_QUICK_REF.md](docs/VOICE_QUICK_REF.md)** for complete voice listings.
 
-### Custom Voices
-
-You can still upload custom voices via `/upload-voice` (Qwen backend only).
-
 ## Scripts
 
 ### Generate Reference Voice
@@ -374,69 +325,31 @@ ELEVENLABS_API_KEY=your-key bun scripts/generate-reference.ts <voice_id>
 
 Creates `~/.claude/voices/<voice_id>.reference.wav`.
 
-## Requirements
+## TTS Backend
 
-### Platform
-- **macOS 13+ (Ventura or later)** - Required for native `afplay` audio
-- **Apple Silicon (M1/M2/M3/M4)** recommended for MLX-audio backend
+### MLX-audio
 
-### Required Tools
-
-| Tool | Version | Purpose | Install |
-|------|---------|---------|--------|
-| **Bun** | >= 1.0 | TypeScript runtime | `curl -fsSL https://bun.sh/install \| bash` |
-| **uv** | >= 0.1 | Python package manager | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| **ffmpeg** | any | Audio conversion | `brew install ffmpeg` |
-
-### Backend-Specific Requirements
-
-| Backend | Requirements | Voices | Performance |
-|---------|--------------|--------|-------------|
-| **MLX-audio** (default) | Apple Silicon only | 41 built-in | Fastest (~1.0x RTF) |
-| **Qwen TTS** | Python 3.10+, PyTorch | Custom voices | Moderate (~2-3x RTF) |
-
-## TTS Backends
-
-### MLX-audio (Recommended - Default)
-
-Fast local TTS optimized for Apple Silicon.
+Fast local TTS optimized for Apple Silicon using the Kokoro-82M model.
 
 ```bash
 # Install MLX-audio
 uv tool install mlx-audio
 
-# Run with MLX backend (production port 8888)
-TTS_BACKEND=mlx PORT=8888 bun run dev
+# Run server (production port 8888)
+PORT=8888 bun run dev
 
 # Development mode (port 8889 to avoid conflicts)
-NODE_ENV=development TTS_BACKEND=mlx PORT=8889 bun run dev
+NODE_ENV=development PORT=8889 bun run dev
 ```
 
 **Features:**
-- 41 built-in voices (no custom voice upload needed)
-- Ultra-fast streaming on Apple Silicon
+- 41 built-in voices
+- Ultra-fast streaming on Apple Silicon (~1.0x RTF)
 - Supports English, British, Japanese, Chinese
-
-### Qwen TTS (Optional)
-
-For custom voice cloning and VoiceDesign capabilities.
-
-```bash
-# Install Python dependencies
-uv pip install -r requirements.txt
-
-# Run with Qwen backend
-TTS_BACKEND=qwen PORT=8888 bun run dev
-```
-
-**Features:**
-- Custom voice upload via `/upload-voice`
-- VoiceDesign: Create voices from text descriptions
-- Supports 10+ languages
 
 ## Architecture
 
-The server uses a modular TypeScript architecture with pluggable TTS backends:
+The server uses a modular TypeScript architecture:
 
 1. **TypeScript Main Server** (Bun)
    - HTTP API endpoints (`/notify`, `/pai`, `/health`)
@@ -444,9 +357,10 @@ The server uses a modular TypeScript architecture with pluggable TTS backends:
    - Voice configuration management
    - macOS notification integration
 
-2. **TTS Backend** (configurable)
-   - **MLX-audio**: Direct CLI integration for Apple Silicon
-   - **Qwen TTS**: Optional Python subprocess for custom voices
+2. **MLX-audio Backend**
+   - Direct CLI integration for Apple Silicon
+   - Kokoro-82M model for high-quality TTS
+   - 41 built-in voices across multiple languages
 
 ## Migration from ElevenLabs
 
@@ -489,19 +403,6 @@ mlx-audio --help
 uname -m  # Should show arm64
 ```
 
-### Python/Qwen backend issues
-
-```bash
-# Check Python dependencies
-uv pip list
-
-# Reinstall Python dependencies
-uv pip install -r requirements.txt
-
-# Verify Python server
-uv run uvicorn src.py.qwen_tts_server:app --port 7860
-```
-
 ### Audio not playing
 
 ```bash
@@ -521,11 +422,4 @@ MIT
 
 ## Attribution
 
-This server is inspired by [ValyrianTech/Qwen3-TTS_server](https://github.com/ValyrianTech/Qwen3-TTS_server) for the TTS inference patterns and FastAPI structure.
-
-**Key Differences:**
-- API contract designed as drop-in replacement for ElevenLabs
-- macOS-first with pyttsx3 fallback
-- JSON POST requests
-- Subprocess architecture managed by TypeScript host
-- CPU-based inference for local development
+This server uses MLX-audio with the Kokoro-82M model for high-quality text-to-speech.

@@ -1,18 +1,14 @@
 {
   "name": "madeinoz-voice-server",
   "version": "0.1.0",
-  "description": "TTS service using Qwen TTS model",
+  "description": "PAI voice server using MLX-audio Kokoro TTS",
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development bun run src/ts/server.ts",
-    "dev:py": "uv run uvicorn src.py.qwen_tts_server:app --port 7861 --reload",
     "start": "bun run dist/server.js",
     "test": "bun test",
-    "test:py": "uv run pytest",
     "lint": "eslint src/ts",
     "lint:fix": "eslint src/ts --fix",
-    "lint:py": "uv run ruff check src/py tests/py",
-    "lint:py:fix": "uv run ruff check --fix src/py tests/py",
     "typecheck": "tsc --noEmit",
     "build": "tsc"
   },
