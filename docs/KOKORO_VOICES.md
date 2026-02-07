@@ -4,7 +4,7 @@ This document describes the numeric voice ID system for Kokoro-82M TTS voices.
 
 ## Overview
 
-The voice server now uses **numeric voice IDs (1-54)** to select Kokoro voices. This makes it easy to configure voices in agent personalities without remembering complex voice names.
+The voice server now uses **numeric voice IDs (1-41)** to select Kokoro voices. This makes it easy to configure voices in agent personalities without remembering complex voice names.
 
 ## Usage
 
@@ -86,7 +86,7 @@ The voice_id `"1"` maps to `af_heart` (warm, friendly American female voice).
 |----|-------|-------------|
 | 33 | jm_kumo | Standard Japanese male |
 
-### Chinese Female (34-41)
+### Chinese Female (34-37)
 
 | ID | Voice | Description |
 |----|-------|-------------|
@@ -94,6 +94,11 @@ The voice_id `"1"` maps to `af_heart` (warm, friendly American female voice).
 | 35 | zf_xiaobei | Soft, gentle |
 | 36 | zf_xiaoni | Young, bright |
 | 37 | zf_xiaoyi | Clear, articulate |
+
+### Chinese Male (38-41)
+
+| ID | Voice | Description |
+|----|-------|-------------|
 | 38 | zm_yunjian | Standard Chinese male |
 | 39 | zm_yunxi | Warm, friendly |
 | 40 | zm_yunxia | Gentle |
