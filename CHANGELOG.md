@@ -3,12 +3,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [0.1.0] - 2026-02-08
+
+## [Unreleased]
 
 ### Documentation
 
-- Update CHANGELOG.md [skip ci] ([8b6de06](8b6de06bf64564a68dab8dd0297d0c755f885de5))
+- Update CHANGELOG.md for v0.1.0 [skip ci] ([1d91e3d](1d91e3d5e18e65b30080c74dae7ecf70a506f021))
 
+### Bug Fixes
+
+- Add NPM_TOKEN to npm publish job ([a4f219b](a4f219b6449e8853783814fa0f02089ecb9d012a))
+
+
+## [0.1.0] - 2026-02-08
 
 ### Features
 
