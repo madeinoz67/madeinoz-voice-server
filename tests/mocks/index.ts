@@ -55,10 +55,12 @@ export function createMockMLXProcess(options: {
  */
 export const mockFS = {
   existsSync: (path: string): boolean => {
+    // Build paths outside object literal for CodeQL compatibility
+    const homeVoicePath = process.env.HOME + "/.claude/VoiceServer/voices/pronunciations.json";
     const mockExists: Record<string, boolean> = {
       "/tmp/test.wav": true,
       "/tmp/test.mp3": true,
-      `${process.env.HOME}/.claude/VoiceServer/voices/pronunciations.json`: false,
+      [homeVoicePath]: false,
     };
     return mockExists[path] || false;
   },
