@@ -86,10 +86,10 @@ function errorResponse(message: string): ErrorResponse {
 /**
  * Escape a string for safe use inside a double-quoted AppleScript string literal.
  *
- * This escapes backslashes first, then double quotes.
+ * AppleScript does not use backslash escapes; embed quotes by doubling them.
  */
 function escapeForAppleScriptString(input: string): string {
-  return input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return input.replace(/"/g, `""`);
 }
 
 /**
