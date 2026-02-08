@@ -46,9 +46,13 @@ const SHELL_CHARS_PATTERN = /[\$`'"\\;|&()<>]/g;
 const WHITESPACE_PATTERN = /\s+/g;
 
 /**
- * Script tag detection (more aggressive)
+ * Script tag detection (conservative)
+ *
+ * Detects any <script ...> or </script ...> tag, including variants with
+ * whitespace or attributes inside the tag name, such as `</script >`
+ * or `</script foo="bar">`.
  */
-const SCRIPT_PATTERN = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+const SCRIPT_PATTERN = /<\s*script\b[^>]*>|<\s*\/\s*script\b[^>]*>/i;
 
 /**
  * Sanitize text for TTS input
