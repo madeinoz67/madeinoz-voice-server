@@ -29,8 +29,11 @@ const DEFAULT_OPTIONS: SanitizeOptions = {
 
 /**
  * HTML tag patterns to remove
+ *
+ * We strip all angle brackets rather than trying to parse HTML tags,
+ * which avoids incomplete multi-character sanitization issues.
  */
-const HTML_TAG_PATTERN = /<[^>]*>/g;
+const HTML_TAG_PATTERN = /[<>]/g;
 
 /**
  * Shell metacharacter patterns to remove
