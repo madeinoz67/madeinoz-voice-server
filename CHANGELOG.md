@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([0788bb3](0788bb3923be7230d8bd5695f6dec3f5634cb656))
 
+- Update CHANGELOG.md [skip ci] ([262b9f7](262b9f7c66830ecd11ecad93fc19d0da86212387))
+
 
 ### Miscellaneous Tasks
 
@@ -31,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump eslint from 8.57.1 to 10.0.0  ([4b678a4](4b678a473516e1bde149d77799258289b0601b5d))
 
 - Bump @types/node from 20.19.32 to 25.2.2  ([70a367c](70a367c221ad67889be82387ee3fee1af0992eb2))
+
+- Exclude test files from CodeQL analysis ([f404e72](f404e721b9fe6f5ce615dfd529ee9c04f0e2f4a4))
 
 
 
