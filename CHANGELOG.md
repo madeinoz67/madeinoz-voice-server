@@ -44,6 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([f292411](f292411624150bf259ade7fe74e8235e0e0fcb24))
 
+- Update CHANGELOG.md [skip ci] ([e6a7556](e6a75562c61fcd21eaeef5e1a46071b0b386c2cd))
+
+- Rename project to voice-server  ([c7e9209](c7e9209b2eeee1ac2af152f55b01045043cab2b9))
+
 
 ### Features
 
