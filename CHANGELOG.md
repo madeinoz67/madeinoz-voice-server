@@ -19,12 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([1c1a663](1c1a6634ecfd932cc642601ebbb38f9d03e2cfc3))
 
+- Update CHANGELOG.md [skip ci] ([40eee80](40eee80333ba6dddc3ed6e80e23f2853a9a2f31f))
+
 
 ### Miscellaneous Tasks
 
 - Bump @eslint/js from 8.57.1 to 10.0.1  ([78400b0](78400b02c6f2ea338d6d7a5d5c52e36ecaa93695))
 
 - Bump eslint from 8.57.1 to 10.0.0  ([4b678a4](4b678a473516e1bde149d77799258289b0601b5d))
+
+- Bump @types/node from 20.19.32 to 25.2.2  ([70a367c](70a367c221ad67889be82387ee3fee1af0992eb2))
 
 
 
