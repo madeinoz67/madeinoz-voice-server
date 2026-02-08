@@ -1,6 +1,6 @@
-# madeinoz-voice-server
+# voice-server
 
-Claude Code project guidance for the madeinoz-voice-server TTS service.
+Claude Code project guidance for the voice-server TTS service.
 
 ## Project Overview
 

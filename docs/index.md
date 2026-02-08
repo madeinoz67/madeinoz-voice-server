@@ -1,10 +1,10 @@
-# madeinoz-voice-server
+# voice-server
 
-Welcome to the madeinoz-voice-server documentation.
+Welcome to the voice-server documentation.
 
 ## Overview
 
-madeinoz-voice-server is a local-first Text-to-Speech (TTS) service built with Bun. It supports multiple backends including MLX-audio (Kokoro-82M) for fast local TTS on Apple Silicon, and Qwen TTS for custom voice cloning.
+voice-server is a local-first Text-to-Speech (TTS) service built with Bun. It supports multiple backends including MLX-audio (Kokoro-82M) for fast local TTS on Apple Silicon, and Qwen TTS for custom voice cloning.
 
 ## Features
 
@@ -35,7 +35,7 @@ brew install ffmpeg
 
 ```bash
 # Clone and navigate to project
-cd madeinoz-voice-server
+cd voice-server
 
 # Install dependencies
 bun install

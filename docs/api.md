@@ -214,7 +214,7 @@ export PORT=9000
 export DEFAULT_VOICE_ID="12"
 
 # Start server with custom config
-PORT=9000 DEFAULT_VOICE_ID="12" madeinoz-voice-server
+PORT=9000 DEFAULT_VOICE_ID="12" voice-server
 ```
 
 ---

@@ -48,21 +48,21 @@ pipx install mlx-audio
 #### Option A: Homebrew
 ```bash
 brew tap madeinoz67/tap
-brew install madeinoz67/tap/madeinoz-voice-server
+brew install madeinoz67/tap/voice-server
 ```
 
 #### Option B: npm/bun
 ```bash
-bun install -g madeinoz-voice-server
+bun install -g voice-server
 # or
-npm install -g madeinoz-voice-server
+npm install -g voice-server
 ```
 
 ### 3. Start the Server
 
 ```bash
 # Terminal 1: Start voice server
-PORT=8888 madeinoz-voice-server
+PORT=8888 voice-server
 ```
 
 ### 4. Update Your Application
@@ -193,7 +193,7 @@ const response = await fetch('http://localhost:8888/notify', {
 
 **Solution:** Start the voice server
 ```bash
-madeinoz-voice-server
+voice-server
 ```
 
 ### "mlx-audio not found"

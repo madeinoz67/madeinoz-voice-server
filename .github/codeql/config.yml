@@ -1,4 +1,4 @@
-# CodeQL configuration for madeinoz-voice-server
+# CodeQL configuration for voice-server
 # Excludes test files that use patterns confusing to CodeQL's parser
 
 # For JavaScript/TypeScript analysis, use the packs configuration

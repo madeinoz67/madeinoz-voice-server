@@ -1,5 +1,5 @@
 {
-  "name": "madeinoz-voice-server",
+  "name": "voice-server",
   "version": "0.1.0",
   "description": "PAI voice server using MLX-audio Kokoro TTS",
   "type": "module",

@@ -299,4 +299,4 @@ Even with the voice server completely stopped and port 7860 confirmed free, MLX-
 
 **Generated:** 2026-02-06
 **Evaluator:** DAIV
-**Project:** madeinoz-voice-server
+**Project:** voice-server

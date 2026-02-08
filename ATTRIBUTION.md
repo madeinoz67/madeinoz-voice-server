@@ -1,6 +1,6 @@
 # Attributions
 
-## madeinoz-voice-server
+## voice-server
 
 This project incorporates open-source components and was inspired by
 existing work in the text-to-speech community.
@@ -63,7 +63,7 @@ No code was copied from ValyrianTech/Qwen3-TTS_server.
 
 ## License Notice
 
-This project (madeinoz-voice-server) is licensed under the MIT License.
+This project (voice-server) is licensed under the MIT License.
 See LICENSE file for details.
 
 Third-party components are licensed under their respective terms as

@@ -1,4 +1,4 @@
-# madeinoz-voice-server
+# voice-server
 
 ![Voice Server Header](docs/assets/voice-server-header.png)
 
@@ -43,7 +43,7 @@ A local-first Text-to-Speech (TTS) voice server for PAI (Personal AI Infrastruct
 brew tap madeinoz67/tap
 
 # Install the voice server
-brew install madeinoz67/tap/madeinoz-voice-server
+brew install madeinoz67/tap/voice-server
 
 # Install MLX-audio backend
 pipx install mlx-audio
@@ -64,19 +64,19 @@ pipx install mlx-audio
 
 ```bash
 # Install globally using bun
-bun install -g madeinoz-voice-server
+bun install -g voice-server
 
 # Or install globally using npm
-npm install -g madeinoz-voice-server
+npm install -g voice-server
 
 # Install MLX-audio backend
 pipx install mlx-audio
 
 # Start the server
-madeinoz-voice-server
+voice-server
 
 # Or specify port
-PORT=8888 madeinoz-voice-server
+PORT=8888 voice-server
 ```
 
 **Note:** After npm/bun installation, the MLX-audio backend needs to be installed separately:
@@ -103,7 +103,7 @@ brew install pipx
 
 ```bash
 # Clone and navigate to project
-cd madeinoz-voice-server
+cd voice-server
 
 # Install TypeScript dependencies
 bun install
