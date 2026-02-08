@@ -84,13 +84,22 @@ function errorResponse(message: string): ErrorResponse {
 }
 
 /**
+ * Escape a string for safe use inside a double-quoted AppleScript string literal.
+ *
+ * This escapes backslashes first, then double quotes.
+ */
+function escapeForAppleScriptString(input: string): string {
+  return input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
+/**
  * Display macOS notification using osascript
  */
 async function displayMacOSNotification(title: string, message: string): Promise<void> {
   try {
-    // Escape quotes for AppleScript
-    const escapedTitle = title.replace(/"/g, '\\"');
-    const escapedMessage = message.replace(/"/g, '\\"');
+    // Escape backslashes and quotes for AppleScript
+    const escapedTitle = escapeForAppleScriptString(title);
+    const escapedMessage = escapeForAppleScriptString(message);
 
     const script = `display notification "${escapedMessage}" with title "${escapedTitle}"`;
     await $`osascript -e '${script}'`;
