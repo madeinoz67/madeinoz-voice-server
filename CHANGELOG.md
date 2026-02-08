@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use correct CodeQL config format to exclude tests ([e66b020](e66b02060506b0a4c181211576c54f02e517d989))
 
+- Exclude tests from CodeQL and skip CI on changelog changes ([7ba9d9c](7ba9d9c62721d291f4fcc584b3eccdb799904055))
+
 
 ### Documentation
 
@@ -33,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update CHANGELOG.md [skip ci] ([d9bb5e6](d9bb5e6bef8060c8e34c6201540e04a32beef6a3))
 
 - Update CHANGELOG.md [skip ci] ([dcec442](dcec44218dec3bd74912add4a354f7cc7e43534a))
+
+- Update CHANGELOG.md [skip ci] ([92ac66c](92ac66c15f86cb020ff005b1ad3d29cd87fcf83a))
 
 
 ### Features
