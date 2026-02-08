@@ -6,6 +6,7 @@ site_dir: site
 
 theme:
   name: material
+  logo: assets/voice-server-pack-logo.png
   palette:
     - scheme: default
       primary: indigo
@@ -33,9 +34,6 @@ theme:
 
 plugins:
   - search
-  - git-revision-date-localized
-  - git-committers
-  - git-authors
 
 repo_name: madeinoz-voice-server
 repo_url: https://github.com/madeinoz/madeinoz-voice-server
