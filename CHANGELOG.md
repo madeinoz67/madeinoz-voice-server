@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [Unreleased]
+## [0.1.1] - 2026-02-08
 
 ### Bug Fixes
 
@@ -44,9 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([f292411](f292411624150bf259ade7fe74e8235e0e0fcb24))
 
-- Update CHANGELOG.md [skip ci] ([e6a7556](e6a75562c61fcd21eaeef5e1a46071b0b386c2cd))
-
-- Rename project to voice-server  ([c7e9209](c7e9209b2eeee1ac2af152f55b01045043cab2b9))
+- Rename project to voice-server ([ed387c3](ed387c3a959b3c308e7ca7724ff9a00a5acc8a9e))
 
 
 ### Features
@@ -66,9 +64,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Exclude test files from CodeQL analysis ([f404e72](f404e721b9fe6f5ce615dfd529ee9c04f0e2f4a4))
 
+- Bump version to 0.1.1 ([059d0c6](059d0c6490a152bf3b1f3c99c018f07cd1780d16))
 
 
-[Unreleased]: https://github.com/madeinoz/voice-server/compare/trunk...HEAD
+### Ci
+
+- Ignore CHANGELOG.md in pull requests ([6bd4380](6bd4380334fb1cbd4da48775f3440726fedda606))
+
+
+
+[0.1.0]: https://github.com/madeinoz/voice-server/compare/v0.1.0...v0.1.1
 ## [0.1.0] - 2026-02-08
 
 ### Bug Fixes
