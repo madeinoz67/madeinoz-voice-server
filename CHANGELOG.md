@@ -15,10 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([7dc28a7](7dc28a7bb9ae20986fa134721b4526b30ab3cfe9))
 
+- Update CHANGELOG.md [skip ci] ([ef68568](ef685683a582bdf59e9b52f152bd3c103942fa4f))
+
 
 ### Miscellaneous Tasks
 
 - Bump @eslint/js from 8.57.1 to 10.0.1  ([78400b0](78400b02c6f2ea338d6d7a5d5c52e36ecaa93695))
+
+- Bump eslint from 8.57.1 to 10.0.0  ([4b678a4](4b678a473516e1bde149d77799258289b0601b5d))
 
 
 
