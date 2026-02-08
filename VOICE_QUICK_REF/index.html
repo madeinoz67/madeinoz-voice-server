@@ -1,0 +1,1053 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="TTS service using MLX-audio Kokoro TTS">
+      
+      
+        <meta name="author" content="madeinoz">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Voice Quick Reference - madeinoz-voice-server</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#voice-quick-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="madeinoz-voice-server" class="md-header__button md-logo" aria-label="madeinoz-voice-server" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            madeinoz-voice-server
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Voice Quick Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/madeinoz/madeinoz-voice-server" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    madeinoz-voice-server
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../api.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="madeinoz-voice-server" class="md-nav__button md-logo" aria-label="madeinoz-voice-server" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    madeinoz-voice-server
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/madeinoz/madeinoz-voice-server" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    madeinoz-voice-server
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Use
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-pick-by-personality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Pick by Personality
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-voice-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Voice Index
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complete Voice Index">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#american-female-ids-1-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        American Female (IDs 1-11)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#american-male-ids-12-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        American Male (IDs 12-20)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#british-female-ids-21-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        British Female (IDs 21-24)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#british-male-ids-25-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        British Male (IDs 25-28)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#japanese-ids-29-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Japanese (IDs 29-33)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chinese-ids-34-41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chinese (IDs 34-41)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-liner-descriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One-Liner Descriptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#popular-combinations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Popular Combinations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="voice-quick-reference">Voice Quick Reference</h1>
+<p>Quick lookup table for all 41 Kokoro voices.</p>
+<h2 id="how-to-use">How to Use</h2>
+<p>Find the voice you want, then use its ID number:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">&quot;voice_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">}</span>
+</code></pre></div>
+<h2 id="quick-pick-by-personality">Quick Pick by Personality</h2>
+<table>
+<thead>
+<tr>
+<th>Personality</th>
+<th>Use ID</th>
+<th>Voice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Warm &amp; Friendly</td>
+<td><strong>1</strong></td>
+<td>af_heart</td>
+</tr>
+<tr>
+<td>High Energy</td>
+<td><strong>4</strong></td>
+<td>af_sky</td>
+</tr>
+<tr>
+<td>Professional</td>
+<td><strong>12</strong></td>
+<td>am_michael</td>
+</tr>
+<tr>
+<td>Youthful</td>
+<td><strong>13</strong></td>
+<td>am_adam</td>
+</tr>
+<tr>
+<td>Sophisticated</td>
+<td><strong>21</strong></td>
+<td>bf_emma</td>
+</tr>
+<tr>
+<td>British Male</td>
+<td><strong>25</strong></td>
+<td>bm_george</td>
+</tr>
+<tr>
+<td>Dreamy</td>
+<td><strong>8</strong></td>
+<td>af_nova</td>
+</tr>
+<tr>
+<td>Deep &amp; Strong</td>
+<td><strong>16</strong></td>
+<td>am_fenrir</td>
+</tr>
+</tbody>
+</table>
+<h2 id="complete-voice-index">Complete Voice Index</h2>
+<h3 id="american-female-ids-1-11">American Female (IDs 1-11)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Vibe</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>af_heart</td>
+<td>🧡 Warm, friendly</td>
+<td>Default, all-purpose</td>
+</tr>
+<tr>
+<td>2</td>
+<td>af_bella</td>
+<td>✨ Elegant, refined</td>
+<td>Professional settings</td>
+</tr>
+<tr>
+<td>3</td>
+<td>af_nicole</td>
+<td>💼 Professional</td>
+<td>Business contexts</td>
+</tr>
+<tr>
+<td>4</td>
+<td>af_sky</td>
+<td>☀️ Bright, energetic</td>
+<td>High-energy tasks</td>
+</tr>
+<tr>
+<td>5</td>
+<td>af_sarah</td>
+<td>📢 Clear, articulate</td>
+<td>Instructions</td>
+</tr>
+<tr>
+<td>6</td>
+<td>af_jessica</td>
+<td>🎭 Expressive</td>
+<td>Storytelling</td>
+</tr>
+<tr>
+<td>7</td>
+<td>af_kore</td>
+<td>🌸 Soft, gentle</td>
+<td>Calm content</td>
+</tr>
+<tr>
+<td>8</td>
+<td>af_nova</td>
+<td>🎨 Artistic, dreamy</td>
+<td>Creative work</td>
+</tr>
+<tr>
+<td>9</td>
+<td>af_alloy</td>
+<td>🔧 Modern, crisp</td>
+<td>Tech content</td>
+</tr>
+<tr>
+<td>10</td>
+<td>af_aoede</td>
+<td>🎵 Musical, lyrical</td>
+<td>Poetry, lyrics</td>
+</tr>
+<tr>
+<td>11</td>
+<td>af_river</td>
+<td>🌊 Flowing, calm</td>
+<td>Meditation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="american-male-ids-12-20">American Male (IDs 12-20)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Vibe</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12</td>
+<td>am_michael</td>
+<td>💼 Professional, grounded</td>
+<td>Engineering, tech</td>
+</tr>
+<tr>
+<td>13</td>
+<td>am_adam</td>
+<td>⚡ Youthful, energetic</td>
+<td>Playful content</td>
+</tr>
+<tr>
+<td>14</td>
+<td>am_eric</td>
+<td>👋 Friendly, warm</td>
+<td>Casual help</td>
+</tr>
+<tr>
+<td>15</td>
+<td>am_liam</td>
+<td>💪 Confident</td>
+<td>Leadership</td>
+</tr>
+<tr>
+<td>16</td>
+<td>am_fenrir</td>
+<td>🎙️ Deep, authoritative</td>
+<td>Narration</td>
+</tr>
+<tr>
+<td>17</td>
+<td>am_echo</td>
+<td>🔊 Resonant</td>
+<td>Presentations</td>
+</tr>
+<tr>
+<td>18</td>
+<td>am_onyx</td>
+<td>🛡️ Bold, strong</td>
+<td>Announcements</td>
+</tr>
+<tr>
+<td>19</td>
+<td>am_puck</td>
+<td>🃏 Playful</td>
+<td>Entertainment</td>
+</tr>
+<tr>
+<td>20</td>
+<td>am_santa</td>
+<td>🎅 Jolly, warm</td>
+<td>Holiday, fun</td>
+</tr>
+</tbody>
+</table>
+<h3 id="british-female-ids-21-24">British Female (IDs 21-24)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Vibe</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>21</td>
+<td>bf_emma</td>
+<td>🎩 Sophisticated, RP</td>
+<td>Academic, formal</td>
+</tr>
+<tr>
+<td>22</td>
+<td>bf_isabella</td>
+<td>👑 Elegant, proper</td>
+<td>High-end content</td>
+</tr>
+<tr>
+<td>23</td>
+<td>bf_alice</td>
+<td>📚 Clear, educated</td>
+<td>Teaching</td>
+</tr>
+<tr>
+<td>24</td>
+<td>bf_lily</td>
+<td>🌷 Soft, gentle</td>
+<td>Soothing content</td>
+</tr>
+</tbody>
+</table>
+<h3 id="british-male-ids-25-28">British Male (IDs 25-28)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Vibe</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>25</td>
+<td>bm_george</td>
+<td>🎓 Authoritative, RP</td>
+<td>Expert commentary</td>
+</tr>
+<tr>
+<td>26</td>
+<td>bm_lewis</td>
+<td>🎯 Confident, articulate</td>
+<td>Presentations</td>
+</tr>
+<tr>
+<td>27</td>
+<td>bm_daniel</td>
+<td>💡 Professional, clear</td>
+<td>Business</td>
+</tr>
+<tr>
+<td>28</td>
+<td>bm_fable</td>
+<td>📖 Storyteller, warm</td>
+<td>Narration</td>
+</tr>
+</tbody>
+</table>
+<h3 id="japanese-ids-29-33">Japanese (IDs 29-33)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Vibe</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>29</td>
+<td>jf_alpha</td>
+<td>🇯🇵 Standard female</td>
+<td>Japanese content</td>
+</tr>
+<tr>
+<td>30</td>
+<td>jf_gongitsune</td>
+<td>🦊 Character</td>
+<td>Anime-style</td>
+</tr>
+<tr>
+<td>31</td>
+<td>jf_nezumi</td>
+<td>🐭 Character</td>
+<td>Anime-style</td>
+</tr>
+<tr>
+<td>32</td>
+<td>jf_tebukuro</td>
+<td>🧤 Character</td>
+<td>Anime-style</td>
+</tr>
+<tr>
+<td>33</td>
+<td>jm_kumo</td>
+<td>🇯🇵 Standard male</td>
+<td>Japanese content</td>
+</tr>
+</tbody>
+</table>
+<h3 id="chinese-ids-34-41">Chinese (IDs 34-41)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Vibe</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>34</td>
+<td>zf_xiaoxiao</td>
+<td>🇨🇳 Standard female</td>
+<td>Chinese content</td>
+</tr>
+<tr>
+<td>35</td>
+<td>zf_xiaobei</td>
+<td>🌸 Soft, gentle</td>
+<td>Calm Chinese</td>
+</tr>
+<tr>
+<td>36</td>
+<td>zf_xiaoni</td>
+<td>🌟 Young, bright</td>
+<td>Youthful Chinese</td>
+</tr>
+<tr>
+<td>37</td>
+<td>zf_xiaoyi</td>
+<td>📢 Clear, articulate</td>
+<td>Formal Chinese</td>
+</tr>
+<tr>
+<td>38</td>
+<td>zm_yunjian</td>
+<td>🇨🇳 Standard male</td>
+<td>Chinese content</td>
+</tr>
+<tr>
+<td>39</td>
+<td>zm_yunxi</td>
+<td>👋 Warm, friendly</td>
+<td>Casual Chinese</td>
+</tr>
+<tr>
+<td>40</td>
+<td>zm_yunxia</td>
+<td>🌙 Gentle</td>
+<td>Soothing Chinese</td>
+</tr>
+<tr>
+<td>41</td>
+<td>zm_yunyang</td>
+<td>⚡ Energetic</td>
+<td>Lively Chinese</td>
+</tr>
+</tbody>
+</table>
+<h2 id="one-liner-descriptions">One-Liner Descriptions</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1:  af_heart       - Warm, friendly (default)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2:  af_bella       - Elegant, refined
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3:  af_nicole      - Professional
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4:  af_sky         - Bright, energetic
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>5:  af_sarah       - Clear, articulate
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>6:  af_jessica     - Expressive
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>7:  af_kore        - Soft, gentle
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>8:  af_nova        - Artistic, dreamy
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>9:  af_alloy       - Modern, crisp
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>10: af_aoede       - Musical, lyrical
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>11: af_river       - Flowing, calm
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>12: am_michael     - Professional, grounded
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>13: am_adam        - Youthful, energetic
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>14: am_eric        - Friendly, warm
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>15: am_liam        - Clear, confident
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>16: am_fenrir      - Deep, authoritative
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>17: am_echo        - Resonant
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>18: am_onyx        - Bold, strong
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>19: am_puck        - Playful
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>20: am_santa       - Jolly, warm
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>21: bf_emma        - Sophisticated, British
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>22: bf_isabella    - Elegant, proper
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>23: bf_alice       - Clear, educated
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>24: bf_lily        - Soft, gentle
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>25: bm_george      - Authoritative, British
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>26: bm_lewis       - Confident, articulate
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>27: bm_daniel      - Professional, clear
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>28: bm_fable       - Storyteller, warm
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>29: jf_alpha       - Japanese female
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>30: jf_gongitsune  - Japanese character
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>31: jf_nezumi      - Japanese character
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>32: jf_tebukuro    - Japanese character
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>33: jm_kumo        - Japanese male
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>34: zf_xiaoxiao    - Chinese female
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>35: zf_xiaobei     - Soft Chinese
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>36: zf_xiaoni      - Young Chinese
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>37: zf_xiaoyi      - Clear Chinese
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>38: zm_yunjian     - Chinese male
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>39: zm_yunxi       - Warm Chinese
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>40: zm_yunxia      - Gentle Chinese
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>41: zm_yunyang     - Energetic Chinese
+</code></pre></div>
+<h2 id="popular-combinations">Popular Combinations</h2>
+<p><strong>Tech Assistant:</strong> ID 12 (am_michael) - Professional, trustworthy</p>
+<p><strong>Creative Muse:</strong> ID 8 (af_nova) - Artistic, dreamy</p>
+<p><strong>Study Buddy:</strong> ID 4 (af_sky) - Bright, energetic</p>
+<p><strong>News Reader:</strong> ID 21 (bf_emma) - Sophisticated BBC-style</p>
+<p><strong>Game Character:</strong> ID 13 (am_adam) - Youthful, fun</p>
+<p><strong>Meditation Guide:</strong> ID 11 (af_river) - Calm, flowing</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 7, 2026 15:30:24 UTC">February 7, 2026</span>
+  </span>
+
+    
+    
+    
+      
+  
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Contributors">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
+      
+    </span>
+    <nav>
+      
+        <a href="mailto:seaton@strobotics.com.au">Stephen Eaton</a>
+    </nav>
+  </span>
+
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
