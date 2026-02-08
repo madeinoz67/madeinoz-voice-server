@@ -1,5 +1,7 @@
 # madeinoz-voice-server
 
+![Voice Server Header](docs/assets/voice-server-header.png)
+
 A local-first Text-to-Speech (TTS) voice server for PAI (Personal AI Infrastructure). Uses MLX-audio with Kokoro-82M model and an ElevenLabs-compatible API for PAI agent voices. Zero API costs, rate limits, or external network dependencies.
 
 ## Features
