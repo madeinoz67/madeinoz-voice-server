@@ -49,7 +49,7 @@ const WHITESPACE_PATTERN = /\s+/g;
  * Script tag detection (conservative)
  *
  * Detects any <script ...> or </script ...> tag, including variants with
- * whitespace or attributes inside the tag name, such as `</script >`
+ * whitespace around the tag name or attributes within the tag, such as `</script >`
  * or `</script foo="bar">`.
  */
 const SCRIPT_PATTERN = /<\s*script\b[^>]*>|<\s*\/\s*script\b[^>]*>/i;
