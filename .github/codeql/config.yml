@@ -1,10 +1,13 @@
-name: CodeQL config for madeinoz-voice-server
+# CodeQL configuration for madeinoz-voice-server
+# Excludes test files that use patterns confusing to CodeQL's parser
 
-# Exclude test files and mock files from CodeQL analysis
-# These files use patterns that confuse CodeQL's TypeScript parser
-paths-ignore:
-  - tests
-  - '**/*.test.ts'
-  - '**/*.spec.ts'
-  - '**/mocks/**'
-  - '**/fixtures/**'
+# For JavaScript/TypeScript analysis, use the packs configuration
+# to exclude certain directories
+packs:
+  javascript:
+    exclude:
+      - tests/
+      - "**/*.test.ts"
+      - "**/*.spec.ts"
+      - "**/mocks/**"
+      - "**/fixtures/**"

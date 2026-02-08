@@ -4,6 +4,8 @@ on:
   push:
     branches: ['**']
     tags: ['v*']
+    paths-ignore:
+      - 'CHANGELOG.md'
   pull_request:
     branches: ['**']
   workflow_dispatch:
