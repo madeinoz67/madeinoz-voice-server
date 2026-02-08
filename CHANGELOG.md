@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add visual assets and architecture diagram  ([afeb22c](afeb22c9461924e8767a57a24b0dbfb83ed5ce56))
 
+- Update CHANGELOG.md [skip ci] ([7dc28a7](7dc28a7bb9ae20986fa134721b4526b30ab3cfe9))
+
 
 ### Miscellaneous Tasks
 
