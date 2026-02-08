@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [0.1.3] - 2026-02-08
+
+### Miscellaneous Tasks
+
+- Bump version to 0.1.3 ([a893263](a893263d89d5d159fec68f7bbdcd405e255f5cd5))
+
+
+
+[0.1.2]: https://github.com/madeinoz/voice-server/compare/v0.1.2...v0.1.3
 ## [0.1.2] - 2026-02-08
 
 ### Bug Fixes
