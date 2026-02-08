@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
+### Bug Fixes
+
+- Use correct CodeQL config format to exclude tests ([e66b020](e66b02060506b0a4c181211576c54f02e517d989))
+
+
 ### Documentation
 
 - Update CHANGELOG.md for v0.1.0 [skip ci] ([1d91e3d](1d91e3d5e18e65b30080c74dae7ecf70a506f021))
@@ -24,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update CHANGELOG.md [skip ci] ([0788bb3](0788bb3923be7230d8bd5695f6dec3f5634cb656))
 
 - Update CHANGELOG.md [skip ci] ([262b9f7](262b9f7c66830ecd11ecad93fc19d0da86212387))
+
+- Update CHANGELOG.md [skip ci] ([d9bb5e6](d9bb5e6bef8060c8e34c6201540e04a32beef6a3))
 
 
 ### Miscellaneous Tasks
