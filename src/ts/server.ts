@@ -102,7 +102,7 @@ async function displayMacOSNotification(title: string, message: string): Promise
     const escapedMessage = escapeForAppleScriptString(message);
 
     const script = `display notification "${escapedMessage}" with title "${escapedTitle}"`;
-    await $`osascript -e '${script}'`;
+    await $`osascript -e ${script}`;
 
     logger.debug("Displayed macOS notification", { title });
   } catch (error) {
