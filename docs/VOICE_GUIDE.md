@@ -169,13 +169,13 @@ curl -X POST http://localhost:8888/notify \
   -d '{"message": "This is voice 1, warm and friendly", "voice_id": "1"}'
 
 # Test voice 12 (professional male)
-curl -X POST http://localhost:8889/notify \
+curl -X POST http://localhost:8888/notify \
   -H "Content-Type: application/json" \
   -d '{"message": "This is voice 12, professional and grounded", "voice_id": "12"}'
 
 # Test voice 21 (British female)
-curl -X POST http://localhost:8889/notify \
-  -H "Content-Type: application/json" \
+curl -X POST http://localhost:8888/notify \
+  -H "Content-Type": application/json" \
   -d '{"message": "This is voice 21, sophisticated British", "voice_id": "21"}'
 ```
 

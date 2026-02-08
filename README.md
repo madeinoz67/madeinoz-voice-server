@@ -23,7 +23,7 @@ A local-first Text-to-Speech (TTS) voice server for PAI (Personal AI Infrastruct
 | Tool | Version | Purpose | Install |
 |------|---------|---------|--------|
 | **Bun** | >= 1.0 | TypeScript runtime | `curl -fsSL https://bun.sh/install \| bash` |
-| **uv** | >= 0.1 | Python package manager | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
+| **pipx** | >= 1.0 | Python package installer | `brew install pipx` |
 | **ffmpeg** | any | Audio conversion | `brew install ffmpeg` |
 
 ### TTS Backend
@@ -44,7 +44,7 @@ brew tap madeinoz67/tap
 brew install madeinoz67/tap/madeinoz-voice-server
 
 # Install MLX-audio backend
-uv tool install mlx-audio
+pipx install mlx-audio
 
 # Start as a service
 brew services start voice-server
@@ -55,10 +55,34 @@ voice-server
 
 **Note:** After Homebrew installation, the MLX-audio backend needs to be installed separately:
 ```bash
-uv tool install mlx-audio
+pipx install mlx-audio
 ```
 
-### Option 2: Manual Installation
+### Option 2: Install via npm/bun
+
+```bash
+# Install globally using bun
+bun install -g madeinoz-voice-server
+
+# Or install globally using npm
+npm install -g madeinoz-voice-server
+
+# Install MLX-audio backend
+pipx install mlx-audio
+
+# Start the server
+madeinoz-voice-server
+
+# Or specify port
+PORT=8888 madeinoz-voice-server
+```
+
+**Note:** After npm/bun installation, the MLX-audio backend needs to be installed separately:
+```bash
+pipx install mlx-audio
+```
+
+### Option 3: Install from Source
 
 #### 1. Install Prerequisites
 
@@ -66,11 +90,11 @@ uv tool install mlx-audio
 # Install Bun (if not already installed)
 curl -fsSL https://bun.sh/install | bash
 
-# Install uv (Python package manager)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
 # Install ffmpeg (for audio conversion)
 brew install ffmpeg
+
+# Install pipx for MLX-audio (if not already installed)
+brew install pipx
 ```
 
 ### 2. Install Project Dependencies
@@ -83,7 +107,7 @@ cd madeinoz-voice-server
 bun install
 
 # Install MLX-audio for Kokoro TTS backend
-uv tool install mlx-audio
+pipx install mlx-audio
 ```
 
 ### 3. Run the Server
@@ -266,7 +290,7 @@ Add custom pronunciations in `~/.claude/pronunciations.json`:
 ```bash
 # Install all dependencies
 bun install              # TypeScript/Bun dependencies
-uv tool install mlx-audio  # MLX-audio backend
+pipx install mlx-audio  # MLX-audio backend
 
 # Run development server
 # Production: PORT=8888
@@ -333,7 +357,7 @@ Fast local TTS optimized for Apple Silicon using the Kokoro-82M model.
 
 ```bash
 # Install MLX-audio
-uv tool install mlx-audio
+pipx install mlx-audio
 
 # Run server (production port 8888)
 PORT=8888 bun run dev
@@ -390,11 +414,11 @@ bun install
 
 ```bash
 # Check MLX-audio is installed
-uv tool list
+pipx list
 
 # Reinstall MLX-audio if needed
-uv tool uninstall mlx-audio
-uv tool install mlx-audio
+pipx uninstall mlx-audio
+pipx install mlx-audio
 
 # Verify MLX-audio works directly
 mlx-audio --help
