@@ -42,10 +42,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([8203d0f](8203d0f85b0979bda76719b6d4545f84b5b0705c))
 
+- Update CHANGELOG.md [skip ci] ([f292411](f292411624150bf259ade7fe74e8235e0e0fcb24))
+
 
 ### Features
 
 - Add custom CodeQL workflow with test file exclusions ([8323d4a](8323d4a88f544455a66e2b50fc3320de8b969e3d))
+
+- Add comprehensive CodeQL paths-ignore configuration ([4c761c0](4c761c0f0e1446bce7d25a4e884f6b6238df6b06))
 
 
 ### Miscellaneous Tasks
