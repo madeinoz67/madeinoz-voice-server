@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Exclude tests from CodeQL and skip CI on changelog changes ([7ba9d9c](7ba9d9c62721d291f4fcc584b3eccdb799904055))
 
+- Avoid template literal property keys for CodeQL compatibility ([66b1738](66b1738a5fb18061ad77a43ede1acc9f67e70707))
+
 
 ### Documentation
 
@@ -37,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update CHANGELOG.md [skip ci] ([dcec442](dcec44218dec3bd74912add4a354f7cc7e43534a))
 
 - Update CHANGELOG.md [skip ci] ([92ac66c](92ac66c15f86cb020ff005b1ad3d29cd87fcf83a))
+
+- Update CHANGELOG.md [skip ci] ([8203d0f](8203d0f85b0979bda76719b6d4545f84b5b0705c))
 
 
 ### Features
