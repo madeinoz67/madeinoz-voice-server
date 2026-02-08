@@ -1,0 +1,30 @@
+# CodeQL Configuration for GitHub Advanced Security
+# Excludes test files from security scanning to reduce false positives
+
+paths-ignore:
+  # Test directories
+  - '**/test/**'
+  - '**/tests/**'
+  - '**/__tests__/**'
+  - '**/spec/**'
+
+  # Test files by convention
+  - '**/*.test.js'
+  - '**/*.test.ts'
+  - '**/*.spec.js'
+  - '**/*.spec.ts'
+  - '**/*.test.py'
+  - '**/*_test.go'
+  - '**/*.test.java'
+  - '**/*_test.rs'
+
+  # Fixtures and mocks
+  - '**/fixtures/**'
+  - '**/mocks/**'
+  - '**/__mocks__/**'
+
+  # Dependencies and build outputs
+  - '**/node_modules/**'
+  - '**/vendor/**'
+  - '**/dist/**'
+  - '**/build/**'
