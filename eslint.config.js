@@ -1,5 +1,5 @@
 /**
- * ESLint configuration for madeinoz-voice-server
+ * ESLint configuration for voice-server
  * TypeScript + Bun runtime
  */
 

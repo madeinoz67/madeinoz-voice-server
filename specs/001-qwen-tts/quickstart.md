@@ -18,7 +18,7 @@
 
 ```bash
 # Navigate to project directory
-cd madeinoz-voice-server
+cd voice-server
 
 # Install Bun dependencies
 bun install

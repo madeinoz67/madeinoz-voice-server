@@ -64,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]: https://github.com/madeinoz/madeinoz-voice-server/compare/trunk...HEAD
+[Unreleased]: https://github.com/madeinoz/voice-server/compare/trunk...HEAD
 ## [0.1.0] - 2026-02-08
 
 ### Bug Fixes

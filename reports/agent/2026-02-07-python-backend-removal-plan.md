@@ -1,5 +1,5 @@
 # Python Backend Removal Plan
-## madeinoz-voice-server
+## voice-server
 
 **Status**: DRAFT - Ready for Review
 **Date**: 2026-02-07
@@ -51,7 +51,7 @@ The MLX-audio backend is now the default and meets all PAI requirements. The Pyt
 | `src/py/test_mlx_cli.sh` | MLX CLI test script | DELETE |
 | `src/py/test_qwen3_mlx.sh` | Qwen MLX test script | DELETE |
 | `src/py/benchmark_comparison.sh` | Benchmark comparison | DELETE |
-| `Formula/madeinoz-voice-server.rb` | Homebrew formula (references Python) | MODIFY |
+| `Formula/voice-server.rb` | Homebrew formula (references Python) | MODIFY |
 
 **Total**: 5 shell scripts + 1 formula modification
 
@@ -388,7 +388,7 @@ git rm docs/DEVELOPMENT.md
 
 ### Phase 6: Update Homebrew Formula (10 minutes)
 
-**File: `Formula/madeinoz-voice-server.rb`**
+**File: `Formula/voice-server.rb`**
 
 **Remove Python dependencies:**
 ```ruby
@@ -746,7 +746,7 @@ MODIFIED (6 files):
 ├── package.json
 ├── README.md
 ├── .github/workflows/ci.yml
-└── Formula/madeinoz-voice-server.rb
+└── Formula/voice-server.rb
 
 DEPENDENCIES REMOVED:
 ├── fastapi
