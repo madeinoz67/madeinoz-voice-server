@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [0.1.2] - 2026-02-08
+
+### Bug Fixes
+
+- Use scoped npm package name ([4914423](49144231e1f0412d24e9b914893505337da9321d))
+
+
+
+[0.1.1]: https://github.com/madeinoz/voice-server/compare/v0.1.1...v0.1.2
 ## [0.1.1] - 2026-02-08
 
 ### Bug Fixes
