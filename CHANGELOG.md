@@ -3,15 +3,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [0.1.8] - 2026-02-09
+## [Unreleased]
+
+### Documentation
+
+- Update CHANGELOG.md for v0.1.7 [skip ci] ([f3e287c](f3e287c418545806619a39ac49404844681b8b7e))
+
+- Update CHANGELOG.md [skip ci] ([e3d8e74](e3d8e74620518f9f5eaeea7cd5d793d05740cf51))
+
+- Update CHANGELOG.md for v0.1.8 [skip ci] ([b22b945](b22b9454b1f3015937916ccbfa06c4f4009193f1))
+
+- Fix repository URL in mkdocs.yml  ([60a5fee](60a5feecbcbf8bbe3b91443a3ce86ce9bc796fc3))
+
 
 ### Miscellaneous Tasks
 
-- Bump version to 0.1.8 ([d4570bf](d4570bfd346d1af8046b641df9dbfce40b1fc61d))
+- Bump version to 0.1.8 ([75991de](75991de1cc13a3e42baca279673bbdb8127884a1))
 
 
 
-[0.1.7]: https://github.com/madeinoz/voice-server/compare/v0.1.7...v0.1.8
+[Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
 ## [0.1.7] - 2026-02-09
 
 ### Documentation
@@ -46,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[0.1.4]: https://github.com/madeinoz/voice-server/compare/v0.1.4...v0.1.7
+[0.1.4]: https://github.com/madeinoz67/madeinoz-voice-server/compare/v0.1.4...v0.1.7
 ## [0.1.4] - 2026-02-09
 
 ### Bug Fixes
@@ -128,7 +139,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[0.1.0]: https://github.com/madeinoz/voice-server/compare/v0.1.0...v0.1.4
+[0.1.0]: https://github.com/madeinoz67/madeinoz-voice-server/compare/v0.1.0...v0.1.4
 ## [0.1.0] - 2026-02-08
 
 ### Bug Fixes
