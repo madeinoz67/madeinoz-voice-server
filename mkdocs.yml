@@ -41,6 +41,9 @@ repo_url: https://github.com/madeinoz67/madeinoz-voice-server
 nav:
   - Home: index.md
   - API: api.md
+  - Features:
+      - FIFO Queue: fifo-queue.md
+      - Queue Architecture: queue-architecture.md
 
 markdown_extensions:
   - pymdownx.highlight:
