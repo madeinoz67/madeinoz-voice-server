@@ -64,19 +64,19 @@ pipx install mlx-audio
 
 ```bash
 # Install globally using bun
-bun install -g voice-server
+bun install -g @madeinoz67/voice-server
 
 # Or install globally using npm
-npm install -g voice-server
+npm install -g @madeinoz67/voice-server
 
 # Install MLX-audio backend
 pipx install mlx-audio
 
 # Start the server
-voice-server
+bunx @madeinoz67/voice-server
 
 # Or specify port
-PORT=8888 voice-server
+PORT=8888 bunx @madeinoz67/voice-server
 ```
 
 **Note:** After npm/bun installation, the MLX-audio backend needs to be installed separately:

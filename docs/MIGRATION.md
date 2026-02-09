@@ -53,16 +53,16 @@ brew install madeinoz67/tap/voice-server
 
 #### Option B: npm/bun
 ```bash
-bun install -g voice-server
+bun install -g @madeinoz67/voice-server
 # or
-npm install -g voice-server
+npm install -g @madeinoz67/voice-server
 ```
 
 ### 3. Start the Server
 
 ```bash
 # Terminal 1: Start voice server
-PORT=8888 voice-server
+PORT=8888 bunx @madeinoz67/voice-server
 ```
 
 ### 4. Update Your Application
