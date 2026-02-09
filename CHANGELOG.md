@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [0.1.10] - 2026-02-09
+## [Unreleased]
 
 ### Bug Fixes
 
@@ -12,9 +12,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- FIFO queue documentation with visual diagrams ([53f4dd8](53f4dd8118c55f10dcbe55d42b054cd803731d4f))
+- Update CHANGELOG.md for v0.1.7 [skip ci] ([f3e287c](f3e287c418545806619a39ac49404844681b8b7e))
 
-- Fix repository URL in mkdocs.yml ([60a5fee](60a5feecbcbf8bbe3b91443a3ce86ce9bc796fc3))
+- Update CHANGELOG.md [skip ci] ([e3d8e74](e3d8e74620518f9f5eaeea7cd5d793d05740cf51))
+
+- Update CHANGELOG.md for v0.1.8 [skip ci] ([b22b945](b22b9454b1f3015937916ccbfa06c4f4009193f1))
+
+- Fix repository URL in mkdocs.yml  ([60a5fee](60a5feecbcbf8bbe3b91443a3ce86ce9bc796fc3))
+
+- Update CHANGELOG.md [skip ci] ([7f6e640](7f6e6409937dc5cddebcb4d34f1226a13d80e963))
+
+- Update CHANGELOG.md [skip ci] ([37698ca](37698ca1e4884990731657c54d6b99e8d72291dd))
+
+- Update CHANGELOG.md for v0.1.9 [skip ci] ([046a02e](046a02e74637afdf771d7e7cc2f954efe588aed8))
+
+- FIFO queue documentation with visual diagrams  ([53f4dd8](53f4dd8118c55f10dcbe55d42b054cd803731d4f))
+
+- Update CHANGELOG.md [skip ci] ([864460c](864460ca5ba7536f8e4eb44ff02e865308164896))
+
+- Update CHANGELOG.md for v0.1.10 [skip ci] ([6131a08](6131a0850f1da71728849e3c30acb64b786a05d6))
 
 
 ### Miscellaneous Tasks
@@ -23,9 +39,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Skip version bump commits in changelog ([6fc8a2d](6fc8a2dc9913ee5fdb1394d15432fd326b61a1e3))
 
+- Remove changelog self-entries from v0.1.10 release ([7129699](7129699d4152263465534c146313545610134d12))
 
 
-[0.1.7]: https://github.com/madeinoz67/madeinoz-voice-server/compare/v0.1.7...v0.1.10
+
+[Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
 ## [0.1.7] - 2026-02-09
 
 ### Documentation
