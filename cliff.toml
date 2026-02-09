@@ -50,6 +50,7 @@ commit_parsers = [
   { message = "^test", group = "Testing" },
   { message = "^chore\\(release\\): prepare for", skip = true },
   { message = "^docs.*update CHANGELOG", skip = true },
+  { message = "^chore.*[Bb]ump version", skip = true },
   { message = "^chore", group = "Miscellaneous Tasks" },
   { body = ".*security", group = "Security" },
 ]
