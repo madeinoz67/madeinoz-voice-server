@@ -373,6 +373,34 @@ NODE_ENV=development PORT=8889 bun run dev
 - Ultra-fast streaming on Apple Silicon (~1.0x RTF)
 - Supports English, British, Japanese, Chinese
 
+## Model Testing
+
+### Kokoro (Current)
+
+The Kokoro-82M model via MLX-audio delivers **near real-time** performance on Apple Silicon:
+- Real-Time Factor (RTF): ~1.0x (audio generates as fast as it plays)
+- Low latency: < 500ms to first audio chunk
+- Smooth streaming with no buffering delays
+- Good voice quality for most use cases
+
+### qwen-tts (Alternative MLX-audio Model)
+
+qwen-tts is a supported MLX-audio model that was tested alongside Kokoro. It exhibited the following issues:
+- **Delay:** Significant latency before audio playback (6-15 seconds)
+- **Quality:** Inconsistent audio quality with stuttering, artifacts, and streaming issues
+- **Streaming:** Intermittent playback and buffering problems
+
+qwen-tts is self-contained like Kokoro (no external API dependencies). Despite these issues, qwen-tts models offer **greater flexibility** for custom voice cloning and fine-tuning. We remain interested in exploring qwen-tts for specialized use cases.
+
+### Community Contributions
+
+We welcome additional model testing results and comparisons from the community. If you have experience with:
+- Other TTS backends on Apple Silicon
+- qwen-tts improvements or configurations
+- Alternative local TTS solutions
+
+Please share your findings via issues or pull requests.
+
 ## Architecture
 
 The server uses a modular TypeScript architecture:

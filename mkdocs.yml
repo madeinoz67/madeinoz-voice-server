@@ -35,8 +35,8 @@ theme:
 plugins:
   - search
 
-repo_name: voice-server
-repo_url: https://github.com/madeinoz/voice-server
+repo_name: madeinoz-voice-server
+repo_url: https://github.com/madeinoz67/madeinoz-voice-server
 
 nav:
   - Home: index.md
