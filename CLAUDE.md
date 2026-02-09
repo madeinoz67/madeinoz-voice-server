@@ -47,4 +47,9 @@ bun run typecheck # Type check only
 - Documentation is built with MkDocs Material theme
 
 ## Recent Changes
+- 001-fifo-notify-queue: Added TypeScript 5.x (Bun runtime) + Bun native APIs, MLX-audio CLI (existing)
 - 001-qwen-tts: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+
+## Active Technologies
+- TypeScript 5.x (Bun runtime) + Bun native APIs, MLX-audio CLI (existing) (001-fifo-notify-queue)
+- In-memory array (no persistence per spec) (001-fifo-notify-queue)

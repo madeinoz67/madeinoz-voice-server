@@ -1,0 +1,283 @@
+openapi: 3.0.3
+info:
+  title: MadeInOz Voice Server - FIFO Notification Queue API
+  description: API for the FIFO notification queue feature that prevents audio overlap
+  version: 0.2.0
+  contact:
+    name: MadeInOz
+    url: https://github.com/madeinoz67/madeinoz-voice-server
+
+servers:
+  - url: http://127.0.0.1:8888
+    description: Local development server
+
+tags:
+  - name: Queue
+    description: Queue operations
+  - name: Health
+    description: Health and status endpoints
+
+paths:
+  /notify:
+    post:
+      tags: [Queue]
+      summary: Queue a voice notification
+      description: |
+        Submits a voice notification to the queue for processing.
+        Returns 201 Accepted immediately when queued successfully.
+        Audio playback happens asynchronously in FIFO order.
+      operationId: queueNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+            examples:
+              basic:
+                summary: Basic notification
+                value:
+                  message: "Hello, world"
+              withTitle:
+                summary: Notification with title
+                value:
+                  title: "System Alert"
+                  message: "Process completed successfully"
+              withVoiceSettings:
+                summary: Notification with custom voice
+                value:
+                  title: "Reminder"
+                  message: "Meeting starting in 5 minutes"
+                  voice_id: "marrvin"
+                  voice_settings:
+                    stability: 0.5
+                    similarity: 0.75
+                    speed: 1.0
+                  volume: 0.8
+      responses:
+        '201':
+          description: Notification queued successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                status: "success"
+                message: "Notification queued"
+        '400':
+          description: Invalid request (malformed JSON, missing fields, invalid voice_id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingMessage:
+                  summary: Missing required field
+                  value:
+                    status: "error"
+                    message: "Missing required field: message"
+                invalidVoiceId:
+                  summary: Invalid voice ID
+                  value:
+                    status: "error"
+                    message: "Invalid voice_id: unknown_voice"
+                emptyAfterSanitization:
+                  summary: Empty message after sanitization
+                  value:
+                    status: "error"
+                    message: "Invalid input after sanitization"
+        '429':
+          description: Queue is at maximum capacity (100 items)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: "error"
+                message: "Queue is full (100 items)"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: "error"
+                message: "Internal server error"
+
+  /queue/status:
+    get:
+      tags: [Health]
+      summary: Get queue status
+      description: |
+        Returns the current state of the notification queue including depth,
+        processing status, and health indicator.
+      operationId: getQueueStatus
+      responses:
+        '200':
+          description: Queue status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueStateResponse'
+              examples:
+                emptyQueue:
+                  summary: Empty queue, idle
+                  value:
+                    depth: 0
+                    processing_status: "idle"
+                    health: "healthy"
+                processing:
+                  summary: Queue with items, actively processing
+                  value:
+                    depth: 3
+                    processing_status: "active"
+                    health: "healthy"
+                    metrics:
+                      average_wait_time_ms: 5000
+                      items_processed: 127
+                      items_failed: 2
+                degraded:
+                  summary: Queue near capacity
+                  value:
+                    depth: 85
+                    processing_status: "active"
+                    health: "degraded"
+                    metrics:
+                      average_wait_time_ms: 45000
+                      items_processed: 542
+                      items_failed: 12
+                unavailable:
+                  summary: TTS system unavailable
+                  value:
+                    depth: 5
+                    processing_status: "idle"
+                    health: "unavailable"
+
+components:
+  schemas:
+    NotificationRequest:
+      type: object
+      description: Request to queue a voice notification
+      properties:
+        title:
+          type: string
+          maxLength: 100
+          description: Notification title (optional for backward compatibility)
+        message:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Text message to synthesize (required)
+        voice_id:
+          type: string
+          description: Voice identifier to use (defaults to server default)
+        voice_name:
+          type: string
+          deprecated: true
+          description: Alias for voice_id (use voice_id instead)
+        voice_settings:
+          $ref: '#/components/schemas/ProsodySettings'
+        volume:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+          description: Playback volume (0.0-1.0, defaults to voice setting)
+      required:
+        - message
+
+    ProsodySettings:
+      type: object
+      description: Voice prosody configuration
+      properties:
+        stability:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+          description: Voice stability (lower = more expressive)
+        similarity:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+          description: Voice similarity boost
+        style:
+          type: string
+          description: Voice style (model-dependent)
+        speed:
+          type: number
+          minimum: 0.25
+          maximum: 4.0
+          description: Playback speed multiplier
+
+    SuccessResponse:
+      type: object
+      description: Successful API response
+      properties:
+        status:
+          type: string
+          enum: [success]
+          description: Response status indicator
+        message:
+          type: string
+          description: Human-readable success message
+      required:
+        - status
+        - message
+
+    ErrorResponse:
+      type: object
+      description: Error API response
+      properties:
+        status:
+          type: string
+          enum: [error]
+          description: Response status indicator
+        message:
+          type: string
+          description: Human-readable error message
+      required:
+        - status
+        - message
+
+    QueueStateResponse:
+      type: object
+      description: Current queue state
+      properties:
+        depth:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Current number of items in queue
+        processing_status:
+          type: string
+          enum: [idle, active]
+          description: Whether queue is actively processing items
+        health:
+          type: string
+          enum: [healthy, degraded, unavailable]
+          description: Overall system health indicator
+        metrics:
+          type: object
+          description: Optional queue metrics
+          properties:
+            average_wait_time_ms:
+              type: integer
+              minimum: 0
+              description: Average wait time for queued items (milliseconds)
+            items_processed:
+              type: integer
+              minimum: 0
+              description: Total items processed since server start
+            items_failed:
+              type: integer
+              minimum: 0
+              description: Total items that failed since server start
+      required:
+        - depth
+        - processing_status
+        - health
+
+  examples:
+    null
+
+security: []

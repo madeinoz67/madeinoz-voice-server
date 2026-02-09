@@ -100,21 +100,24 @@ export class MLXTTSClient {
         args.push("--speed", this.config.speed.toString());
       }
 
-      // For streaming, use smaller interval for smoother playback (< 0.5s)
-      const streamingInterval = stream ? (this.config.streamingInterval || 0.3) : 2.0;
-      args.push("--streaming_interval", streamingInterval.toString());
-
-      // Add --play flag for streaming mode to enable audio playback
+      // Only add streaming_interval for actual streaming mode
+      // Do NOT add --play when using afplay for playback (avoids double audio)
+      // When stream=false, generate file without any streaming behavior
       if (stream) {
-        args.push("--play");
+        // For streaming, use smaller interval for smoother playback (< 0.5s)
+        const streamingInterval = this.config.streamingInterval || 0.3;
+        args.push("--streaming_interval", streamingInterval.toString());
+        // NOTE: We DON'T add --play here because we use afplay instead
+        // This prevents MLX-audio from playing audio through sounddevice
       }
 
-      logger.debug("Executing MLX-audio command", { args: args.join(" ") });
+      logger.info("Executing MLX-audio command", { args: args.join(" ") });
 
-      // For streaming mode, MLX-audio plays audio directly via sounddevice
-      // We just need to wait for completion and return minimal response
+      // For streaming mode, generate audio to file and play with afplay
+      // This avoids MLX-audio's buggy sounddevice implementation that
+      // closes the audio stream before playback completes
       if (stream) {
-        logger.info("MLX-audio streaming mode - audio will play directly via sounddevice");
+        logger.info("MLX-audio streaming mode - generating audio file for playback");
 
         // Set ESPEAK_DATA_PATH for Kokoro model
         const env = {
@@ -122,31 +125,83 @@ export class MLXTTSClient {
           ESPEAK_DATA_PATH: "/opt/homebrew/Cellar/espeak-ng/1.52.0/share/espeak-ng-data",
         };
 
-        // Use inherit for stderr so sounddevice can access audio device properly
-        // and we can see any error messages
+        // Generate audio file WITHOUT --play flag
         const proc = Bun.spawn(args, {
-          stdout: "inherit",
-          stderr: "inherit",
+          stdout: "pipe",
+          stderr: "pipe",
           env,
         });
 
-        // Wait for streaming to complete
+        // Wait for generation to complete
+        const stderr = await new Promise<string>((resolve) => {
+          const reader = proc.stderr!.getReader();
+          const chunks: Buffer[] = [];
+
+          const read = () => {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                resolve(Buffer.concat(chunks).toString());
+                return;
+              }
+              if (value) {
+                chunks.push(value as Buffer);
+              }
+              read();
+            });
+          };
+          read();
+        });
+
         const exitCode = await proc.exited;
 
         if (exitCode !== 0) {
-          throw new Error(`MLX-audio streaming failed with exit code ${exitCode}`);
+          throw new Error(`MLX-audio generation failed with exit code ${exitCode}: ${stderr}`);
+        }
+
+        // Find the generated audio file
+        const audioFile = `${filePrefix}_000.wav`;
+        if (!existsSync(audioFile)) {
+          throw new Error(`MLX-audio did not generate expected audio file: ${audioFile}`);
+        }
+
+        logger.info("Audio file generated, playing with afplay", { path: audioFile });
+
+        // Play audio with afplay (macOS native, reliable sequential playback)
+        const playStartTime = Date.now();
+        logger.info("Spawning afplay process", { file: audioFile });
+
+        const afplayProc = Bun.spawn(["afplay", audioFile], {
+          stdout: "pipe",
+          stderr: "pipe",
+        });
+
+        logger.info("afplay spawned", { pid: afplayProc.pid });
+        const afplayExitCode = await afplayProc.exited;
+        logger.info("afplay exited", { pid: afplayProc.pid, exitCode: afplayExitCode });
+
+        if (afplayExitCode !== 0) {
+          logger.warn("afplay exited with non-zero code", { code: afplayExitCode });
+        }
+
+        const playTimeMs = Date.now() - playStartTime;
+
+        // Clean up temp file after playback
+        try {
+          unlinkSync(audioFile);
+        } catch {
+          logger.warn("Failed to clean up temp file", { path: audioFile });
         }
 
         const processingTimeMs = Date.now() - startTime;
 
-        logger.info("MLX-audio streaming complete", {
+        logger.info("MLX-audio streaming with afplay complete", {
           processing_time_ms: processingTimeMs,
+          playback_time_ms: playTimeMs,
         });
 
-        // Return minimal response for streaming (audio played directly)
         return {
-          audio_data: "", // No audio data returned when streaming
-          duration_ms: 0,  // Duration unknown for streaming
+          audio_data: "",
+          duration_ms: 0,
           format: "streaming",
           sample_rate: 24000,
         };
