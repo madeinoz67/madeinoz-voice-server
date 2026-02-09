@@ -3,18 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [Unreleased]
+## [0.1.5] - 2026-02-09
 
 ### Documentation
 
 - Update CHANGELOG.md for v0.1.4 [skip ci] ([fe76674](fe76674036f7e7b1decf152ef6ca294ab93da10a))
 
-- Update CHANGELOG.md [skip ci] ([552c173](552c173acbd7ca4902fc0921a3cf7f4a468cdbff))
-
 
 ### Miscellaneous Tasks
 
-- Bump version to 0.1.5 ([ef85788](ef85788a7283dd498879fa064c220f9249f9f9f6))
+- Bump version to 0.1.5 ([c9d2694](c9d2694e7bc4e8e06de46c8d5f590536a042aac3))
 
 
 ### Ci
@@ -23,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]: https://github.com/madeinoz/voice-server/compare/trunk...HEAD
+[0.1.4]: https://github.com/madeinoz/voice-server/compare/v0.1.4...v0.1.5
 ## [0.1.4] - 2026-02-09
 
 ### Bug Fixes
