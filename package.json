@@ -1,6 +1,6 @@
 {
   "name": "@madeinoz67/voice-server",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "PAI voice server using MLX-audio Kokoro TTS",
   "type": "module",
   "scripts": {
@@ -24,5 +24,9 @@
   },
   "engines": {
     "bun": ">=1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madeinoz67/madeinoz-voice-server.git"
   }
 }
