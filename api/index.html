@@ -16,6 +16,8 @@
         <link rel="prev" href="..">
       
       
+        <link rel="next" href="../fifo-queue/">
+      
       
         
       
@@ -253,6 +255,26 @@
 
       </a>
     </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../fifo-queue/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
   
 
       
@@ -840,6 +862,123 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fifo-queue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FIFO Queue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../queue-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queue Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1329,10 +1468,12 @@
 <p>The voice server provides a simple HTTP API for text-to-speech notifications and health checks.</p>
 <h2 id="architecture-overview">Architecture Overview</h2>
 <p><img alt="Voice Server Architecture" src="../assets/voice-server-architecture.png" /></p>
-<p>The voice server uses a modular architecture:
-- <strong>Bun Server</strong> - TypeScript HTTP API handling requests and validation
-- <strong>MLX-audio</strong> - Local TTS backend using the Kokoro-82M model
-- <strong>macOS Integration</strong> - Native audio playback via afplay</p>
+<p>The voice server uses a modular architecture:</p>
+<ul>
+<li><strong>Bun Server</strong> - TypeScript HTTP API handling requests and validation</li>
+<li><strong>MLX-audio</strong> - Local TTS backend using the Kokoro-82M model</li>
+<li><strong>macOS Integration</strong> - Native audio playback via afplay</li>
+</ul>
 <h2 id="base-url">Base URL</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>http://localhost:8888
 </code></pre></div>
@@ -1427,17 +1568,17 @@
 </tbody>
 </table>
 <h4 id="response">Response</h4>
-<p><strong>Success (200):</strong>
+<p><strong>Success (200):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Notification sent&quot;</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Error (400):</strong>
+</code></pre></div>
+<p><strong>Error (400):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Message is required&quot;</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="example">Example</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test with voice 1 (warm, friendly)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8888/notify<span class="w"> </span><span class="se">\</span>
@@ -1465,10 +1606,12 @@
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <h4 id="request-body_1">Request Body</h4>
-<p>Same fields as <code>/notify</code>, but uses PAI-optimized defaults:
-- Default <code>voice_id</code>: "12" (professional male)
-- Default <code>volume</code>: 1.0
-- Default <code>voice_enabled</code>: true</p>
+<p>Same fields as <code>/notify</code>, but uses PAI-optimized defaults:</p>
+<ul>
+<li>Default <code>voice_id</code>: "12" (professional male)</li>
+<li>Default <code>volume</code>: 1.0</li>
+<li>Default <code>voice_enabled</code>: true</li>
+</ul>
 <h4 id="response_1">Response</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
