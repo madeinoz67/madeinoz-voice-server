@@ -1,7 +1,8 @@
 /**
  * Qwen TTS Voice Server
- * Main Bun HTTP server with /notify, /pai, /health endpoints
+ * Main Bun HTTP server with /notify, /pai, /health, /queue/status endpoints
  * MLX-audio only - Python backend removed
+ * FIFO notification queue for sequential processing
  */
 
 import type { NotificationRequest, PaiNotificationRequest } from "@/models/notification.js";
@@ -17,6 +18,8 @@ import { getMLXTTSClient, type MLXTTSClientConfig } from "@/services/mlx-tts-cli
 import { getVoiceLoader } from "@/services/voice-loader.js";
 import { getRateLimiter, extractClientId } from "@/middleware/rate-limiter.js";
 import { getCORSMiddleware } from "@/middleware/cors.js";
+import { NotificationQueue, type TTSProcessor } from "@/services/notification-queue.js";
+import type { QueueState } from "@/models/queue.js";
 import { $ } from "bun";
 
 /**
@@ -29,6 +32,10 @@ interface ServerConfig {
   enableMacOSNotifications: boolean;
   /** MLX-audio configuration */
   mlxConfig: MLXTTSClientConfig;
+  /** Queue configuration */
+  queueMaxDepth?: number;
+  queueDrainTimeoutMs?: number;
+  queueDegradedThreshold?: number;
 }
 
 /**
@@ -49,6 +56,9 @@ const DEFAULT_CONFIG: ServerConfig = {
     streamingInterval: parseFloat(process.env.MLX_STREAMING_INTERVAL || "0.3"),
     timeout: 10000,
   },
+  queueMaxDepth: parseInt(process.env.QUEUE_MAX_DEPTH || "100", 10),
+  queueDrainTimeoutMs: parseInt(process.env.QUEUE_DRAIN_TIMEOUT_MS || "30000", 10),
+  queueDegradedThreshold: parseInt(process.env.QUEUE_DEGRADED_THRESHOLD || "50", 10),
 };
 
 /**
@@ -59,6 +69,7 @@ interface ServerState {
   config: ServerConfig;
   cors: ReturnType<typeof getCORSMiddleware>;
   rateLimiter: ReturnType<typeof getRateLimiter>;
+  notificationQueue: NotificationQueue;
 }
 
 let serverState: ServerState;
@@ -134,6 +145,34 @@ async function fallbackToMacOSSay(text: string, voiceId?: string): Promise<void>
 
 /**
  * Process TTS request with MLX-audio backend
+ * This is used by the notification queue
+ */
+async function processTTSWithMacOSNotification(request: NotificationRequest): Promise<void> {
+  const title = sanitizeTitle(request.title || "Notification");
+  const message = sanitizeMessage(request.message);
+
+  if (!message) {
+    throw new Error("Invalid message after sanitization");
+  }
+
+  // Determine voice settings
+  const voiceId = request.voice_id || request.voice_name || serverState.config.defaultVoiceId;
+  const voiceSettings = request.voice_settings || DEFAULT_PROSODY;
+  const volume = request.volume ?? voiceSettings.volume ?? 1.0;
+
+  // Display macOS notification
+  if (serverState.config.enableMacOSNotifications) {
+    await displayMacOSNotification(title, message);
+  }
+
+  // Process TTS if enabled
+  if (request.voice_enabled !== false) {
+    await processTTS(message, voiceId, voiceSettings, volume);
+  }
+}
+
+/**
+ * Process TTS request with MLX-audio backend
  */
 async function processTTS(
   text: string,
@@ -176,7 +215,7 @@ async function processTTS(
 }
 
 /**
- * Handle POST /notify endpoint
+ * Handle POST /notify endpoint (now queues requests)
  */
 async function handleNotify(request: NotificationRequest): Promise<SuccessResponse | ErrorResponse> {
   try {
@@ -187,30 +226,24 @@ async function handleNotify(request: NotificationRequest): Promise<SuccessRespon
       return errorResponse("Missing required field: message");
     }
 
-    // Sanitize input - use default title if not provided
-    const title = sanitizeTitle(request.title || "Notification");
+    // Sanitize input
     const message = sanitizeMessage(request.message);
-
     if (!message) {
       return errorResponse("Invalid input after sanitization");
     }
 
-    // Determine voice settings
-    const voiceId = request.voice_id || request.voice_name || serverState.config.defaultVoiceId;
-    const voiceSettings = request.voice_settings || DEFAULT_PROSODY;
-    const volume = request.volume ?? voiceSettings.volume ?? 1.0;
+    // Enqueue the notification
+    const result = await serverState.notificationQueue.enqueue(request);
 
-    // Display macOS notification
-    if (serverState.config.enableMacOSNotifications) {
-      await displayMacOSNotification(title, message);
+    if (!result.success) {
+      return errorResponse(result.message);
     }
 
-    // Process TTS if enabled
-    if (request.voice_enabled !== false) {
-      await processTTS(message, voiceId, voiceSettings, volume);
-    }
-
-    return successResponse();
+    // Return 201 Accepted response
+    return {
+      status: "success",
+      message: result.message,
+    };
   } catch (error) {
     logger.error("Error handling /notify", error as Error);
     return errorResponse("Internal server error");
@@ -218,7 +251,20 @@ async function handleNotify(request: NotificationRequest): Promise<SuccessRespon
 }
 
 /**
+ * Handle GET /queue/status endpoint
+ */
+async function handleQueueStatus(): Promise<QueueState & { status: "success" }> {
+  const queueState = serverState.notificationQueue.getQueueState();
+  return {
+    status: "success",
+    ...queueState,
+  };
+}
+
+/**
  * Handle POST /pai endpoint
+ * Note: This bypasses the queue for immediate PAI notifications
+ * Can be changed to use queue if desired
  */
 async function handlePai(request: PaiNotificationRequest): Promise<SuccessResponse | ErrorResponse> {
   try {
@@ -233,7 +279,7 @@ async function handlePai(request: PaiNotificationRequest): Promise<SuccessRespon
     const title = sanitizeTitle(request.title);
     const message = sanitizeMessage(request.message);
 
-    // Use default DA voice settings
+    // Determine voice settings
     const voiceId = serverState.config.defaultVoiceId;
     const voiceSettings = DEFAULT_PROSODY;
     const volume = 1.0;
@@ -316,11 +362,21 @@ async function parseJsonBody<T>(req: Request): Promise<T> {
 export async function startServer(config: Partial<ServerConfig> = {}): Promise<void> {
   // Initialize server state
   const finalConfig = { ...DEFAULT_CONFIG, ...config };
+
+  // Create notification queue
+  const ttsProcessor: TTSProcessor = processTTSWithMacOSNotification;
+  const notificationQueue = new NotificationQueue(ttsProcessor, {
+    maxDepth: finalConfig.queueMaxDepth,
+    drainTimeoutMs: finalConfig.queueDrainTimeoutMs,
+    degradedThreshold: finalConfig.queueDegradedThreshold,
+  });
+
   serverState = {
     healthStatus: createDefaultHealthStatus(),
     config: finalConfig,
     cors: getCORSMiddleware(),
     rateLimiter: getRateLimiter(),
+    notificationQueue,
   };
 
   const { port, host } = finalConfig;
@@ -329,6 +385,11 @@ export async function startServer(config: Partial<ServerConfig> = {}): Promise<v
   logger.info(`Starting Voice Server on ${serverUrl}`);
   logger.info(`TTS Backend: MLX-audio`, {
     model: finalConfig.mlxConfig.model,
+  });
+  logger.info(`Notification Queue: enabled`, {
+    maxDepth: finalConfig.queueMaxDepth,
+    drainTimeoutMs: finalConfig.queueDrainTimeoutMs,
+    degradedThreshold: finalConfig.queueDegradedThreshold,
   });
 
   // Initialize MLX-audio client
@@ -400,6 +461,11 @@ export async function startServer(config: Partial<ServerConfig> = {}): Promise<v
         if (path === "/notify" && req.method === "POST") {
           const body = await parseJsonBody<NotificationRequest>(req);
           responseData = await handleNotify(body);
+
+          // Return 201 for successful queue operations
+          const statusCode = (responseData as SuccessResponse).status === "success" ? 201 : 400;
+          const response = Response.json(responseData, { status: statusCode });
+          return serverState.cors.addCorsHeaders(response, origin);
         }
         // POST /pai
         else if (path === "/pai" && req.method === "POST") {
@@ -409,6 +475,10 @@ export async function startServer(config: Partial<ServerConfig> = {}): Promise<v
         // GET /health
         else if (path === "/health" && req.method === "GET") {
           responseData = await handleHealth();
+        }
+        // GET /queue/status
+        else if (path === "/queue/status" && req.method === "GET") {
+          responseData = await handleQueueStatus();
         }
         // 404 Not Found
         else {
@@ -438,6 +508,15 @@ export async function startServer(config: Partial<ServerConfig> = {}): Promise<v
   // Graceful shutdown
   const shutdown = async () => {
     logger.info("Shutting down server...");
+
+    // Drain notification queue
+    logger.info("Draining notification queue...");
+    const drainResult = await serverState.notificationQueue.drain();
+    logger.info("Queue drain complete", {
+      itemsProcessed: drainResult.itemsProcessed,
+      itemsFailed: drainResult.itemsFailed,
+      timedOut: drainResult.timedOut,
+    });
 
     // Stop rate limiter
     serverState.rateLimiter.stop();

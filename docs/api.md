@@ -7,6 +7,7 @@ The voice server provides a simple HTTP API for text-to-speech notifications and
 ![Voice Server Architecture](assets/voice-server-architecture.png)
 
 The voice server uses a modular architecture:
+
 - **Bun Server** - TypeScript HTTP API handling requests and validation
 - **MLX-audio** - Local TTS backend using the Kokoro-82M model
 - **macOS Integration** - Native audio playback via afplay
@@ -60,6 +61,7 @@ curl -X POST http://localhost:8888/notify \
 #### Response
 
 **Success (200):**
+
 ```json
 {
   "status": "success",
@@ -68,6 +70,7 @@ curl -X POST http://localhost:8888/notify \
 ```
 
 **Error (400):**
+
 ```json
 {
   "error": "Message is required"
@@ -112,6 +115,7 @@ curl -X POST http://localhost:8888/pai \
 #### Request Body
 
 Same fields as `/notify`, but uses PAI-optimized defaults:
+
 - Default `voice_id`: "12" (professional male)
 - Default `volume`: 1.0
 - Default `voice_enabled`: true
