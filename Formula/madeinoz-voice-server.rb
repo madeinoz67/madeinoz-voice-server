@@ -3,7 +3,7 @@
 class VoiceServer < Formula
   desc "Local-first TTS voice server using MLX-audio with Kokoro-82M model"
   homepage "https://github.com/madeinoz67/voice-server"
-  version "0.1.5"
+  version "0.1.6"
   license "MIT"
 
   depends_on "bun"
