@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [Unreleased]
+## [0.1.9] - 2026-02-09
 
 ### Documentation
 
@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([7f6e640](7f6e6409937dc5cddebcb4d34f1226a13d80e963))
 
+- Update CHANGELOG.md [skip ci] ([37698ca](37698ca1e4884990731657c54d6b99e8d72291dd))
+
 
 ### Miscellaneous Tasks
 
@@ -26,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
+[0.1.7]: https://github.com/madeinoz67/madeinoz-voice-server/compare/v0.1.7...v0.1.9
 ## [0.1.7] - 2026-02-09
 
 ### Documentation
