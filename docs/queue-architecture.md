@@ -47,29 +47,7 @@ interface QueueMetrics {
 
 ### Error Handling Flow
 
-```
-Client                          Server                            TTS
-  │                                │                                 │
-  ├─ POST /notify ────────────────>│                                 │
-  │   {title, message, voice_id}    │                                 │
-  │                                │                                 │
-  │<─ 201 Accepted ──────────────────│                                 │
-  │                                │                                 │
-  │                                ├─> [Queue: append item]          │
-  │                                │                                 │
-  │                                ├─> [processQueue: process item]  │
-  │                                │                                 │
-  │                                │  └──> [TTS: generate audio]    │
-  │                                │                                 │
-  │                                │<─── [TTS: ERROR!]             │
-  │                                │                                 │
-  │                                │<─┬─ [Item marked failed]        │
-  │                                │  │                              │
-  │                                │  └──> [Queue: shift()]          │
-  │                                │                                 │
-  │                                │<─> [Next item (skip failed)]   │
-  │                                │                                 │
-```
+![Error Handling Flow](assets/queue-error-handling-flow.png)
 
 ## Queue States
 
