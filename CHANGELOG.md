@@ -3,7 +3,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [Unreleased]
+## [0.1.3] - 2026-02-08
+
+### Miscellaneous Tasks
+
+- Bump version to 0.1.3 ([a893263](a893263d89d5d159fec68f7bbdcd405e255f5cd5))
+
+
+
+[0.1.2]: https://github.com/madeinoz/voice-server/compare/v0.1.2...v0.1.3
+## [0.1.2] - 2026-02-08
+
+### Bug Fixes
+
+- Use scoped npm package name ([4914423](49144231e1f0412d24e9b914893505337da9321d))
+
+
+
+[0.1.1]: https://github.com/madeinoz/voice-server/compare/v0.1.1...v0.1.2
+## [0.1.1] - 2026-02-08
 
 ### Bug Fixes
 
@@ -42,10 +60,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([8203d0f](8203d0f85b0979bda76719b6d4545f84b5b0705c))
 
+- Update CHANGELOG.md [skip ci] ([f292411](f292411624150bf259ade7fe74e8235e0e0fcb24))
+
+- Rename project to voice-server ([ed387c3](ed387c3a959b3c308e7ca7724ff9a00a5acc8a9e))
+
 
 ### Features
 
 - Add custom CodeQL workflow with test file exclusions ([8323d4a](8323d4a88f544455a66e2b50fc3320de8b969e3d))
+
+- Add comprehensive CodeQL paths-ignore configuration ([4c761c0](4c761c0f0e1446bce7d25a4e884f6b6238df6b06))
 
 
 ### Miscellaneous Tasks
@@ -58,8 +82,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Exclude test files from CodeQL analysis ([f404e72](f404e721b9fe6f5ce615dfd529ee9c04f0e2f4a4))
 
+- Bump version to 0.1.1 ([059d0c6](059d0c6490a152bf3b1f3c99c018f07cd1780d16))
 
 
+### Ci
+
+- Ignore CHANGELOG.md in pull requests ([6bd4380](6bd4380334fb1cbd4da48775f3440726fedda606))
+
+
+
+[0.1.0]: https://github.com/madeinoz/voice-server/compare/v0.1.0...v0.1.1
 [Unreleased]: https://github.com/madeinoz/voice-server/compare/trunk...HEAD
 ## [0.1.0] - 2026-02-08
 
