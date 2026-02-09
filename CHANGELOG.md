@@ -3,25 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [0.1.3] - 2026-02-08
-
-### Miscellaneous Tasks
-
-- Bump version to 0.1.3 ([a893263](a893263d89d5d159fec68f7bbdcd405e255f5cd5))
-
-
-
-[0.1.2]: https://github.com/madeinoz/voice-server/compare/v0.1.2...v0.1.3
-## [0.1.2] - 2026-02-08
-
-### Bug Fixes
-
-- Use scoped npm package name ([4914423](49144231e1f0412d24e9b914893505337da9321d))
-
-
-
-[0.1.1]: https://github.com/madeinoz/voice-server/compare/v0.1.1...v0.1.2
-## [0.1.1] - 2026-02-08
+## [Unreleased]
 
 ### Bug Fixes
 
@@ -62,7 +44,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([f292411](f292411624150bf259ade7fe74e8235e0e0fcb24))
 
-- Rename project to voice-server ([ed387c3](ed387c3a959b3c308e7ca7724ff9a00a5acc8a9e))
+- Update CHANGELOG.md [skip ci] ([e6a7556](e6a75562c61fcd21eaeef5e1a46071b0b386c2cd))
+
+- Rename project to voice-server  ([c7e9209](c7e9209b2eeee1ac2af152f55b01045043cab2b9))
+
+- Update CHANGELOG.md [skip ci] ([485f47e](485f47e3001035af7f8a3c39c1a271373d93b675))
+
+- Update CHANGELOG.md for v0.1.1 [skip ci] ([6828e7d](6828e7dde9203622acd031cb7c70f2f1220c105e))
+
+- Update CHANGELOG.md for v0.1.2 [skip ci] ([9dd2c2f](9dd2c2fe6a9b74117fbb2185e98704f506433ae4))
+
+- Update CHANGELOG.md for v0.1.3 [skip ci] ([6894e0d](6894e0d647bfbcc92a4ed631626186421038a35a))
+
+- Update npm package name and CI changelog ignore  ([3cee42e](3cee42e74e4c5ef9fe9c456c5941036c5a210403))
 
 
 ### Features
@@ -82,16 +76,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Exclude test files from CodeQL analysis ([f404e72](f404e721b9fe6f5ce615dfd529ee9c04f0e2f4a4))
 
-- Bump version to 0.1.1 ([059d0c6](059d0c6490a152bf3b1f3c99c018f07cd1780d16))
-
-
-### Ci
-
-- Ignore CHANGELOG.md in pull requests ([6bd4380](6bd4380334fb1cbd4da48775f3440726fedda606))
+- Bump bun-types from 1.3.8 to 1.3.9  ([a54ac69](a54ac6927c2663298078e94144eb5522b9005183))
 
 
 
-[0.1.0]: https://github.com/madeinoz/voice-server/compare/v0.1.0...v0.1.1
 [Unreleased]: https://github.com/madeinoz/voice-server/compare/trunk...HEAD
 ## [0.1.0] - 2026-02-08
 
