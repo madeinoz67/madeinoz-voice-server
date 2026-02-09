@@ -49,8 +49,10 @@ commit_parsers = [
   { message = "^style", group = "Styling" },
   { message = "^test", group = "Testing" },
   { message = "^chore\\(release\\): prepare for", skip = true },
-  { message = "^docs.*update CHANGELOG", skip = true },
   { message = "^chore.*[Bb]ump version", skip = true },
+  { message = "^[Uu]pdate CHANGELOG", skip = true },
+  { message = "^[Uu]pdated CHANGELOG", skip = true },
+  { message = "\\[skip ci\\].*[Cc]hangelog", skip = true },
   { message = "^chore", group = "Miscellaneous Tasks" },
   { body = ".*security", group = "Security" },
 ]
