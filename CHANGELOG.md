@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [0.1.6] - 2026-02-09
+## [0.1.7] - 2026-02-09
 
 ### Documentation
 
@@ -11,21 +11,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([552c173](552c173acbd7ca4902fc0921a3cf7f4a468cdbff))
 
+- Update CHANGELOG.md [skip ci] ([b6be863](b6be863a69534d7aa3512cad62d9dad86f195116))
+
+- Update CHANGELOG.md for v0.1.5 [skip ci] ([f872586](f8725862357f7720e6055026955f699b7538916c))
+
+- Update CHANGELOG.md [skip ci] ([c3b7430](c3b74305c6238f94089a4552a4b151e566c84f75))
+
+- Update CHANGELOG.md for v0.1.6 [skip ci] ([31657f8](31657f8de48c41e721c8400f9d0e22da155aea27))
+
 
 ### Miscellaneous Tasks
 
 - Bump version to 0.1.5 ([ef85788](ef85788a7283dd498879fa064c220f9249f9f9f6))
 
-- Bump version to 0.1.6 ([f1e5e7c](f1e5e7c3ab984983bd3ca236c4a2a65e5c2ded81))
+- Bump version to 0.1.6 ([b806cdb](b806cdb40a039dabc7feafe823aa62c4669214bb))
+
+- Bump version to 0.1.7 ([e67f8aa](e67f8aa2178cf80ccbc0a9d41fefb7afdd9adb2a))
 
 
 ### Ci
 
 - Use npm OIDC for publish instead of token ([5476714](54767141475c4783d9c4ea1c54e29ba6b6a79ed9))
 
+- Upgrade npm for OIDC support ([5d6aade](5d6aade1727b1e731031ec728537abc629aaa84f))
 
 
-[0.1.4]: https://github.com/madeinoz/voice-server/compare/v0.1.4...v0.1.6
+
+[0.1.4]: https://github.com/madeinoz/voice-server/compare/v0.1.4...v0.1.7
 ## [0.1.4] - 2026-02-09
 
 ### Bug Fixes
