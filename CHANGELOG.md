@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md for v0.1.4 [skip ci] ([fe76674](fe76674036f7e7b1decf152ef6ca294ab93da10a))
 
+- Update CHANGELOG.md [skip ci] ([552c173](552c173acbd7ca4902fc0921a3cf7f4a468cdbff))
+
+
+### Miscellaneous Tasks
+
+- Bump version to 0.1.5 ([ef85788](ef85788a7283dd498879fa064c220f9249f9f9f6))
+
 
 ### Ci
 
