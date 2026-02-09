@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 ## [Unreleased]
 
 ### Bug Fixes
@@ -16,45 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- Update CHANGELOG.md for v0.1.0 [skip ci] ([1d91e3d](1d91e3d5e18e65b30080c74dae7ecf70a506f021))
-
-- Update CHANGELOG.md [skip ci] ([4e77dae](4e77dae378f41f4df76a60cdffacb56e1920f31c))
-
 - Add visual assets and architecture diagram  ([afeb22c](afeb22c9461924e8767a57a24b0dbfb83ed5ce56))
 
-- Update CHANGELOG.md [skip ci] ([7dc28a7](7dc28a7bb9ae20986fa134721b4526b30ab3cfe9))
-
-- Update CHANGELOG.md [skip ci] ([ef68568](ef685683a582bdf59e9b52f152bd3c103942fa4f))
-
-- Update CHANGELOG.md [skip ci] ([1c1a663](1c1a6634ecfd932cc642601ebbb38f9d03e2cfc3))
-
-- Update CHANGELOG.md [skip ci] ([40eee80](40eee80333ba6dddc3ed6e80e23f2853a9a2f31f))
-
-- Update CHANGELOG.md [skip ci] ([0788bb3](0788bb3923be7230d8bd5695f6dec3f5634cb656))
-
-- Update CHANGELOG.md [skip ci] ([262b9f7](262b9f7c66830ecd11ecad93fc19d0da86212387))
-
-- Update CHANGELOG.md [skip ci] ([d9bb5e6](d9bb5e6bef8060c8e34c6201540e04a32beef6a3))
-
-- Update CHANGELOG.md [skip ci] ([dcec442](dcec44218dec3bd74912add4a354f7cc7e43534a))
-
-- Update CHANGELOG.md [skip ci] ([92ac66c](92ac66c15f86cb020ff005b1ad3d29cd87fcf83a))
-
-- Update CHANGELOG.md [skip ci] ([8203d0f](8203d0f85b0979bda76719b6d4545f84b5b0705c))
-
-- Update CHANGELOG.md [skip ci] ([f292411](f292411624150bf259ade7fe74e8235e0e0fcb24))
-
-- Update CHANGELOG.md [skip ci] ([e6a7556](e6a75562c61fcd21eaeef5e1a46071b0b386c2cd))
-
 - Rename project to voice-server  ([c7e9209](c7e9209b2eeee1ac2af152f55b01045043cab2b9))
-
-- Update CHANGELOG.md [skip ci] ([485f47e](485f47e3001035af7f8a3c39c1a271373d93b675))
-
-- Update CHANGELOG.md for v0.1.1 [skip ci] ([6828e7d](6828e7dde9203622acd031cb7c70f2f1220c105e))
-
-- Update CHANGELOG.md for v0.1.2 [skip ci] ([9dd2c2f](9dd2c2fe6a9b74117fbb2185e98704f506433ae4))
-
-- Update CHANGELOG.md for v0.1.3 [skip ci] ([6894e0d](6894e0d647bfbcc92a4ed631626186421038a35a))
 
 - Update npm package name and CI changelog ignore  ([3cee42e](3cee42e74e4c5ef9fe9c456c5941036c5a210403))
 
@@ -86,15 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Bug Fixes
 
 - Add NPM_TOKEN to npm publish job ([a4f219b](a4f219b6449e8853783814fa0f02089ecb9d012a))
-
-
-### Documentation
-
-- Update CHANGELOG.md [skip ci] ([8b6de06](8b6de06bf64564a68dab8dd0297d0c755f885de5))
-
-- Update CHANGELOG.md [skip ci] ([b0b380e](b0b380e0be8b43e9e00873ebe642e0bd9c6b31b9))
-
-- Update CHANGELOG.md for v0.1.0 [skip ci] ([3d47e3d](3d47e3d6d3693fcf01712928e431c03e46d8809a))
 
 
 ### Features
