@@ -24,10 +24,10 @@ body = """
 
 {% if version %}\
 {% if previous.version %}\
-    [{{ previous.version | trim_start_matches(pat="v") }}]: https://github.com/madeinoz/voice-server/compare/{{ previous.version }}...{{ version }}
+    [{{ previous.version | trim_start_matches(pat="v") }}]: https://github.com/madeinoz67/madeinoz-voice-server/compare/{{ previous.version }}...{{ version }}
 {% endif %}\
 {% else %}\
-    [Unreleased]: https://github.com/madeinoz/voice-server/compare/trunk...HEAD
+    [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
 {% endif %}\
 """
 trim = true
@@ -38,7 +38,7 @@ filter_unconventional = true
 split_commits = false
 commit_preprocessors = [
   { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
-  { pattern = '#([0-9]+)', replace = "https://github.com/madeinoz/voice-server/issues/$1" },
+  { pattern = '#([0-9]+)', replace = "https://github.com/madeinoz67/madeinoz-voice-server/issues/$1" },
 ]
 commit_parsers = [
   { message = "^feat", group = "Features" },
@@ -49,6 +49,7 @@ commit_parsers = [
   { message = "^style", group = "Styling" },
   { message = "^test", group = "Testing" },
   { message = "^chore\\(release\\): prepare for", skip = true },
+  { message = "^docs.*update CHANGELOG", skip = true },
   { message = "^chore", group = "Miscellaneous Tasks" },
   { body = ".*security", group = "Security" },
 ]
