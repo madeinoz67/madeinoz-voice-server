@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [Unreleased]
+
+### Documentation
+
+- Update CHANGELOG.md for v0.1.4 [skip ci] ([fe76674](fe76674036f7e7b1decf152ef6ca294ab93da10a))
+
+
+### Ci
+
+- Use npm OIDC for publish instead of token ([5476714](54767141475c4783d9c4ea1c54e29ba6b6a79ed9))
+
+
+
+[Unreleased]: https://github.com/madeinoz/voice-server/compare/trunk...HEAD
 ## [0.1.4] - 2026-02-09
 
 ### Bug Fixes
