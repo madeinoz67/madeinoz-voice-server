@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update CHANGELOG.md [skip ci] ([6178ab2](6178ab257397a560e5243c3e34245c3fde8449e9))
 
+- Update CHANGELOG.md [skip ci] ([4084b2e](4084b2e022d65f570f1a249b42511fa89d31dda2))
+
 
 ### Miscellaneous Tasks
 
@@ -50,6 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump @types/node from 25.2.2 to 25.2.3  ([7d07d72](7d07d725d251b8bcdc54accdddab91a776ff4713))
 
 - Bump @typescript-eslint/eslint-plugin  ([d8bf7ef](d8bf7ef16649ec199402eef0d044e2bb3744c78b))
+
+- Bump typescript-eslint from 8.54.0 to 8.55.0  ([c28e5ea](c28e5ea3ebdf28d046bcc72e41dec653954ada3c))
 
 
 
