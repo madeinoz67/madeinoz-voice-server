@@ -12,17 +12,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Update CHANGELOG.md for v0.1.7 [skip ci] ([f3e287c](f3e287c418545806619a39ac49404844681b8b7e))
 
+- Update CHANGELOG.md [skip ci] ([e3d8e74](e3d8e74620518f9f5eaeea7cd5d793d05740cf51))
 
+- Update CHANGELOG.md for v0.1.8 [skip ci] ([b22b945](b22b9454b1f3015937916ccbfa06c4f4009193f1))
 
 - Fix repository URL in mkdocs.yml  ([60a5fee](60a5feecbcbf8bbe3b91443a3ce86ce9bc796fc3))
 
+- Update CHANGELOG.md [skip ci] ([7f6e640](7f6e6409937dc5cddebcb4d34f1226a13d80e963))
 
+- Update CHANGELOG.md [skip ci] ([37698ca](37698ca1e4884990731657c54d6b99e8d72291dd))
 
+- Update CHANGELOG.md for v0.1.9 [skip ci] ([046a02e](046a02e74637afdf771d7e7cc2f954efe588aed8))
 
 - FIFO queue documentation with visual diagrams  ([53f4dd8](53f4dd8118c55f10dcbe55d42b054cd803731d4f))
 
+- Update CHANGELOG.md [skip ci] ([864460c](864460ca5ba7536f8e4eb44ff02e865308164896))
 
+- Update CHANGELOG.md for v0.1.10 [skip ci] ([6131a08](6131a0850f1da71728849e3c30acb64b786a05d6))
+
+- Update CHANGELOG.md [skip ci] ([6178ab2](6178ab257397a560e5243c3e34245c3fde8449e9))
 
 
 ### Miscellaneous Tasks
@@ -33,6 +43,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog self-entries from v0.1.10 release ([7129699](7129699d4152263465534c146313545610134d12))
 
+- Remove all changelog self-entries from CHANGELOG ([b902952](b90295201559c433f7b73ca231a1df6f23e777a9))
+
+- Remove all changelog self-entries from CHANGELOG [skip ci] ([08c68c2](08c68c22a496e1b461572617f0db53b502d9cc0a))
+
+- Bump @types/node from 25.2.2 to 25.2.3  ([7d07d72](7d07d725d251b8bcdc54accdddab91a776ff4713))
+
+- Bump @typescript-eslint/eslint-plugin  ([d8bf7ef](d8bf7ef16649ec199402eef0d044e2bb3744c78b))
+
 
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
@@ -40,11 +58,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Update CHANGELOG.md for v0.1.4 [skip ci] ([fe76674](fe76674036f7e7b1decf152ef6ca294ab93da10a))
 
+- Update CHANGELOG.md [skip ci] ([552c173](552c173acbd7ca4902fc0921a3cf7f4a468cdbff))
 
+- Update CHANGELOG.md [skip ci] ([b6be863](b6be863a69534d7aa3512cad62d9dad86f195116))
 
+- Update CHANGELOG.md for v0.1.5 [skip ci] ([f872586](f8725862357f7720e6055026955f699b7538916c))
 
+- Update CHANGELOG.md [skip ci] ([c3b7430](c3b74305c6238f94089a4552a4b151e566c84f75))
 
+- Update CHANGELOG.md for v0.1.6 [skip ci] ([31657f8](31657f8de48c41e721c8400f9d0e22da155aea27))
 
 
 ### Ci
@@ -69,30 +93,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Update CHANGELOG.md for v0.1.0 [skip ci] ([1d91e3d](1d91e3d5e18e65b30080c74dae7ecf70a506f021))
 
+- Update CHANGELOG.md [skip ci] ([4e77dae](4e77dae378f41f4df76a60cdffacb56e1920f31c))
 
 - Add visual assets and architecture diagram  ([afeb22c](afeb22c9461924e8767a57a24b0dbfb83ed5ce56))
 
+- Update CHANGELOG.md [skip ci] ([7dc28a7](7dc28a7bb9ae20986fa134721b4526b30ab3cfe9))
 
+- Update CHANGELOG.md [skip ci] ([ef68568](ef685683a582bdf59e9b52f152bd3c103942fa4f))
 
+- Update CHANGELOG.md [skip ci] ([1c1a663](1c1a6634ecfd932cc642601ebbb38f9d03e2cfc3))
 
+- Update CHANGELOG.md [skip ci] ([40eee80](40eee80333ba6dddc3ed6e80e23f2853a9a2f31f))
 
+- Update CHANGELOG.md [skip ci] ([0788bb3](0788bb3923be7230d8bd5695f6dec3f5634cb656))
 
+- Update CHANGELOG.md [skip ci] ([262b9f7](262b9f7c66830ecd11ecad93fc19d0da86212387))
 
+- Update CHANGELOG.md [skip ci] ([d9bb5e6](d9bb5e6bef8060c8e34c6201540e04a32beef6a3))
 
+- Update CHANGELOG.md [skip ci] ([dcec442](dcec44218dec3bd74912add4a354f7cc7e43534a))
 
+- Update CHANGELOG.md [skip ci] ([92ac66c](92ac66c15f86cb020ff005b1ad3d29cd87fcf83a))
 
+- Update CHANGELOG.md [skip ci] ([8203d0f](8203d0f85b0979bda76719b6d4545f84b5b0705c))
 
+- Update CHANGELOG.md [skip ci] ([f292411](f292411624150bf259ade7fe74e8235e0e0fcb24))
 
+- Update CHANGELOG.md [skip ci] ([e6a7556](e6a75562c61fcd21eaeef5e1a46071b0b386c2cd))
 
 - Rename project to voice-server  ([c7e9209](c7e9209b2eeee1ac2af152f55b01045043cab2b9))
 
+- Update CHANGELOG.md [skip ci] ([485f47e](485f47e3001035af7f8a3c39c1a271373d93b675))
 
+- Update CHANGELOG.md for v0.1.1 [skip ci] ([6828e7d](6828e7dde9203622acd031cb7c70f2f1220c105e))
 
+- Update CHANGELOG.md for v0.1.2 [skip ci] ([9dd2c2f](9dd2c2fe6a9b74117fbb2185e98704f506433ae4))
 
+- Update CHANGELOG.md for v0.1.3 [skip ci] ([6894e0d](6894e0d647bfbcc92a4ed631626186421038a35a))
 
 - Update npm package name and CI changelog ignore  ([3cee42e](3cee42e74e4c5ef9fe9c456c5941036c5a210403))
 
+- Update CHANGELOG.md [skip ci] ([369d7c4](369d7c417032169bc77ab3bf30956c961059b72f))
 
 
 ### Features
@@ -126,8 +169,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Update CHANGELOG.md [skip ci] ([8b6de06](8b6de06bf64564a68dab8dd0297d0c755f885de5))
 
+- Update CHANGELOG.md [skip ci] ([b0b380e](b0b380e0be8b43e9e00873ebe642e0bd9c6b31b9))
 
+- Update CHANGELOG.md for v0.1.0 [skip ci] ([3d47e3d](3d47e3d6d3693fcf01712928e431c03e46d8809a))
 
 
 ### Features
