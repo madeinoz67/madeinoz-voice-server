@@ -41,6 +41,16 @@ commit_preprocessors = [
   { pattern = '#([0-9]+)', replace = "https://github.com/madeinoz67/madeinoz-voice-server/issues/$1" },
 ]
 commit_parsers = [
+  # Skip patterns FIRST (before grouping)
+  { message = "^chore\\(release\\): prepare for", skip = true },
+  { message = "^chore.*[Bb]ump version", skip = true },
+  { message = "[Uu]pdate CHANGELOG", skip = true },
+  { message = "[Uu]pdated CHANGELOG", skip = true },
+  { message = "CHANGELOG.*\\[skip ci\\]", skip = true },
+  { message = "\\[skip ci\\].*CHANGELOG", skip = true },
+  { message = "^docs.*CHANGELOG", skip = true },
+  { message = "^chore.*[Cc]hangelog", skip = true },
+  # Grouping patterns (after skip patterns)
   { message = "^feat", group = "Features" },
   { message = "^fix", group = "Bug Fixes" },
   { message = "^docs", group = "Documentation" },
@@ -48,11 +58,6 @@ commit_parsers = [
   { message = "^refactor", group = "Refactor" },
   { message = "^style", group = "Styling" },
   { message = "^test", group = "Testing" },
-  { message = "^chore\\(release\\): prepare for", skip = true },
-  { message = "^chore.*[Bb]ump version", skip = true },
-  { message = "^[Uu]pdate CHANGELOG", skip = true },
-  { message = "^[Uu]pdated CHANGELOG", skip = true },
-  { message = "\\[skip ci\\].*[Cc]hangelog", skip = true },
   { message = "^chore", group = "Miscellaneous Tasks" },
   { body = ".*security", group = "Security" },
 ]
