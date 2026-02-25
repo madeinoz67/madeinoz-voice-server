@@ -75,20 +75,23 @@ export class NotificationQueue {
       };
     }
 
-    // Validate voice_id
+    // Validate voice_id - empty/missing voice_id is allowed (uses default)
     const voiceLoader = getVoiceLoader();
     try {
-      const voiceInfo = voiceLoader.getVoiceInfo(request.voice_id || request.voice_name || "");
-      if (!voiceInfo) {
-        // Check if it's a known voice ID from the voice loader
-        const availableVoices = await voiceLoader.getAvailableVoices();
-        const voiceId = request.voice_id || request.voice_name || "";
-        if (!availableVoices.includes(voiceId) && voiceId !== "marrvin" && voiceId !== "marlin" && voiceId !== "daniel") {
-          return {
-            success: false,
-            statusCode: 400,
-            message: `Invalid voice_id: ${voiceId}. Available voices: ${availableVoices.join(", ")}`,
-          };
+      const voiceId = request.voice_id || request.voice_name || "";
+      // Skip validation for empty voice_id - will use default
+      if (voiceId) {
+        const voiceInfo = voiceLoader.getVoiceInfo(voiceId);
+        if (!voiceInfo) {
+          // Check if it's a known voice ID from the voice loader
+          const availableVoices = await voiceLoader.getAvailableVoices();
+          if (!availableVoices.includes(voiceId) && voiceId !== "marrvin" && voiceId !== "marlin" && voiceId !== "daniel") {
+            return {
+              success: false,
+              statusCode: 400,
+              message: `Invalid voice_id: ${voiceId}. Available voices: ${availableVoices.join(", ")}`,
+            };
+          }
         }
       }
     } catch (error) {
