@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow empty/missing voice_id in notifications ([2479428](247942826cc9262dc1402b8e299c02bb5275c94b))
 
 
+### Miscellaneous Tasks
+
+- Bump eslint from 10.0.0 to 10.0.1  ([ff97687](ff97687b3acb15158be44dd21e449a36b18515c4))
+
+
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
 ## [0.1.11] - 2026-02-17
