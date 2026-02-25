@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [Unreleased]
+
+### Bug Fixes
+
+- Allow empty/missing voice_id in notifications ([2479428](247942826cc9262dc1402b8e299c02bb5275c94b))
+
+
+
+[Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
 ## [0.1.11] - 2026-02-17
 
 ### Documentation
