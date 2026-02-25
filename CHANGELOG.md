@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump eslint from 10.0.0 to 10.0.1  ([ff97687](ff97687b3acb15158be44dd21e449a36b18515c4))
 
+- Bump @types/node from 25.2.3 to 25.3.0  ([b930f7b](b930f7bc5a788295b73c09430e291d3ffc218a94))
+
 
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
