@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump @types/node from 25.2.3 to 25.3.0  ([b930f7b](b930f7bc5a788295b73c09430e291d3ffc218a94))
 
+- Bump @typescript-eslint/parser from 8.56.0 to 8.56.1  ([f8f2c69](f8f2c6904395f213990a61f5bbc9a074d3171531))
+
 
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
