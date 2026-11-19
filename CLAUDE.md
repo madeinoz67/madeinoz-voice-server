@@ -81,17 +81,18 @@ Add `lang:<language>` to a search to narrow it by language.
 ### Rules
 - Codanna results are navigation hints, not ground truth. Confirm against the file before editing.
 - Before renaming or changing a signature, list every caller in your plan.
-- If a Codanna command exits with code 7 (stale index), run `codanna index .` in the current checkout and retry.
+- If a Codanna command exits with code 7 (stale index), run `codanna index` in the current checkout and retry.
+- Never pass `.` to `codanna index`. It registers the cwd as a root and rewrites `.codanna/settings.toml` with an absolute path, double-indexing the tree (32 files/413 symbols vs 18/322 here). Bare `codanna index` or `codanna index -f` rebuild the configured roots only.
 - Prefer `symbol_id:N` over names when available; it avoids ambiguity.
 
 ### Orca worktrees
 - In Orca, each agent is a full Claude Code session whose working directory is its own worktree. Orca's `scripts.setup` builds that worktree's Codanna index, and the `.mcp.json` server indexes the worktree, so `mcp__codanna__*` tools are correct there.
-- If a Codanna tool reports a missing or stale index (exit code 7) right after the worktree opens, setup may still be running: wait, or run `codanna index .` once.
+- If a Codanna tool reports a missing or stale index (exit code 7) right after the worktree opens, setup may still be running: wait, or run `codanna index` once.
 - Never share `.codanna/` between worktrees (symlink or `sharedDirectories`).
 
 ### Subagents and worktrees
 - A subagent in `.claude/worktrees/*` must **not** use `mcp__codanna__*`. Those tools read the main checkout's index, which doesn't match the worktree's files.
-- Worktree subagents build their own index first (`codanna index .` from the worktree root), then use the CLI.
+- Worktree subagents build their own index first (`codanna index` from the worktree root), then use the CLI.
 - Never point the CLI at the main checkout from inside a worktree (`--config ../..`, `cd` to the repo root). Worktree isolation blocks it anyway.
 - Delegate read-only investigation to `codanna-explorer` and isolated edits to `codanna-implementer`.
 
