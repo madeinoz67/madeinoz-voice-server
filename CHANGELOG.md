@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add queue diagrams and agent reports ([d4be95d](d4be95df90e396d2bf182e1b900da289049da1eb))
 
+- Ban `codanna index .` in agent guidance  ([2650a51](2650a51c8c0799deb48b83fa47e54ad6fb76cf12))
+
 
 ### Miscellaneous Tasks
 
