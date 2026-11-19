@@ -42,7 +42,7 @@ bun run typecheck # Type check only
 
 ## Notes
 
-- Codanna indexing is enabled for `src/` directory
+- Codanna indexing is enabled for `src/ts` and `tests/ts` directories
 - Semantic search is available for code queries
 - Documentation is built with MkDocs Material theme
 
