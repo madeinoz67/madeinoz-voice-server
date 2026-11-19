@@ -26,6 +26,8 @@ Thumbs.db
 
 # Codanna
 .codanna/index/
+.claude/worktrees/
+.fastembed_cache
 
 # Logs
 logs/
