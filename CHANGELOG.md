@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Prune dead python paths, drop stale pyproject ref, rebuild index for 0.17.1 ([9e1497f](9e1497f8804ed33d36449051994b3fef8ca0eb71))
 
+- Install hooks, agents, MCP binding, orca setup, worktree-safe config  ([d6d3cf8](d6d3cf8114dd0c34dd44d01d0bc48226cb8bde63))
+
 
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
