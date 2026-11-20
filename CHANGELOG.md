@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow empty/missing voice_id in notifications ([2479428](247942826cc9262dc1402b8e299c02bb5275c94b))
 
 
+### Documentation
+
+- Add queue diagrams and agent reports ([d4be95d](d4be95df90e396d2bf182e1b900da289049da1eb))
+
+- Ban `codanna index .` in agent guidance  ([2650a51](2650a51c8c0799deb48b83fa47e54ad6fb76cf12))
+
+
 ### Miscellaneous Tasks
 
 - Bump eslint from 10.0.0 to 10.0.1  ([ff97687](ff97687b3acb15158be44dd21e449a36b18515c4))
@@ -17,6 +24,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump @types/node from 25.2.3 to 25.3.0  ([b930f7b](b930f7bc5a788295b73c09430e291d3ffc218a94))
 
 - Bump @typescript-eslint/parser from 8.56.0 to 8.56.1  ([f8f2c69](f8f2c6904395f213990a61f5bbc9a074d3171531))
+
+- Add GitHub MCP permissions to local settings ([1641ec3](1641ec3581e763149da2035b3ca91c5f599dcba6))
+
+- Prune dead python paths, drop stale pyproject ref, rebuild index for 0.17.1 ([9e1497f](9e1497f8804ed33d36449051994b3fef8ca0eb71))
+
+- Install hooks, agents, MCP binding, orca setup, worktree-safe config  ([d6d3cf8](d6d3cf8114dd0c34dd44d01d0bc48226cb8bde63))
+
+- Bump flatted  ([9ea0207](9ea0207f25c59d8561381a7d59f689a77cd873b1))
+
+- Bump @types/node from 25.3.0 to 25.6.0  ([b9a5f72](b9a5f72ffada0f0a00760292d721596f97640900))
+
+- Bump eslint from 10.0.1 to 10.2.0  ([a18acb9](a18acb9b2ce93acdd88ebbe0d00d62f931bb6c06))
+
+- Bump @typescript-eslint/eslint-plugin  ([e46bc7d](e46bc7db99c423a1a416d8799cea3e55beb62ea6))
 
 
 
