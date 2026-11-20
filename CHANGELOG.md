@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump the npm_and_yarn group across 1 directory with 3 updates  ([494a67b](494a67b3028d4b3d6312d94375955a1a6a36137d))
 
+- Sync ProjectSetup update (grep nudge, safe index, doc collections)  ([7522f4d](7522f4da18195aa0d0c2ee4b9e54e637a6599a06))
+
 
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
