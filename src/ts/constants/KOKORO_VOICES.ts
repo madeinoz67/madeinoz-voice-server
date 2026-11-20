@@ -84,34 +84,62 @@ export const KOKORO_VOICES: readonly KokoroVoice[] = [
 ] as const;
 
 /**
- * Map numeric voice ID to Kokoro voice name
- * @param voiceId - Numeric voice ID (1-54)
- * @returns Kokoro voice name or default "af_heart"
+ * Persona and legacy voice IDs mapped to documented Kokoro voice IDs.
+ * Sources: AGENTPERSONALITIES.md for the persona names; the runtime IDs
+ * (marrvin, marlin) are the server's built-in voices — marrvin is the
+ * default voice and carries the DAIV persona, marlin is the male
+ * alternative. Without these, string IDs parseInt to NaN and every voice
+ * silently fell back to af_heart (female).
  */
-export function getKokoroVoice(voiceId: string | number): string {
-  const id = typeof voiceId === "string" ? parseInt(voiceId, 10) : voiceId;
-
-  if (isNaN(id) || id < 1 || id > KOKORO_VOICES.length) {
-    return KOKORO_VOICES[0].name; // Default to af_heart (ID 1)
-  }
-
-  // Array is 0-indexed, voice IDs start at 1
-  return KOKORO_VOICES[id - 1].name;
-}
+const VOICE_ALIASES: Record<string, number> = {
+  marrvin: 12, // DAIV default persona — am_michael
+  marlin: 14, // alternative voice — am_eric
+  daniel: 21, // AGENTPERSONALITIES.md — bf_emma
+  daiv: 12, // AGENTPERSONALITIES.md — am_michael
+  jeremy: 4, // AGENTPERSONALITIES.md — af_sky
+  aria: 8, // AGENTPERSONALITIES.md — af_nova
+  marcus: 12, // AGENTPERSONALITIES.md — am_michael
+  rachel: 1, // AGENTPERSONALITIES.md — af_heart
+};
 
 /**
- * Get voice info by numeric ID
- * @param voiceId - Numeric voice ID (1-54)
- * @returns Voice info or undefined
+ * Resolve a voice identifier (Kokoro name, persona name, or numeric ID)
+ * to its catalog entry, or undefined when nothing matches.
  */
-export function getVoiceInfo(voiceId: string | number): KokoroVoice | undefined {
+function resolveVoice(voiceId: string | number): KokoroVoice | undefined {
+  if (typeof voiceId === "string") {
+    const byName = KOKORO_VOICES.find((v) => v.name === voiceId);
+    if (byName) {
+      return byName;
+    }
+    const alias = VOICE_ALIASES[voiceId.toLowerCase()];
+    if (alias !== undefined) {
+      return KOKORO_VOICES[alias - 1];
+    }
+  }
   const id = typeof voiceId === "string" ? parseInt(voiceId, 10) : voiceId;
-
   if (isNaN(id) || id < 1 || id > KOKORO_VOICES.length) {
     return undefined;
   }
-
   return KOKORO_VOICES[id - 1];
+}
+
+/**
+ * Map a voice identifier to Kokoro voice name
+ * @param voiceId - Numeric voice ID (1-54), Kokoro name, or persona name
+ * @returns Kokoro voice name or default "af_heart"
+ */
+export function getKokoroVoice(voiceId: string | number): string {
+  return resolveVoice(voiceId)?.name ?? KOKORO_VOICES[0].name; // Default to af_heart (ID 1)
+}
+
+/**
+ * Get voice info by identifier
+ * @param voiceId - Numeric voice ID (1-54), Kokoro name, or persona name
+ * @returns Voice info or undefined
+ */
+export function getVoiceInfo(voiceId: string | number): KokoroVoice | undefined {
+  return resolveVoice(voiceId);
 }
 
 /**

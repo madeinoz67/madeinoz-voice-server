@@ -77,8 +77,8 @@ class VoiceServer < Formula
     mlx_check = `which mlx-audio 2>/dev/null`.strip
     if mlx_check.empty?
       ohai "MLX-audio backend not found. To install:"
-      ohai "  uv tool install mlx-audio"
-      ohai "Or pipx install mlx-audio"
+      ohai "  uv tool install --with \"misaki[en]\" --with kokoro mlx-audio"
+      ohai "Or pipx install mlx-audio plus the misaki and kokoro packages"
     end
   end
 
@@ -92,7 +92,7 @@ class VoiceServer < Formula
   end
 
   service do
-    run [bin/"voice-server"]
+    run [opt_bin/"voice-server"]
     keep_alive true
     log_path var/"log/voice-server.log"
     error_log_path var/"log/voice-server.log"
