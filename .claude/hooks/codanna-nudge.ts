@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 // codanna-nudge.ts — PostToolUse, one advisory per session.
 //
-// The "use Codanna before rg" rule is prose, and prose loses to the default tool at the
-// moment of a search. This fires once when a session reaches for rg or Grep in a
-// Codanna-indexed repo and has not used Codanna yet, then never again. PostToolUse
+// The "use Codanna before rg or grep" rule is prose, and prose loses to the default tool
+// at the moment of a search. This fires once when a session reaches for rg, grep or Grep
+// in a Codanna-indexed repo and has not used Codanna yet, then never again. PostToolUse
 // exit 2 with stderr is the channel this repo already uses to reach the model
 // (see ledger-guard.mjs); it cannot block a call.
 //
@@ -27,7 +27,7 @@ type SessionState = { codanna: boolean; nudged: boolean };
 const NUDGE = [
   "",
   "Codanna nudge: this repo is indexed, and this session has not used Codanna yet.",
-  'For symbol and "where is X" lookups, use Codanna before rg or reading whole files:',
+  'For symbol and "where is X" lookups, use Codanna before rg, grep or reading whole files:',
   "  main session: mcp__codanna__semantic_search_with_context, find_symbol, analyze_impact",
   '  worktree or subagent: codanna mcp semantic_search_with_context query:"..." limit:5 --json',
   "rg stays right for exact strings, HTML, CSS, templates and config keys.",
@@ -88,7 +88,8 @@ async function main(): Promise<number> {
 
   if (state.codanna || state.nudged) return 0;
 
-  const isSearch = tool === "Grep" || (tool === "Bash" && /^\s*rg\b/.test(command));
+  const isSearch =
+    tool === "Grep" || (tool === "Bash" && /^\s*(rg|grep)\b/.test(command));
   if (!isSearch) return 0;
 
   save(path, { codanna: false, nudged: true });
