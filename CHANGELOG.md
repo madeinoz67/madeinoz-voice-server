@@ -41,6 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump typescript-eslint from 8.56.0 to 8.58.1  ([ec2887e](ec2887e2f1bb10c90536b9713ce8c49d457bd435))
 
+- Bump bun-types from 1.3.9 to 1.3.12  ([75cdd0b](75cdd0b53b84bbade97b347596eea66f4a32a4ff))
+
 
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
