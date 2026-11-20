@@ -31,6 +31,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Install hooks, agents, MCP binding, orca setup, worktree-safe config  ([d6d3cf8](d6d3cf8114dd0c34dd44d01d0bc48226cb8bde63))
 
+- Bump flatted  ([9ea0207](9ea0207f25c59d8561381a7d59f689a77cd873b1))
+
+- Bump @types/node from 25.3.0 to 25.6.0  ([b9a5f72](b9a5f72ffada0f0a00760292d721596f97640900))
+
+- Bump eslint from 10.0.1 to 10.2.0  ([a18acb9](a18acb9b2ce93acdd88ebbe0d00d62f931bb6c06))
+
+- Bump @typescript-eslint/eslint-plugin  ([e46bc7d](e46bc7db99c423a1a416d8799cea3e55beb62ea6))
+
+- Bump typescript-eslint from 8.56.0 to 8.58.1  ([ec2887e](ec2887e2f1bb10c90536b9713ce8c49d457bd435))
+
+- Bump bun-types from 1.3.9 to 1.3.12  ([75cdd0b](75cdd0b53b84bbade97b347596eea66f4a32a4ff))
+
 
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
