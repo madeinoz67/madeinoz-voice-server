@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump bun-types from 1.3.9 to 1.3.12  ([75cdd0b](75cdd0b53b84bbade97b347596eea66f4a32a4ff))
 
+- Bump the npm_and_yarn group across 1 directory with 3 updates  ([494a67b](494a67b3028d4b3d6312d94375955a1a6a36137d))
+
 
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
