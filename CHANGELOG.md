@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Install hooks, agents, MCP binding, orca setup, worktree-safe config  ([d6d3cf8](d6d3cf8114dd0c34dd44d01d0bc48226cb8bde63))
 
+- Bump flatted  ([9ea0207](9ea0207f25c59d8561381a7d59f689a77cd873b1))
+
 
 
 [Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
