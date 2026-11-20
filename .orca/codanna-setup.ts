@@ -11,7 +11,7 @@
 //                             relative paths (unverified). Test before enabling.
 //   CODANNA_SETUP_THREADS=N   indexing threads (default: all cores)
 
-import { appendFileSync, cpSync, existsSync, mkdirSync } from "node:fs";
+import { appendFileSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 const wt = process.env.ORCA_WORKTREE_PATH || process.cwd();
@@ -71,14 +71,30 @@ function main(): void {
     log("seeded index from primary checkout");
   }
 
-  // 3. Build the index.
-  const args = ["index", ".", "--no-progress"];
+  // 3. Build the index. No path argument: passing "." makes codanna rewrite the tracked
+  //    settings.toml with an absolute workspace_root and an extra absolute root entry.
+  const args = ["index", "--no-progress"];
   if (process.env.CODANNA_SETUP_THREADS) args.push("--threads", process.env.CODANNA_SETUP_THREADS);
   const start = performance.now();
   const code = codanna(args);
   const secs = Math.round((performance.now() - start) / 1000);
   if (code === 0) log(`index built in ${secs}s for ${name}`);
-  else log(`codanna index failed (exit ${code}); agents will see exit code 7 and can re-run 'codanna index .'`);
+  else log(`codanna index failed (exit ${code}); agents will see exit code 7 and can re-run 'codanna index'`);
+
+  // 4. Document collections (search_documents reads these, and the code index does not
+  //    cover them). Indexing appends, so clear the store first or every run duplicates
+  //    every chunk.
+  const settingsText = existsSync(settings) ? readFileSync(settings, "utf8") : "";
+  const collections = [...settingsText.matchAll(/^\[documents\.collections\.([^\]]+)\]/gm)].map((m) => m[1].trim());
+  if (collections.length === 0) {
+    log("no document collections configured; skipping document index");
+    return;
+  }
+  rmSync(join(index, "documents"), { recursive: true, force: true });
+  for (const c of collections) {
+    const docCode = codanna(["documents", "index", "--collection", c, "--no-progress"]);
+    log(docCode === 0 ? `documents indexed for collection ${c}` : `codanna documents index failed for ${c} (exit ${docCode})`);
+  }
 }
 
 try { main(); } catch (err) { log(`setup error: ${(err as Error).message}`); }

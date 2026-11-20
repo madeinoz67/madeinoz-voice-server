@@ -52,7 +52,7 @@ This repo is indexed by Codanna (local symbol graph + semantic search).
 
 If the location of a symbol or the shape of a module is not already known, find it with
 Codanna before reading files or grepping. A file already named in the issue or the error
-is not a search: read it. A hook nudges once per session when a search starts with `rg`
+is not a search: read it. A hook nudges once per session when a search starts with `rg` or `grep`
 before Codanna has been used, so the rule is not something to remember.
 
 ### Which interface
