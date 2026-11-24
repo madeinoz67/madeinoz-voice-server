@@ -18,7 +18,7 @@ export interface ProsodySettings {
   speed: number;
   /** Enhance voice clarity */
   use_speaker_boost: boolean;
-  /** Playback volume level (0.0-1.0, optional) */
+  /** Playback volume multiplier (1.0 = normal, 0.0-4.0, optional) */
   volume?: number;
 }
 
@@ -46,7 +46,7 @@ export interface VoiceConfig {
   use_speaker_boost: boolean;
   /** Nested prosody configuration (optional) */
   prosody?: ProsodySettings;
-  /** Playback volume level (0.0-1.0, optional) */
+  /** Playback volume multiplier (1.0 = normal, 0.0-4.0, optional) */
   volume?: number;
 }
 
@@ -64,7 +64,7 @@ export function isValidVoiceConfig(config: Partial<VoiceConfig>): boolean {
   if (config.similarity_boost !== undefined && (config.similarity_boost < 0 || config.similarity_boost > 1)) return false;
   if (config.style !== undefined && (config.style < 0 || config.style > 1)) return false;
   if (config.speed !== undefined && (config.speed < 0.1 || config.speed > 2)) return false;
-  if (config.volume !== undefined && (config.volume < 0 || config.volume > 1)) return false;
+  if (config.volume !== undefined && (config.volume < 0 || config.volume > 4)) return false;
 
   return true;
 }
@@ -77,6 +77,6 @@ export function isValidProsody(settings: Partial<ProsodySettings>): boolean {
   if (settings.similarity_boost !== undefined && (settings.similarity_boost < 0 || settings.similarity_boost > 1)) return false;
   if (settings.style !== undefined && (settings.style < 0 || settings.style > 1)) return false;
   if (settings.speed !== undefined && (settings.speed < 0.1 || settings.speed > 2)) return false;
-  if (settings.volume !== undefined && (settings.volume < 0 || settings.volume > 1)) return false;
+  if (settings.volume !== undefined && (settings.volume < 0 || settings.volume > 4)) return false;
   return true;
 }
