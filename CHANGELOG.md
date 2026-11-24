@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [Unreleased]
+
+### Features
+
+- Wire playback volume multiplier through to afplay  ([2c01fce](2c01fce1d64aa1d115e3271d1d8bed4c99a05563))
+
+
+
+[Unreleased]: https://github.com/madeinoz67/madeinoz-voice-server/compare/trunk...HEAD
 ## [0.1.13] - 2026-11-20
 
 ### Bug Fixes
