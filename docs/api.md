@@ -47,7 +47,7 @@ curl -X POST http://localhost:8888/notify \
 | `message` | string | **Yes** | Text to speak |
 | `voice_id` | string | No | Numeric voice ID 1-41 (default: "1") |
 | `voice_settings` | object | No | Voice configuration |
-| `volume` | number | No | Volume 0.0-1.0 (default: 1.0) |
+| `volume` | number | No | Playback volume multiplier, 1.0 = normal (default: from `DEFAULT_VOLUME`, else 1.0) |
 | `voice_enabled` | boolean | No | Enable TTS (default: true) |
 
 #### Voice Settings

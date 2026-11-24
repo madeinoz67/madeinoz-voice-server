@@ -29,6 +29,7 @@ interface ServerConfig {
   port: number;
   host: string;
   defaultVoiceId: string;
+  defaultVolume: number;
   enableMacOSNotifications: boolean;
   /** MLX-audio configuration */
   mlxConfig: MLXTTSClientConfig;
@@ -45,6 +46,7 @@ const DEFAULT_CONFIG: ServerConfig = {
   port: parseInt(process.env.PORT || "8888", 10),
   host: "127.0.0.1",
   defaultVoiceId: process.env.DEFAULT_VOICE_ID || "marrvin",
+  defaultVolume: parseFloat(process.env.DEFAULT_VOLUME || "1.0"),
   enableMacOSNotifications: process.env.ENABLE_MACOS_NOTIFICATIONS !== "false",
   mlxConfig: {
     // Use Kokoro-82M for smooth streaming (RTF ~1.0x)
@@ -158,7 +160,7 @@ async function processTTSWithMacOSNotification(request: NotificationRequest): Pr
   // Determine voice settings
   const voiceId = request.voice_id || request.voice_name || serverState.config.defaultVoiceId;
   const voiceSettings = request.voice_settings || DEFAULT_PROSODY;
-  const volume = request.volume ?? voiceSettings.volume ?? 1.0;
+  const volume = request.volume ?? voiceSettings.volume ?? serverState.config.defaultVolume;
 
   // Display macOS notification
   if (serverState.config.enableMacOSNotifications) {
@@ -178,7 +180,7 @@ async function processTTS(
   text: string,
   voiceId: string,
   prosody: ProsodySettings,
-  _volume: number
+  volume: number
 ): Promise<void> {
   const mlxClient = getMLXTTSClient(serverState.config.mlxConfig);
   const prosodyInstruction = translateProsody(prosody);
@@ -200,6 +202,7 @@ async function processTTS(
         voice: voiceId,
         prosody_instruction: prosodyInstruction,
         speed: prosody.speed,
+        volume,
         output_format: "wav",
       },
       true // stream = true
@@ -282,7 +285,7 @@ async function handlePai(request: PaiNotificationRequest): Promise<SuccessRespon
     // Determine voice settings
     const voiceId = serverState.config.defaultVoiceId;
     const voiceSettings = DEFAULT_PROSODY;
-    const volume = 1.0;
+    const volume = serverState.config.defaultVolume;
 
     // Display macOS notification
     if (serverState.config.enableMacOSNotifications) {

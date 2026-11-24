@@ -168,9 +168,11 @@ export class MLXTTSClient {
 
         // Play audio with afplay (macOS native, reliable sequential playback)
         const playStartTime = Date.now();
-        logger.info("Spawning afplay process", { file: audioFile });
+        // afplay -v is a multiplier: 1.0 = normal, above 1.0 amplifies
+        const playVolume = Math.min(4, Math.max(0, request.volume ?? 1));
+        logger.info("Spawning afplay process", { file: audioFile, volume: playVolume });
 
-        const afplayProc = Bun.spawn(["afplay", audioFile], {
+        const afplayProc = Bun.spawn(["afplay", "-v", playVolume.toString(), audioFile], {
           stdout: "pipe",
           stderr: "pipe",
         });

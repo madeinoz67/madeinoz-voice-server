@@ -15,6 +15,8 @@ export interface TTSRequest {
   prosody_instruction: string;
   /** Speed multiplier */
   speed: number;
+  /** Playback volume multiplier (1.0 = normal, 0.0-4.0) */
+  volume?: number;
   /** Audio output format */
   output_format?: "wav" | "mp3";
 }

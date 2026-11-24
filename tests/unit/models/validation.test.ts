@@ -216,8 +216,12 @@ describe("ProsodySettings validation", () => {
       const settings = { volume: -0.1 };
       expect(isValidProsody(settings as ProsodySettings)).toBe(false);
 
-      const settings2 = { volume: 1.5 };
+      const settings2 = { volume: 4.5 };
       expect(isValidProsody(settings2 as ProsodySettings)).toBe(false);
+
+      // volume is an afplay multiplier, so values above 1.0 amplify
+      const settings3 = { volume: 1.5 };
+      expect(isValidProsody(settings3 as ProsodySettings)).toBe(true);
     });
   });
 });

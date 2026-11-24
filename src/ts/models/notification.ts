@@ -21,7 +21,7 @@ export interface NotificationRequest {
   voice_name?: string;
   /** Override voice prosody */
   voice_settings?: ProsodySettings;
-  /** Override playback volume (0.0-1.0) */
+  /** Override playback volume multiplier (1.0 = normal, 0.0-4.0) */
   volume?: number;
 }
 
