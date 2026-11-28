@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Gate Codanna MCP on the worktree index  ([4372061](43720610d5a64e3307481f92884cc2933c0fa472))
 
+- Run the worktree's Codanna setup and gate on checkout type  ([e16788c](e16788ceff0c19f41f80f0109627d2d92e9b778b))
+
 
 ### Features
 
