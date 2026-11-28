@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
+### Bug Fixes
+
+- Gate Codanna MCP on the worktree index  ([4372061](43720610d5a64e3307481f92884cc2933c0fa472))
+
+
 ### Features
 
 - Wire playback volume multiplier through to afplay  ([2c01fce](2c01fce1d64aa1d115e3271d1d8bed4c99a05563))
