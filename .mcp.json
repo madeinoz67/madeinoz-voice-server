@@ -1,8 +1,10 @@
 {
   "mcpServers": {
     "codanna": {
-      "command": "codanna",
-      "args": ["--config", ".codanna/settings.toml", "serve", "--watch"]
+      "command": "/bin/sh",
+      "args": [
+        ".orca/codanna-mcp.sh"
+      ]
     }
   }
 }
