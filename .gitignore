@@ -67,3 +67,6 @@ uv.lock
 huggingface/
 
 site/
+.codanna/index.ready
+.codanna/setup-in-progress
+.codanna/setup.log
